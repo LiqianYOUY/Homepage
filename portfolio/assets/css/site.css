@@ -478,7 +478,10 @@ textarea {
 }
 
 .project-media {
-    min-height: 520px;
+    align-self: center;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
     background: #1c1c21;
 }
 
@@ -592,15 +595,11 @@ textarea {
 }
 
 .archive-card img {
+    display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
     background: #202027;
-}
-
-.archive-card--contain img {
-    padding: 24px;
-    object-fit: contain;
 }
 
 .archive-card div {
@@ -1272,7 +1271,7 @@ textarea {
     }
 
     .project-media {
-        min-height: 420px;
+        min-height: 0;
     }
 
     .process-grid article:nth-child(2) {
@@ -1444,7 +1443,7 @@ textarea {
     }
 
     .project-media {
-        min-height: 300px;
+        min-height: 0;
     }
 
     .project-copy {
