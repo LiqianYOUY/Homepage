@@ -491,17 +491,39 @@ textarea {
     object-fit: cover;
 }
 
-.project-media--contain {
-    padding: clamp(24px, 4vw, 58px);
-    background:
-        linear-gradient(rgba(104, 244, 232, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(104, 244, 232, 0.06) 1px, transparent 1px),
-        #15141d;
-    background-size: 36px 36px;
+.project-media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-.project-media--contain img {
+.project-media--foodcare {
+    position: relative;
+    overflow: hidden;
+}
+
+.project-media--foodcare .project-cover {
+    object-position: 62% center;
+}
+
+.project-media--foodcare::after {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(9, 9, 11, 0.18), transparent 48%);
+    content: "";
+    pointer-events: none;
+}
+
+.project-media--foodcare .project-ui-preview {
+    position: absolute;
+    bottom: -7%;
+    left: 7%;
+    z-index: 2;
+    width: auto;
+    height: 76%;
     object-fit: contain;
+    filter: drop-shadow(0 24px 28px rgba(0, 0, 0, 0.42));
 }
 
 .project-copy {
@@ -663,22 +685,37 @@ textarea {
 
 .profile-grid {
     display: grid;
-    grid-template-columns: minmax(300px, 0.36fr) minmax(0, 0.64fr);
-    gap: 76px;
+    grid-template-columns: minmax(240px, 0.3fr) minmax(0, 0.7fr);
+    gap: clamp(48px, 7vw, 92px);
     align-items: start;
 }
 
 .profile-portrait {
+    display: block;
     overflow: hidden;
-    border-radius: 6px;
-    background: #ddd;
+    width: min(100%, 320px);
+    aspect-ratio: 1;
+    padding: 7px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--paper-bright);
+    transition: border-color 180ms ease, transform 180ms ease;
 }
 
 .profile-portrait img {
+    display: block;
     width: 100%;
-    aspect-ratio: 4 / 5;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
     object-fit: cover;
-    object-position: center top;
+    object-position: center;
+}
+
+.profile-portrait:hover,
+.profile-portrait:focus-visible {
+    border-color: var(--coral);
+    transform: translateY(-3px);
 }
 
 .profile-copy h2 {
@@ -692,34 +729,6 @@ textarea {
     margin: 24px 0 0;
     color: var(--muted);
     font-size: 1.04rem;
-}
-
-.metric-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 46px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-}
-
-.metric-row div {
-    padding: 22px 20px 22px 0;
-}
-
-.metric-row strong,
-.metric-row span {
-    display: block;
-}
-
-.metric-row strong {
-    color: var(--coral);
-    font-size: 1.45rem;
-}
-
-.metric-row span {
-    margin-top: 4px;
-    color: var(--muted);
-    font-size: 0.78rem;
 }
 
 .profile-lists {
@@ -865,23 +874,39 @@ textarea {
 .case-hero--moodball {
     background-image:
         linear-gradient(90deg, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.66) 50%, rgba(9, 9, 11, 0.18) 100%),
-        url("../images/moodball/hero.jpg");
+        url("../images/moodball/hero-motion.webp");
 }
 
 .case-hero--medication {
     background-image:
         linear-gradient(90deg, rgba(9, 9, 11, 0.98) 0%, rgba(9, 9, 11, 0.78) 46%, rgba(9, 9, 11, 0.14) 100%),
-        url("../images/smart-medication/dashboard.png");
+        url("../images/smart-medication/concept-cover.jpg");
 }
 
 .case-hero--foodcare {
     background-color: #101310;
     background-image:
-        linear-gradient(90deg, rgba(9, 9, 11, 0.98) 0%, rgba(9, 9, 11, 0.88) 48%, rgba(9, 9, 11, 0.14) 100%),
-        url("../images/foodcare/mobile-prototype.png");
-    background-position: center, 82% center;
-    background-repeat: no-repeat;
-    background-size: cover, auto 76%;
+        linear-gradient(90deg, rgba(9, 9, 11, 0.96) 0%, rgba(9, 9, 11, 0.78) 45%, rgba(9, 9, 11, 0.08) 100%),
+        url("../images/foodcare/hero-banner.jpg");
+    background-position: center;
+}
+
+.foodcare-hero-device {
+    position: absolute;
+    top: 26%;
+    right: clamp(30px, 7vw, 116px);
+    bottom: auto;
+    z-index: 1;
+    width: clamp(164px, 15vw, 230px);
+    max-height: 68%;
+    object-fit: contain;
+    filter: drop-shadow(0 32px 30px rgba(0, 0, 0, 0.5));
+    pointer-events: none;
+}
+
+.case-hero--foodcare .case-hero-inner {
+    position: relative;
+    z-index: 2;
 }
 
 .case-hero-inner {
@@ -954,6 +979,11 @@ textarea {
     font-size: 1.04rem;
 }
 
+.case-intro-grid h2 + p,
+.case-copy h2 + p {
+    margin-top: 34px;
+}
+
 .case-section--dark .case-intro-grid p,
 .case-section--dark .case-copy p {
     color: var(--muted-dark);
@@ -962,6 +992,30 @@ textarea {
 .case-intro-grid p + p,
 .case-copy p + p {
     margin-top: 18px;
+}
+
+.ip-note {
+    display: grid;
+    grid-template-columns: minmax(160px, 0.28fr) minmax(0, 0.72fr);
+    gap: 48px;
+    margin-top: 58px;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.ip-note strong {
+    color: var(--coral);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+}
+
+.ip-note p {
+    max-width: 720px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.94rem;
 }
 
 .fact-grid,
@@ -1417,7 +1471,6 @@ textarea {
     .service-grid,
     .archive-grid,
     .process-grid,
-    .metric-row,
     .profile-lists,
     .fact-grid,
     .principles-grid,
@@ -1474,7 +1527,8 @@ textarea {
     }
 
     .profile-portrait {
-        max-width: 380px;
+        max-width: 280px;
+        margin-inline: auto;
     }
 
     .profile-lists {
@@ -1513,8 +1567,25 @@ textarea {
     }
 
     .case-hero--foodcare {
-        background-position: center, 88% 62%;
-        background-size: cover, auto 58%;
+        background-position: 66% center;
+    }
+
+    .foodcare-hero-device {
+        top: 96px;
+        right: 14px;
+        bottom: auto;
+        width: 100px;
+        opacity: 0.72;
+    }
+
+    .case-intro-grid h2 + p,
+    .case-copy h2 + p {
+        margin-top: 26px;
+    }
+
+    .ip-note {
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
 
     .fact-grid article,
@@ -1572,5 +1643,11 @@ textarea {
     *::before,
     *::after {
         transition-duration: 0.01ms !important;
+    }
+
+    .case-hero--moodball {
+        background-image:
+            linear-gradient(90deg, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.66) 50%, rgba(9, 9, 11, 0.18) 100%),
+            url("../images/moodball/hero.jpg");
     }
 }
