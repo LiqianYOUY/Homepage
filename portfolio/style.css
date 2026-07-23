@@ -129,7 +129,7 @@ a {
     color: var(--coral);
     font-size: 0.78rem;
     font-weight: 800;
-    letter-spacing: 0.12em;
+    letter-spacing: 0;
     text-transform: uppercase;
 }
 
@@ -217,6 +217,33 @@ a {
     font-weight: 800;
 }
 
+.panel-facts {
+    display: grid;
+    gap: 8px;
+    margin: 18px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    list-style: none;
+}
+
+.panel-facts li {
+    position: relative;
+    padding-left: 18px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.82rem;
+}
+
+.panel-facts li::before {
+    position: absolute;
+    top: 0.66em;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    content: "";
+}
+
 .section {
     padding: clamp(72px, 10vw, 128px) clamp(20px, 5vw, 72px);
 }
@@ -246,6 +273,79 @@ a {
 .contact-card p {
     margin: 0;
     color: var(--muted);
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 1120px;
+    margin-top: clamp(42px, 6vw, 72px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.profile-stats div {
+    min-width: 0;
+    padding: 26px clamp(18px, 3vw, 34px);
+    border-right: 1px solid var(--line);
+}
+
+.profile-stats div:first-child {
+    padding-left: 0;
+}
+
+.profile-stats div:last-child {
+    border-right: 0;
+}
+
+.profile-stats strong,
+.profile-stats span {
+    display: block;
+}
+
+.profile-stats strong {
+    color: var(--teal);
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    line-height: 1.15;
+}
+
+.profile-stats span {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.education-block {
+    max-width: 1120px;
+    margin-top: clamp(52px, 7vw, 88px);
+}
+
+.education-list {
+    border-top: 1px solid var(--line);
+}
+
+.education-list article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.education-list h3,
+.education-list p {
+    margin: 0;
+}
+
+.education-list h3 {
+    font-size: 1.08rem;
+}
+
+.education-list p,
+.education-list span {
+    color: var(--muted);
+    font-size: 0.9rem;
 }
 
 .skills-section {
@@ -288,6 +388,142 @@ a {
 .skills-grid p {
     margin: 0;
     color: rgba(255, 255, 255, 0.72);
+}
+
+.research-section {
+    background: #eef4f2;
+}
+
+.research-section .section-heading {
+    max-width: 940px;
+}
+
+.research-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.research-card {
+    min-height: 300px;
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px solid #d6e2de;
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.research-card > span {
+    color: var(--coral);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.research-card h3 {
+    margin: 54px 0 16px;
+    font-size: clamp(1.25rem, 2.2vw, 1.72rem);
+    line-height: 1.16;
+}
+
+.research-card p,
+.publication-list p,
+.patent-card p,
+.experience-list p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.research-evidence {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+    gap: clamp(36px, 6vw, 76px);
+    align-items: start;
+    margin-top: clamp(56px, 8vw, 96px);
+}
+
+.publication-list {
+    border-top: 1px solid #cbd9d4;
+}
+
+.publication-list article {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid #cbd9d4;
+}
+
+.publication-list article > span {
+    color: var(--teal);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.publication-list h3 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    line-height: 1.35;
+}
+
+.publication-list .text-link {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.patent-card {
+    padding: clamp(26px, 4vw, 42px);
+    border-radius: 8px;
+    color: var(--surface);
+    background: var(--charcoal);
+}
+
+.patent-card h3 {
+    margin: 34px 0 14px;
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+    line-height: 1.14;
+}
+
+.patent-card p {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.patent-card .text-link {
+    display: inline-block;
+    margin-top: 28px;
+}
+
+.experience-section {
+    background: var(--surface);
+}
+
+.experience-list {
+    max-width: 1120px;
+    border-top: 1px solid var(--line);
+}
+
+.experience-list article {
+    display: grid;
+    grid-template-columns: minmax(130px, 0.26fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 72px);
+    padding: clamp(26px, 4vw, 42px) 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.experience-date {
+    color: var(--teal);
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.experience-list h3 {
+    margin: 0;
+    font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+    line-height: 1.2;
+}
+
+.experience-list .experience-org {
+    margin: 7px 0 14px;
+    color: var(--coral);
+    font-weight: 700;
 }
 
 .projects-section {
@@ -440,6 +676,12 @@ a {
     font-weight: 800;
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+}
+
+.contact-card .contact-location {
+    margin-top: 12px;
+    color: rgba(255, 255, 255, 0.64);
 }
 
 .footer {
@@ -463,7 +705,9 @@ a {
     .project-featured,
     .about-grid,
     .case-grid,
-    .project-grid {
+    .project-grid,
+    .research-grid,
+    .research-evidence {
         grid-template-columns: 1fr;
     }
 
@@ -475,6 +719,10 @@ a {
 
     .hero-panel {
         max-width: 420px;
+    }
+
+    .research-card {
+        min-height: 0;
     }
 
     .skills-grid {
@@ -526,6 +774,24 @@ a {
         font-size: clamp(2.7rem, 16vw, 4.5rem);
     }
 
+    .hero {
+        gap: 20px;
+        padding-top: 34px;
+        padding-bottom: 34px;
+    }
+
+    .hero-lede {
+        margin-top: 20px;
+    }
+
+    .hero-actions {
+        margin-top: 24px;
+    }
+
+    .hero-panel {
+        display: none;
+    }
+
     .hero-actions,
     .button-row,
     .inline-links {
@@ -545,6 +811,28 @@ a {
 
     .skills-grid {
         grid-template-columns: 1fr;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-stats div,
+    .profile-stats div:first-child {
+        padding: 22px 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .profile-stats div:last-child {
+        border-bottom: 0;
+    }
+
+    .education-list article,
+    .experience-list article,
+    .publication-list article {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
 
     .skills-grid article {
