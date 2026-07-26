@@ -660,6 +660,178 @@ textarea {
     transform: scale(1.018);
 }
 
+.falitang-cover-art {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 500px;
+    overflow: hidden;
+    color: #101722;
+    background-color: #edf2f7;
+    background-image:
+        linear-gradient(rgba(16, 23, 34, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 23, 34, 0.055) 1px, transparent 1px);
+    background-size: 38px 38px;
+    transition: transform 240ms ease;
+}
+
+.system-media:hover .falitang-cover-art,
+.system-media:focus-visible .falitang-cover-art {
+    transform: scale(1.012);
+}
+
+.falitang-cover-art::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 3;
+    width: 7px;
+    background: #1973ff;
+    content: "";
+}
+
+.falitang-cover-art__head,
+.falitang-cover-art__foot {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    color: #fff;
+    background: #0d1219;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+}
+
+.falitang-cover-art__head {
+    align-items: center;
+    min-height: 78px;
+    padding: 24px 28px 22px 34px;
+}
+
+.falitang-cover-art__head span {
+    color: #75aaff;
+}
+
+.falitang-cover-art__head strong {
+    color: #9aa5b5;
+}
+
+.falitang-cover-art__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 24px 28px 74px 34px;
+}
+
+.falitang-cover-art__grid > div {
+    position: relative;
+    min-width: 0;
+    min-height: 135px;
+    padding: 20px;
+    border: 1px solid #cdd5df;
+    background: rgba(255, 255, 255, 0.86);
+}
+
+.falitang-cover-art__grid > div::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: #1973ff;
+    content: "";
+}
+
+.falitang-cover-art__grid > div:nth-child(2)::before {
+    background: #0ebbc3;
+}
+
+.falitang-cover-art__grid > div:nth-child(3)::before {
+    background: #ff624a;
+}
+
+.falitang-cover-art__grid > div:nth-child(4)::before {
+    background: #a9ce35;
+}
+
+.falitang-cover-art__grid span {
+    display: block;
+    color: #647083;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.56rem;
+}
+
+.falitang-cover-art__grid strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+}
+
+.falitang-cover-art__grid i {
+    display: block;
+    width: 82%;
+    height: 7px;
+    margin-top: 11px;
+    background: #dbe2ea;
+}
+
+.falitang-cover-art__grid i:nth-of-type(2) {
+    width: 63%;
+}
+
+.falitang-cover-art__grid i:nth-of-type(3) {
+    width: 74%;
+}
+
+.falitang-cover-art__hub {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    z-index: 4;
+    width: 184px;
+    padding: 17px 18px 16px;
+    color: #fff;
+    background: #101722;
+    border: 1px solid #3e4a59;
+    box-shadow: 0 18px 42px rgba(16, 23, 34, 0.24);
+    transform: translate(-50%, -50%);
+}
+
+.falitang-cover-art__hub i {
+    display: block;
+    width: 9px;
+    height: 9px;
+    margin-bottom: 12px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 0 5px rgba(104, 244, 232, 0.12);
+}
+
+.falitang-cover-art__hub strong {
+    display: block;
+    font-size: 0.72rem;
+}
+
+.falitang-cover-art__hub span {
+    display: block;
+    margin-top: 6px;
+    color: #7f8b9c;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.48rem;
+}
+
+.falitang-cover-art__foot {
+    align-items: center;
+    min-height: 44px;
+    padding: 13px 28px 13px 34px;
+    color: #7f8b9c;
+}
+
+.falitang-cover-art__foot strong {
+    color: #7adfd6;
+}
+
 .system-copy-block,
 .prototype-copy {
     padding: 28px;
@@ -1091,11 +1263,332 @@ textarea {
 }
 
 .case-hero--falitang {
-    background-color: #161b22;
+    background-color: #080c12;
     background-image:
-        linear-gradient(90deg, rgba(9, 9, 11, 0.98) 0%, rgba(9, 9, 11, 0.84) 48%, rgba(9, 9, 11, 0.28) 100%),
-        url("../images/projects/falitang/screens/overview.webp");
-    background-position: 56% center;
+        linear-gradient(90deg, #080c12 0%, rgba(8, 12, 18, 0.98) 45%, rgba(8, 12, 18, 0.78) 100%),
+        linear-gradient(180deg, rgba(25, 115, 255, 0.08), transparent 62%);
+}
+
+.case-hero--falitang .case-hero-inner {
+    position: relative;
+    z-index: 2;
+}
+
+.case-hero--falitang .case-title {
+    max-width: 840px;
+}
+
+.falitang-hero-scene {
+    position: absolute;
+    inset: 72px 0 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.falitang-hero-console {
+    position: absolute;
+    top: clamp(54px, 8vh, 104px);
+    right: clamp(28px, 5vw, 90px);
+    width: min(46vw, 660px);
+    min-width: 540px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.19);
+    border-radius: 6px;
+    color: #fff;
+    background: rgba(12, 18, 27, 0.94);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.36);
+}
+
+.falitang-hero-console::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 32px 32px;
+    content: "";
+}
+
+.falitang-hero-console__head,
+.falitang-hero-console__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 18px;
+    color: #8fa3bd;
+    background: #0a0f16;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.52rem;
+    text-transform: uppercase;
+}
+
+.falitang-hero-console__head i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a9ce35;
+    box-shadow: 0 0 0 5px rgba(169, 206, 53, 0.12);
+}
+
+.falitang-hero-network {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) 120px minmax(0, 1fr);
+    gap: 10px 14px;
+    min-height: 310px;
+    padding: 18px;
+}
+
+.falitang-hero-endpoint,
+.falitang-hero-hub {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    background: rgba(18, 27, 40, 0.92);
+}
+
+.falitang-hero-endpoint {
+    padding: 14px;
+}
+
+.falitang-hero-endpoint::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: #1973ff;
+    content: "";
+}
+
+.falitang-hero-endpoint--lawyer {
+    grid-column: 3;
+}
+
+.falitang-hero-endpoint--lawyer::before {
+    background: #0ebbc3;
+}
+
+.falitang-hero-endpoint--display {
+    grid-row: 2;
+}
+
+.falitang-hero-endpoint--display::before {
+    background: #ff624a;
+}
+
+.falitang-hero-endpoint--hotline {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+.falitang-hero-endpoint--hotline::before {
+    background: #a9ce35;
+}
+
+.falitang-hero-endpoint header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.falitang-hero-endpoint header span,
+.falitang-hero-endpoint small,
+.falitang-hero-hub span {
+    font-family: "IBM Plex Mono", monospace;
+    text-transform: uppercase;
+}
+
+.falitang-hero-endpoint header span {
+    color: #7891af;
+    font-size: 0.48rem;
+}
+
+.falitang-hero-endpoint header strong {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.falitang-hero-endpoint small {
+    display: block;
+    margin-top: 10px;
+    color: #718097;
+    font-size: 0.42rem;
+}
+
+.falitang-hero-phone,
+.falitang-hero-workspace,
+.falitang-hero-display,
+.falitang-hero-wave {
+    height: 54px;
+    margin-top: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0b111a;
+}
+
+.falitang-hero-phone {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    padding: 8px;
+}
+
+.falitang-hero-phone i {
+    background: #1973ff;
+    opacity: 0.82;
+}
+
+.falitang-hero-phone i:nth-child(2) {
+    background: #0ebbc3;
+}
+
+.falitang-hero-phone i:nth-child(3) {
+    background: #ff624a;
+}
+
+.falitang-hero-phone i:nth-child(4) {
+    background: #a9ce35;
+}
+
+.falitang-hero-workspace {
+    display: grid;
+    grid-template-columns: 28% 1fr;
+    gap: 8px;
+    padding: 8px;
+}
+
+.falitang-hero-workspace b {
+    background: #26384f;
+}
+
+.falitang-hero-workspace i {
+    display: block;
+    width: 100%;
+    height: 7px;
+    margin-bottom: 6px;
+    background: #26384f;
+}
+
+.falitang-hero-workspace i:nth-of-type(2) {
+    width: 72%;
+    background: #0ebbc3;
+}
+
+.falitang-hero-workspace i:nth-of-type(3) {
+    width: 86%;
+}
+
+.falitang-hero-display {
+    display: grid;
+    grid-template-columns: 42% 1fr;
+    gap: 7px;
+    padding: 8px;
+}
+
+.falitang-hero-display b {
+    display: grid;
+    place-items: center;
+    color: #ff7a66;
+    background: #211d20;
+    font-size: 1.1rem;
+}
+
+.falitang-hero-display i {
+    height: 9px;
+    background: #2a3543;
+}
+
+.falitang-hero-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.falitang-hero-wave i {
+    width: 3px;
+    height: 16px;
+    background: #a9ce35;
+}
+
+.falitang-hero-wave i:nth-child(2),
+.falitang-hero-wave i:nth-child(6) {
+    height: 27px;
+}
+
+.falitang-hero-wave i:nth-child(3),
+.falitang-hero-wave i:nth-child(5) {
+    height: 35px;
+}
+
+.falitang-hero-wave i:nth-child(4) {
+    height: 22px;
+}
+
+.falitang-hero-hub {
+    display: flex;
+    grid-row: 1 / 3;
+    grid-column: 2;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 14px;
+    text-align: center;
+}
+
+.falitang-hero-hub::before,
+.falitang-hero-hub::after {
+    position: absolute;
+    z-index: -1;
+    background: rgba(104, 244, 232, 0.26);
+    content: "";
+}
+
+.falitang-hero-hub::before {
+    top: 50%;
+    left: -16px;
+    width: calc(100% + 32px);
+    height: 1px;
+}
+
+.falitang-hero-hub::after {
+    top: -12px;
+    left: 50%;
+    width: 1px;
+    height: calc(100% + 24px);
+}
+
+.falitang-hero-hub i {
+    width: 14px;
+    height: 14px;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 0 8px rgba(104, 244, 232, 0.09);
+}
+
+.falitang-hero-hub strong {
+    font-size: 0.66rem;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+.falitang-hero-hub span {
+    margin-top: 8px;
+    color: #6d7d93;
+    font-size: 0.42rem;
+}
+
+.falitang-hero-console__foot {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 0;
+}
+
+.falitang-hero-console__foot strong {
+    color: #a9ce35;
 }
 
 .case-hero--mes {
@@ -1362,77 +1855,83 @@ textarea {
     object-fit: contain;
 }
 
-.falitang-system-figure {
+
+.falitang-platform-figure {
     container-type: inline-size;
 }
 
-.falitang-journey {
+.falitang-platform {
     position: relative;
     isolation: isolate;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.17);
     border-radius: 6px;
-    color: #0c1017;
-    background-color: #eef2f7;
+    color: #0d1520;
+    background-color: #edf2f7;
     background-image:
-        linear-gradient(rgba(16, 24, 40, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(16, 24, 40, 0.045) 1px, transparent 1px);
+        linear-gradient(rgba(13, 21, 32, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 21, 32, 0.045) 1px, transparent 1px);
     background-size: 44px 44px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
 }
 
-.falitang-journey::before {
+.falitang-platform::before {
     position: absolute;
     inset: 0 auto 0 0;
-    z-index: 3;
+    z-index: 4;
     width: 8px;
-    background: #1769ff;
+    background: #1973ff;
     content: "";
 }
 
-.falitang-journey__header {
+.falitang-platform__header {
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(230px, 0.34fr);
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.34fr);
     gap: 48px;
     align-items: end;
-    min-height: 210px;
+    min-height: 220px;
     padding: 42px 46px 38px 52px;
     color: #fff;
-    background: #0c1017;
+    background: #0d1219;
 }
 
-.falitang-journey__header::after {
+.falitang-platform__header::after {
     position: absolute;
     top: 42px;
     right: 46px;
-    width: 130px;
+    width: 138px;
     height: 6px;
     border-radius: 3px;
     background:
-        linear-gradient(90deg, #14bfca 0 68%, transparent 68% 73%, #ff624a 73% 86%,
-            transparent 86% 91%, #b2d83e 91%);
+        linear-gradient(90deg, #1973ff 0 42%, transparent 42% 47%, #0ebbc3 47% 69%,
+            transparent 69% 74%, #ff624a 74% 87%, transparent 87% 92%, #a9ce35 92%);
     content: "";
 }
 
-.falitang-journey__header p {
-    margin: 0 0 16px;
-    color: #86adff;
+.falitang-platform__header p,
+.falitang-platform__source p,
+.falitang-capabilities__head p {
+    margin: 0;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0;
+    font-size: 0.66rem;
     text-transform: uppercase;
 }
 
-.falitang-journey__header h3 {
-    max-width: 800px;
+.falitang-platform__header p {
+    margin-bottom: 16px;
+    color: #75aaff;
+}
+
+.falitang-platform__header h3 {
+    max-width: 820px;
     margin: 0;
     font-size: clamp(2rem, 3.7cqw, 3.2rem);
     line-height: 1.02;
 }
 
-.falitang-journey__header span {
+.falitang-platform__header span {
     display: block;
     max-width: 760px;
     margin-top: 17px;
@@ -1440,7 +1939,7 @@ textarea {
     font-size: 0.9rem;
 }
 
-.falitang-journey__header > strong {
+.falitang-platform__header > strong {
     color: #8e99aa;
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.62rem;
@@ -1448,227 +1947,459 @@ textarea {
     text-align: right;
 }
 
-.falitang-journey__stages {
-    position: relative;
-    z-index: 1;
+.falitang-platform__source {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-    padding: 20px 20px 18px 28px;
+    grid-template-columns: minmax(240px, 0.34fr) minmax(0, 0.66fr);
+    gap: 34px;
+    align-items: center;
+    padding: 30px 30px 30px 38px;
+    border-bottom: 1px solid #d5dce5;
 }
 
-.falitang-phase {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    min-width: 0;
-    min-height: 570px;
-    overflow: hidden;
-    border: 1px solid #d5dae2;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.96);
+.falitang-platform__source > div:first-child {
+    padding: 8px 6px 8px 10px;
 }
 
-.falitang-phase::before {
-    position: absolute;
-    inset: 0 0 auto;
-    height: 5px;
-    background: #1769ff;
-    content: "";
+.falitang-platform__source p {
+    color: #1973ff;
 }
 
-.falitang-phase--consult::before {
-    background: #14bfca;
+.falitang-platform__source h4 {
+    margin: 16px 0 0;
+    font-size: 1.55rem;
+    line-height: 1.12;
 }
 
-.falitang-phase--continue::before {
-    background: #ff624a;
-}
-
-.falitang-phase header {
-    display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 12px;
-    padding: 25px 23px 16px;
-}
-
-.falitang-phase header > span {
-    padding-top: 3px;
-    color: #1769ff;
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 0.68rem;
-    font-weight: 500;
-}
-
-.falitang-phase--consult header > span {
-    color: #009aa5;
-}
-
-.falitang-phase--continue header > span {
-    color: #e44832;
-}
-
-.falitang-phase h4 {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-}
-
-.falitang-phase header p {
-    margin: 9px 0 0;
-    color: #606a79;
-    font-size: 0.73rem;
-    line-height: 1.55;
-}
-
-.falitang-phone-stage {
-    position: relative;
-    min-height: 400px;
-    margin: 0 18px;
-    overflow: hidden;
-    border: 1px solid #e0e4ea;
-    border-radius: 5px;
-    background:
-        radial-gradient(circle at 50% 20%, rgba(23, 105, 255, 0.09), transparent 40%),
-        #f0f3f7;
-}
-
-.falitang-phone {
-    position: absolute;
-    overflow: hidden;
-    border: 5px solid #fff;
-    border-radius: 19px;
-    background: #fff;
-    box-shadow: 0 18px 36px rgba(16, 24, 40, 0.19);
-}
-
-.falitang-phone img {
+.falitang-platform__source span {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    margin-top: 14px;
+    color: #667284;
+    font-size: 0.78rem;
 }
 
-.falitang-phone--discover-main {
-    bottom: -36px;
-    left: 9%;
-    z-index: 2;
-    width: 47%;
-    aspect-ratio: 375 / 967;
+.falitang-platform__source ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
 }
 
-.falitang-phone--discover-detail {
-    top: 58px;
-    right: 7%;
-    width: 43%;
-    height: 63%;
-    opacity: 0.88;
-    transform: translateY(18px);
-}
-
-.falitang-phone--discover-detail img {
-    width: 172%;
-    height: 172%;
-    max-width: none;
-    object-fit: cover;
-    object-position: 50% 70%;
-    transform: translate(-18%, -36%);
-}
-
-.falitang-phone--consult-main {
-    bottom: -26px;
-    left: 7%;
-    z-index: 2;
-    width: 48%;
-    aspect-ratio: 375 / 812;
-}
-
-.falitang-chat-detail {
-    position: absolute;
-    top: 67px;
-    right: 6%;
-    width: 49%;
-    padding: 15px;
-    border: 1px solid #d9dee7;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 16px 28px rgba(16, 24, 40, 0.12);
-}
-
-.falitang-chat-detail span {
-    display: block;
-    margin-top: 12px;
-    color: #768092;
+.falitang-platform__source li {
+    padding: 7px 9px;
+    border: 1px solid #cad3df;
+    color: #516073;
+    background: rgba(255, 255, 255, 0.62);
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.52rem;
     text-transform: uppercase;
 }
 
-.falitang-chat-detail span:first-child {
-    margin-top: 0;
+.falitang-platform__source-media {
+    overflow: hidden;
+    border: 1px solid #c7d0dc;
+    border-radius: 4px;
+    background: #e5e5e5;
+    box-shadow: 0 18px 38px rgba(22, 34, 50, 0.14);
 }
 
-.falitang-chat-detail p {
-    margin: 6px 0 0;
-    padding: 9px 10px;
-    border-radius: 9px;
-    color: #fff;
-    background: #1876f2;
-    font-size: 0.6rem;
-    line-height: 1.45;
+.falitang-platform__source-media img {
+    width: 100%;
+    aspect-ratio: 760 / 515;
+    object-fit: cover;
 }
 
-.falitang-chat-detail span:nth-of-type(2) + p {
-    color: #3a4350;
-    background: #dfeffc;
+.falitang-platform__surfaces {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 20px 20px 18px 28px;
 }
 
-.falitang-phone--calendar,
-.falitang-phone--messages {
-    bottom: -18px;
-    width: 50%;
+.falitang-surface {
+    position: relative;
+    min-width: 0;
+    min-height: 350px;
+    padding: 22px;
+    border: 1px solid #d0d8e2;
+    background: rgba(255, 255, 255, 0.92);
 }
 
-.falitang-phone--calendar {
-    left: 3%;
-    z-index: 2;
-    aspect-ratio: 375 / 842;
+.falitang-surface::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: #1973ff;
+    content: "";
 }
 
-.falitang-phone--messages {
-    right: 2%;
-    bottom: 32px;
-    width: 47%;
-    aspect-ratio: 375 / 812;
-    opacity: 0.9;
+.falitang-surface--lawyer::before {
+    background: #0ebbc3;
 }
 
-.falitang-phase footer {
-    margin: 16px 22px 0;
-    padding: 14px 0 17px;
-    border-top: 1px solid #e1e5eb;
-    color: #697385;
+.falitang-surface--display::before {
+    background: #ff624a;
+}
+
+.falitang-surface--hotline::before {
+    background: #a9ce35;
+}
+
+.falitang-surface header span {
+    display: block;
+    color: #69798d;
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.56rem;
+    font-size: 0.54rem;
+}
+
+.falitang-surface header strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.82rem;
     text-transform: uppercase;
 }
 
-.falitang-journey__footer {
-    position: relative;
-    z-index: 1;
+.falitang-surface__canvas {
+    display: grid;
+    place-items: center;
+    height: 178px;
+    margin-top: 20px;
+    overflow: hidden;
+    border: 1px solid #d9e0e8;
+    background:
+        linear-gradient(rgba(13, 21, 32, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 21, 32, 0.04) 1px, transparent 1px),
+        #f1f4f7;
+    background-size: 24px 24px;
+}
+
+.falitang-surface > p {
+    margin: 18px 0 0;
+    color: #637083;
+    font-size: 0.7rem;
+    line-height: 1.55;
+}
+
+.falitang-mini-phone {
+    width: 78px;
+    height: 146px;
+    padding: 11px 8px;
+    border: 4px solid #fff;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 14px 24px rgba(16, 29, 45, 0.16);
+}
+
+.falitang-mini-phone > i {
+    display: block;
+    width: 28px;
+    height: 4px;
+    margin: 0 auto 11px;
+    border-radius: 4px;
+    background: #172130;
+}
+
+.falitang-mini-phone div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+}
+
+.falitang-mini-phone b {
+    height: 25px;
+    background: #1973ff;
+}
+
+.falitang-mini-phone b:nth-child(2) {
+    background: #0ebbc3;
+}
+
+.falitang-mini-phone b:nth-child(3) {
+    background: #ff624a;
+}
+
+.falitang-mini-phone b:nth-child(4) {
+    background: #a9ce35;
+}
+
+.falitang-mini-phone span {
+    display: block;
+    width: 100%;
+    height: 6px;
+    margin-top: 7px;
+    background: #dce3eb;
+}
+
+.falitang-mini-phone span:last-child {
+    width: 68%;
+}
+
+.falitang-mini-workspace {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    width: 90%;
+    height: 112px;
+    overflow: hidden;
+    border: 5px solid #fff;
+    background: #fff;
+    box-shadow: 0 14px 24px rgba(16, 29, 45, 0.14);
+}
+
+.falitang-mini-workspace__rail {
+    padding: 10px 8px;
+    background: #142234;
+}
+
+.falitang-mini-workspace__rail i {
+    display: block;
+    height: 5px;
+    margin-bottom: 10px;
+    background: #52657c;
+}
+
+.falitang-mini-workspace__main {
+    padding: 10px;
+}
+
+.falitang-mini-workspace__main div {
     display: flex;
+    align-items: end;
     justify-content: space-between;
-    gap: 24px;
-    padding: 0 28px 22px;
-    color: #5f6978;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #e1e6ed;
+}
+
+.falitang-mini-workspace__main b {
+    color: #0a9aa3;
+    font-size: 1.05rem;
+}
+
+.falitang-mini-workspace__main span {
+    color: #7b8797;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.42rem;
+}
+
+.falitang-mini-workspace__main > i {
+    display: block;
+    width: 100%;
+    height: 8px;
+    margin-top: 9px;
+    background: #e1e6ed;
+}
+
+.falitang-mini-workspace__main > i:nth-of-type(2) {
+    width: 72%;
+    background: #bde9ec;
+}
+
+.falitang-mini-display {
+    width: 90%;
+    height: 112px;
+    padding: 12px;
+    border: 5px solid #fff;
+    background: #111a26;
+    box-shadow: 0 14px 24px rgba(16, 29, 45, 0.16);
+}
+
+.falitang-mini-display div {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.falitang-mini-display span {
+    color: #7f91a7;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.42rem;
+}
+
+.falitang-mini-display b {
+    color: #ff725f;
+    font-size: 1.35rem;
+}
+
+.falitang-mini-display i {
+    display: inline-block;
+    width: calc(50% - 4px);
+    height: 20px;
+    margin-top: 8px;
+    background: #24354a;
+}
+
+.falitang-mini-display i:nth-of-type(2),
+.falitang-mini-display i:nth-of-type(4) {
+    margin-left: 4px;
+    background: #1e6970;
+}
+
+.falitang-mini-hotline {
+    width: 90%;
+    padding: 17px 14px;
+    border: 5px solid #fff;
+    background: #fff;
+    box-shadow: 0 14px 24px rgba(16, 29, 45, 0.14);
+}
+
+.falitang-mini-hotline > span {
+    color: #536174;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.52rem;
+}
+
+.falitang-mini-hotline div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 45px;
+    margin: 10px 0;
+    background: #111923;
+}
+
+.falitang-mini-hotline i {
+    width: 2px;
+    height: 12px;
+    background: #a9ce35;
+}
+
+.falitang-mini-hotline i:nth-child(2),
+.falitang-mini-hotline i:nth-child(8) {
+    height: 23px;
+}
+
+.falitang-mini-hotline i:nth-child(3),
+.falitang-mini-hotline i:nth-child(7) {
+    height: 31px;
+}
+
+.falitang-mini-hotline i:nth-child(4),
+.falitang-mini-hotline i:nth-child(6) {
+    height: 18px;
+}
+
+.falitang-mini-hotline i:nth-child(5) {
+    height: 36px;
+}
+
+.falitang-mini-hotline b {
+    display: block;
+    color: #7b8797;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.54rem;
+    text-align: right;
+}
+
+.falitang-platform__record {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    margin: 0 20px 18px 28px;
+    padding: 16px 20px;
+    color: #fff;
+    background: #111923;
+}
+
+.falitang-platform__record > span {
+    color: #75aaff;
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.58rem;
     text-transform: uppercase;
 }
 
-.falitang-journey__footer strong {
-    color: #1769ff;
+.falitang-platform__record ul {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.13);
+    list-style: none;
+}
+
+.falitang-platform__record li {
+    padding: 9px 6px;
+    color: #a8b3c2;
+    background: #182333;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.48rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.falitang-platform__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 20px 22px 28px;
+    color: #657286;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+}
+
+.falitang-platform__footer strong {
+    color: #1973ff;
+}
+
+.falitang-capabilities {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.3fr) minmax(0, 0.7fr);
+    gap: 46px;
+    align-items: start;
+    margin-top: 70px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line-dark);
+}
+
+.falitang-capabilities__head p {
+    color: var(--cyan);
+}
+
+.falitang-capabilities__head h3 {
+    margin: 18px 0 0;
+    font-size: 1.55rem;
+    line-height: 1.2;
+}
+
+.falitang-capabilities ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 1px;
+    background: var(--line-dark);
+    list-style: none;
+}
+
+.falitang-capabilities li {
+    min-width: 0;
+    min-height: 142px;
+    padding: 20px;
+    background: #111116;
+}
+
+.falitang-capabilities li span {
+    display: block;
+    color: #75aaff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.56rem;
+}
+
+.falitang-capabilities li strong {
+    display: block;
+    margin-top: 24px;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+}
+
+.falitang-capabilities li small {
+    display: block;
+    margin-top: 8px;
+    color: #87909c;
+    font-size: 0.67rem;
 }
 
 .tomato-dashboard-figure {
@@ -2116,48 +2847,38 @@ textarea {
         font-size: 4.4rem;
     }
 
-    .falitang-journey__header {
+    .falitang-hero-console {
+        right: 28px;
+        width: 51vw;
+        min-width: 470px;
+        opacity: 0.76;
+    }
+
+    .falitang-platform__header {
         grid-template-columns: 1fr;
         gap: 24px;
     }
 
-    .falitang-journey__header > strong {
-        max-width: 360px;
+    .falitang-platform__header > strong {
+        max-width: 430px;
         text-align: left;
     }
 
-    .falitang-journey__stages {
+    .falitang-platform__surfaces {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .falitang-surface {
+        min-height: 330px;
+    }
+
+    .falitang-capabilities {
         grid-template-columns: 1fr;
+        gap: 28px;
     }
 
-    .falitang-phase {
-        min-height: 650px;
-    }
-
-    .falitang-phone-stage {
-        min-height: 480px;
-    }
-
-    .falitang-phone--discover-main,
-    .falitang-phone--consult-main {
-        left: 17%;
-        width: 30%;
-    }
-
-    .falitang-phone--discover-detail,
-    .falitang-chat-detail {
-        right: 15%;
-        width: 35%;
-    }
-
-    .falitang-phone--calendar {
-        left: 19%;
-        width: 29%;
-    }
-
-    .falitang-phone--messages {
-        right: 18%;
-        width: 29%;
+    .falitang-capabilities__head {
+        max-width: 620px;
     }
 
     .tomato-dashboard__header {
@@ -2459,6 +3180,26 @@ textarea {
         font-size: 3.25rem;
     }
 
+    .falitang-hero-scene {
+        inset: 82px -44px auto;
+        height: 330px;
+        overflow: hidden;
+    }
+
+    .falitang-hero-console {
+        top: 24px;
+        right: -8px;
+        width: 480px;
+        min-width: 480px;
+        opacity: 0.48;
+        transform: scale(0.72);
+        transform-origin: top right;
+    }
+
+    .case-hero--falitang .case-title {
+        max-width: 520px;
+    }
+
     .case-meta {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         margin-top: 32px;
@@ -2481,69 +3222,127 @@ textarea {
         margin-top: 26px;
     }
 
-    .falitang-journey__header {
+    .falitang-cover-art {
+        min-height: 390px;
+    }
+
+    .falitang-cover-art__head {
+        min-height: 66px;
+        padding: 19px 20px 17px 27px;
+    }
+
+    .falitang-cover-art__head strong {
+        display: none;
+    }
+
+    .falitang-cover-art__grid {
+        gap: 8px;
+        padding: 16px 18px 68px 25px;
+    }
+
+    .falitang-cover-art__grid > div {
+        min-height: 106px;
+        padding: 14px;
+    }
+
+    .falitang-cover-art__grid strong {
+        font-size: 0.68rem;
+    }
+
+    .falitang-cover-art__hub {
+        width: 154px;
+        padding: 14px;
+    }
+
+    .falitang-cover-art__foot {
+        padding: 12px 18px 12px 25px;
+    }
+
+    .falitang-cover-art__foot strong {
+        display: none;
+    }
+
+    .falitang-platform__header {
         min-height: 0;
         padding: 32px 26px 30px 32px;
     }
 
-    .falitang-journey__header::after {
+    .falitang-platform__header::after {
         top: 28px;
         right: 26px;
         width: 88px;
     }
 
-    .falitang-journey__header h3 {
-        max-width: 420px;
+    .falitang-platform__header p {
+        max-width: 170px;
+    }
+
+    .falitang-platform__header h3 {
+        max-width: 440px;
         font-size: 2rem;
     }
 
-    .falitang-journey__header p {
-        max-width: 155px;
-    }
-
-    .falitang-journey__header span {
+    .falitang-platform__header span {
         font-size: 0.78rem;
     }
 
-    .falitang-journey__stages {
+    .falitang-platform__source {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 24px 18px 24px 26px;
+    }
+
+    .falitang-platform__source > div:first-child {
+        padding: 0;
+    }
+
+    .falitang-platform__source h4 {
+        font-size: 1.3rem;
+    }
+
+    .falitang-platform__surfaces {
+        grid-template-columns: 1fr;
+        gap: 10px;
         padding: 14px 14px 14px 22px;
     }
 
-    .falitang-phase {
-        min-height: 570px;
+    .falitang-surface {
+        min-height: 310px;
     }
 
-    .falitang-phone-stage {
-        min-height: 400px;
+    .falitang-surface__canvas {
+        height: 160px;
     }
 
-    .falitang-phone--discover-main,
-    .falitang-phone--consult-main {
-        left: 8%;
-        width: 46%;
+    .falitang-platform__record {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 0 14px 16px 22px;
+        padding: 16px;
     }
 
-    .falitang-phone--discover-detail,
-    .falitang-chat-detail {
-        right: 6%;
-        width: 43%;
+    .falitang-platform__record ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .falitang-phone--calendar {
-        left: 3%;
-        width: 49%;
-    }
-
-    .falitang-phone--messages {
-        right: 2%;
-        width: 47%;
-    }
-
-    .falitang-journey__footer {
+    .falitang-platform__footer {
         align-items: flex-start;
         flex-direction: column;
         gap: 8px;
-        padding: 0 22px 20px;
+        padding: 0 14px 20px 22px;
+    }
+
+    .falitang-capabilities {
+        margin-top: 52px;
+    }
+
+    .falitang-capabilities ol {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .falitang-capabilities li {
+        min-height: 132px;
+        padding: 17px;
     }
 
     .tomato-dashboard__header {
@@ -2637,6 +3436,27 @@ textarea {
 
     .case-meta {
         gap: 12px;
+    }
+
+    .falitang-hero-console {
+        right: -54px;
+        opacity: 0.42;
+    }
+
+    .falitang-cover-art__grid > div {
+        padding: 12px;
+    }
+
+    .falitang-cover-art__grid strong {
+        font-size: 0.62rem;
+    }
+
+    .falitang-capabilities ol {
+        grid-template-columns: 1fr;
+    }
+
+    .falitang-capabilities li {
+        min-height: 112px;
     }
 }
 
