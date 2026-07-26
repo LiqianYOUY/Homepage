@@ -1094,7 +1094,8 @@ textarea {
     background-color: #161b22;
     background-image:
         linear-gradient(90deg, rgba(9, 9, 11, 0.98) 0%, rgba(9, 9, 11, 0.84) 48%, rgba(9, 9, 11, 0.28) 100%),
-        url("../images/projects/falitang/screens/overview.jpg");
+        url("../images/projects/falitang/screens/overview.webp");
+    background-position: 56% center;
 }
 
 .case-hero--mes {
@@ -1325,6 +1326,7 @@ textarea {
 
 .media-item {
     min-width: 0;
+    margin: 0;
 }
 
 .media-frame {
@@ -1357,6 +1359,315 @@ textarea {
 .media-frame--interface img {
     aspect-ratio: auto;
     object-fit: contain;
+}
+
+.falitang-system-figure {
+    container-type: inline-size;
+}
+
+.falitang-journey {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.17);
+    border-radius: 6px;
+    color: #0c1017;
+    background-color: #eef2f7;
+    background-image:
+        linear-gradient(rgba(16, 24, 40, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 24, 40, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
+.falitang-journey::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 3;
+    width: 8px;
+    background: #1769ff;
+    content: "";
+}
+
+.falitang-journey__header {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 0.34fr);
+    gap: 48px;
+    align-items: end;
+    min-height: 210px;
+    padding: 42px 46px 38px 52px;
+    color: #fff;
+    background: #0c1017;
+}
+
+.falitang-journey__header::after {
+    position: absolute;
+    top: 42px;
+    right: 46px;
+    width: 130px;
+    height: 6px;
+    border-radius: 3px;
+    background:
+        linear-gradient(90deg, #14bfca 0 68%, transparent 68% 73%, #ff624a 73% 86%,
+            transparent 86% 91%, #b2d83e 91%);
+    content: "";
+}
+
+.falitang-journey__header p {
+    margin: 0 0 16px;
+    color: #86adff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.falitang-journey__header h3 {
+    max-width: 800px;
+    margin: 0;
+    font-size: clamp(2rem, 3.7cqw, 3.2rem);
+    line-height: 1.02;
+}
+
+.falitang-journey__header span {
+    display: block;
+    max-width: 760px;
+    margin-top: 17px;
+    color: #aeb7c6;
+    font-size: 0.9rem;
+}
+
+.falitang-journey__header > strong {
+    color: #8e99aa;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.62rem;
+    line-height: 1.7;
+    text-align: right;
+}
+
+.falitang-journey__stages {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding: 20px 20px 18px 28px;
+}
+
+.falitang-phase {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-width: 0;
+    min-height: 570px;
+    overflow: hidden;
+    border: 1px solid #d5dae2;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.96);
+}
+
+.falitang-phase::before {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 5px;
+    background: #1769ff;
+    content: "";
+}
+
+.falitang-phase--consult::before {
+    background: #14bfca;
+}
+
+.falitang-phase--continue::before {
+    background: #ff624a;
+}
+
+.falitang-phase header {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    padding: 25px 23px 16px;
+}
+
+.falitang-phase header > span {
+    padding-top: 3px;
+    color: #1769ff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+}
+
+.falitang-phase--consult header > span {
+    color: #009aa5;
+}
+
+.falitang-phase--continue header > span {
+    color: #e44832;
+}
+
+.falitang-phase h4 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.falitang-phase header p {
+    margin: 9px 0 0;
+    color: #606a79;
+    font-size: 0.73rem;
+    line-height: 1.55;
+}
+
+.falitang-phone-stage {
+    position: relative;
+    min-height: 400px;
+    margin: 0 18px;
+    overflow: hidden;
+    border: 1px solid #e0e4ea;
+    border-radius: 5px;
+    background:
+        radial-gradient(circle at 50% 20%, rgba(23, 105, 255, 0.09), transparent 40%),
+        #f0f3f7;
+}
+
+.falitang-phone {
+    position: absolute;
+    overflow: hidden;
+    border: 5px solid #fff;
+    border-radius: 19px;
+    background: #fff;
+    box-shadow: 0 18px 36px rgba(16, 24, 40, 0.19);
+}
+
+.falitang-phone img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.falitang-phone--discover-main {
+    bottom: -36px;
+    left: 9%;
+    z-index: 2;
+    width: 47%;
+    aspect-ratio: 375 / 967;
+}
+
+.falitang-phone--discover-detail {
+    top: 58px;
+    right: 7%;
+    width: 43%;
+    height: 63%;
+    opacity: 0.88;
+    transform: translateY(18px);
+}
+
+.falitang-phone--discover-detail img {
+    width: 172%;
+    height: 172%;
+    max-width: none;
+    object-fit: cover;
+    object-position: 50% 70%;
+    transform: translate(-18%, -36%);
+}
+
+.falitang-phone--consult-main {
+    bottom: -26px;
+    left: 7%;
+    z-index: 2;
+    width: 48%;
+    aspect-ratio: 375 / 812;
+}
+
+.falitang-chat-detail {
+    position: absolute;
+    top: 67px;
+    right: 6%;
+    width: 49%;
+    padding: 15px;
+    border: 1px solid #d9dee7;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 16px 28px rgba(16, 24, 40, 0.12);
+}
+
+.falitang-chat-detail span {
+    display: block;
+    margin-top: 12px;
+    color: #768092;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.52rem;
+    text-transform: uppercase;
+}
+
+.falitang-chat-detail span:first-child {
+    margin-top: 0;
+}
+
+.falitang-chat-detail p {
+    margin: 6px 0 0;
+    padding: 9px 10px;
+    border-radius: 9px;
+    color: #fff;
+    background: #1876f2;
+    font-size: 0.6rem;
+    line-height: 1.45;
+}
+
+.falitang-chat-detail span:nth-of-type(2) + p {
+    color: #3a4350;
+    background: #dfeffc;
+}
+
+.falitang-phone--calendar,
+.falitang-phone--messages {
+    bottom: -18px;
+    width: 50%;
+}
+
+.falitang-phone--calendar {
+    left: 3%;
+    z-index: 2;
+    aspect-ratio: 375 / 842;
+}
+
+.falitang-phone--messages {
+    right: 2%;
+    bottom: 32px;
+    width: 47%;
+    aspect-ratio: 375 / 812;
+    opacity: 0.9;
+}
+
+.falitang-phase footer {
+    margin: 16px 22px 0;
+    padding: 14px 0 17px;
+    border-top: 1px solid #e1e5eb;
+    color: #697385;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.56rem;
+    text-transform: uppercase;
+}
+
+.falitang-journey__footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 28px 22px;
+    color: #5f6978;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+}
+
+.falitang-journey__footer strong {
+    color: #1769ff;
 }
 
 .caption {
@@ -1579,6 +1890,50 @@ textarea {
 
     .case-title {
         font-size: 4.4rem;
+    }
+
+    .falitang-journey__header {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .falitang-journey__header > strong {
+        max-width: 360px;
+        text-align: left;
+    }
+
+    .falitang-journey__stages {
+        grid-template-columns: 1fr;
+    }
+
+    .falitang-phase {
+        min-height: 650px;
+    }
+
+    .falitang-phone-stage {
+        min-height: 480px;
+    }
+
+    .falitang-phone--discover-main,
+    .falitang-phone--consult-main {
+        left: 17%;
+        width: 30%;
+    }
+
+    .falitang-phone--discover-detail,
+    .falitang-chat-detail {
+        right: 15%;
+        width: 35%;
+    }
+
+    .falitang-phone--calendar {
+        left: 19%;
+        width: 29%;
+    }
+
+    .falitang-phone--messages {
+        right: 18%;
+        width: 29%;
     }
 }
 
@@ -1882,6 +2237,71 @@ textarea {
     .case-intro-grid h2 + p,
     .case-copy h2 + p {
         margin-top: 26px;
+    }
+
+    .falitang-journey__header {
+        min-height: 0;
+        padding: 32px 26px 30px 32px;
+    }
+
+    .falitang-journey__header::after {
+        top: 28px;
+        right: 26px;
+        width: 88px;
+    }
+
+    .falitang-journey__header h3 {
+        max-width: 420px;
+        font-size: 2rem;
+    }
+
+    .falitang-journey__header p {
+        max-width: 155px;
+    }
+
+    .falitang-journey__header span {
+        font-size: 0.78rem;
+    }
+
+    .falitang-journey__stages {
+        padding: 14px 14px 14px 22px;
+    }
+
+    .falitang-phase {
+        min-height: 570px;
+    }
+
+    .falitang-phone-stage {
+        min-height: 400px;
+    }
+
+    .falitang-phone--discover-main,
+    .falitang-phone--consult-main {
+        left: 8%;
+        width: 46%;
+    }
+
+    .falitang-phone--discover-detail,
+    .falitang-chat-detail {
+        right: 6%;
+        width: 43%;
+    }
+
+    .falitang-phone--calendar {
+        left: 3%;
+        width: 49%;
+    }
+
+    .falitang-phone--messages {
+        right: 2%;
+        width: 47%;
+    }
+
+    .falitang-journey__footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 22px 20px;
     }
 
     .ip-note {
