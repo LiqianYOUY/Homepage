@@ -7,14 +7,19 @@ Static portfolio and project case studies published with GitHub Pages.
 ```text
 portfolio/
   index.html
+  archive/
+    index.html
   assets/
     css/
     documents/
     images/
   projects/
+    falitang/
     foodcare/
+    mes/
     moodball/
     smart-medication/
+    tomato-travel/
 ```
 
 The public site is available at:
