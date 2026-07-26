@@ -13,6 +13,10 @@ portfolio/
     css/
     documents/
     images/
+      projects/
+        <project>/
+          cover.webp
+          screens/
   projects/
     falitang/
     foodcare/
