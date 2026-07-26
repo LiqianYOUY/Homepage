@@ -1109,7 +1109,8 @@ textarea {
     background-color: #161311;
     background-image:
         linear-gradient(90deg, rgba(9, 9, 11, 0.97) 0%, rgba(9, 9, 11, 0.8) 46%, rgba(9, 9, 11, 0.16) 100%),
-        url("../images/projects/tomato-travel/screens/dashboard.jpg");
+        url("../images/projects/tomato-travel/screens/dashboard-overview.webp");
+    background-position: 56% center;
 }
 
 .foodcare-hero-device {
@@ -1670,6 +1671,229 @@ textarea {
     color: #1769ff;
 }
 
+.tomato-dashboard-figure {
+    container-type: inline-size;
+}
+
+.tomato-dashboard {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 6px;
+    color: #11141a;
+    background-color: #f0f3f2;
+    background-image:
+        linear-gradient(rgba(17, 20, 26, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(17, 20, 26, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
+.tomato-dashboard::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 4;
+    width: 8px;
+    background: #f04a50;
+    content: "";
+}
+
+.tomato-dashboard__header {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 0.32fr);
+    gap: 48px;
+    align-items: end;
+    min-height: 210px;
+    padding: 42px 46px 38px 52px;
+    color: #fff;
+    background: #11141a;
+}
+
+.tomato-dashboard__header::after {
+    position: absolute;
+    top: 42px;
+    right: 46px;
+    width: 142px;
+    height: 6px;
+    border-radius: 3px;
+    background:
+        linear-gradient(90deg, #f04a50 0 62%, transparent 62% 68%, #40d1d0 68% 88%,
+            transparent 88% 94%, #ddff56 94%);
+    content: "";
+}
+
+.tomato-dashboard__header p {
+    margin: 0 0 16px;
+    color: #ff888c;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.tomato-dashboard__header h3 {
+    max-width: 820px;
+    margin: 0;
+    font-size: clamp(2rem, 3.7cqw, 3.2rem);
+    line-height: 1.02;
+}
+
+.tomato-dashboard__header span {
+    display: block;
+    max-width: 760px;
+    margin-top: 17px;
+    color: #aeb7c6;
+    font-size: 0.9rem;
+}
+
+.tomato-dashboard__header > strong {
+    color: #8e99aa;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.62rem;
+    line-height: 1.7;
+    text-align: right;
+}
+
+.tomato-dashboard__workspace {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.95fr) minmax(280px, 0.75fr);
+    gap: 20px;
+    padding: 24px 24px 20px 32px;
+}
+
+.tomato-browser {
+    align-self: start;
+    overflow: hidden;
+    border: 1px solid #2c3038;
+    border-radius: 6px;
+    background: #191c22;
+    box-shadow: 0 24px 48px rgba(24, 27, 34, 0.24);
+}
+
+.tomato-browser__bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    padding: 0 15px;
+    color: #858d9a;
+}
+
+.tomato-browser__bar span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f04a50;
+}
+
+.tomato-browser__bar span:nth-child(2) {
+    background: #ddff56;
+}
+
+.tomato-browser__bar span:nth-child(3) {
+    background: #40d1d0;
+}
+
+.tomato-browser__bar p {
+    margin: 0 0 0 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.58rem;
+}
+
+.tomato-browser > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1050 / 650;
+    object-fit: cover;
+    object-position: left center;
+}
+
+.tomato-dashboard__focus {
+    display: grid;
+    gap: 12px;
+}
+
+.tomato-dashboard__focus article {
+    overflow: hidden;
+    border: 1px solid #d7dce1;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.96);
+}
+
+.tomato-dashboard__focus header {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+    padding: 16px 16px 13px;
+}
+
+.tomato-dashboard__focus header > span {
+    padding-top: 2px;
+    color: #e13e45;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.62rem;
+}
+
+.tomato-dashboard__focus h4 {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.25;
+    text-transform: uppercase;
+}
+
+.tomato-dashboard__focus p {
+    margin: 6px 0 0;
+    color: #687281;
+    font-size: 0.65rem;
+    line-height: 1.45;
+}
+
+.tomato-crop {
+    height: 94px;
+    border-top: 1px solid #e1e5e9;
+    background-color: #eef0e9;
+    background-image: url("../images/projects/tomato-travel/screens/dashboard.jpg");
+    background-repeat: no-repeat;
+}
+
+.tomato-crop--signals {
+    background-position: 82% 25%;
+    background-size: 185%;
+}
+
+.tomato-crop--monitor {
+    background-position: 96% 68%;
+    background-size: 230%;
+}
+
+.tomato-crop--inventory {
+    background-position: 22% 74%;
+    background-size: 220%;
+}
+
+.tomato-dashboard__footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 24px 22px 32px;
+    color: #626c79;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+}
+
+.tomato-dashboard__footer strong {
+    color: #e13e45;
+}
+
 .caption {
     margin-top: 12px;
     color: var(--muted);
@@ -1934,6 +2158,24 @@ textarea {
     .falitang-phone--messages {
         right: 18%;
         width: 29%;
+    }
+
+    .tomato-dashboard__header {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .tomato-dashboard__header > strong {
+        max-width: 420px;
+        text-align: left;
+    }
+
+    .tomato-dashboard__workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .tomato-dashboard__focus {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -2298,6 +2540,49 @@ textarea {
     }
 
     .falitang-journey__footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 22px 20px;
+    }
+
+    .tomato-dashboard__header {
+        min-height: 0;
+        padding: 32px 26px 30px 32px;
+    }
+
+    .tomato-dashboard__header::after {
+        top: 28px;
+        right: 26px;
+        width: 88px;
+    }
+
+    .tomato-dashboard__header p {
+        max-width: 155px;
+    }
+
+    .tomato-dashboard__header h3 {
+        font-size: 2rem;
+    }
+
+    .tomato-dashboard__header span {
+        font-size: 0.78rem;
+    }
+
+    .tomato-dashboard__workspace {
+        gap: 14px;
+        padding: 14px 14px 18px 22px;
+    }
+
+    .tomato-dashboard__focus {
+        grid-template-columns: 1fr;
+    }
+
+    .tomato-crop {
+        height: 130px;
+    }
+
+    .tomato-dashboard__footer {
         align-items: flex-start;
         flex-direction: column;
         gap: 8px;
