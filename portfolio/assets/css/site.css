@@ -3891,9 +3891,9 @@ textarea {
     align-self: stretch;
     margin: 0;
     overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid #cbd1c9;
     border-radius: 7px;
-    background: #e7e7e2;
+    background: #ece9e0;
 }
 
 .foodcare-process-artifact img {
@@ -3907,29 +3907,30 @@ textarea {
 .foodcare-process-artifact--mid img {
     padding: 16px;
     object-fit: contain;
-    background: #fff;
+    background: #f4f1e9;
 }
 
 .foodcare-process-artifact--high img {
     padding: 10px;
     object-fit: contain;
     object-position: center;
-    background: #dedede;
+    background: #e5e9e3;
 }
 
 .foodcare-process-artifact--iterate img {
     padding: 16px;
     object-fit: contain;
     object-position: center;
-    background: #fff;
+    background: #eef3ed;
 }
 
 .foodcare-process-artifact figcaption {
     min-height: 56px;
     margin-top: auto;
     padding: 13px 15px;
-    color: #aeb6b0;
-    background: #171b18;
+    border-top: 1px solid #cbd3cb;
+    color: #4f5f55;
+    background: #e3e9e2;
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.51rem;
     line-height: 1.45;
@@ -4162,22 +4163,25 @@ textarea {
 .foodcare-prototype-lab {
     position: relative;
     overflow: hidden;
-    margin-top: 30px;
-    padding: clamp(26px, 4vw, 52px);
+    width: min(100%, 1040px);
+    margin: 34px auto 0;
+    padding: clamp(28px, 3vw, 44px);
+    border: 1px solid #bfd3d8;
     border-radius: 9px;
-    color: #fff;
+    color: #10232c;
     background:
-        radial-gradient(circle at 92% 2%, rgba(84, 168, 202, 0.29), transparent 28%),
-        linear-gradient(150deg, #081d2a, #050c11 72%);
+        radial-gradient(circle at 92% 2%, rgba(84, 168, 202, 0.22), transparent 30%),
+        linear-gradient(150deg, #eef6f7, #e4eff1 72%);
+    box-shadow: 0 24px 62px rgba(36, 67, 76, 0.12);
 }
 
 .foodcare-prototype-lab::before {
     position: absolute;
     inset: 0;
-    opacity: 0.26;
+    opacity: 0.72;
     background-image:
-        linear-gradient(rgba(84, 168, 202, 0.12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(84, 168, 202, 0.12) 1px, transparent 1px);
+        linear-gradient(rgba(26, 92, 110, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26, 92, 110, 0.07) 1px, transparent 1px);
     background-size: 48px 48px;
     content: "";
     pointer-events: none;
@@ -4195,21 +4199,21 @@ textarea {
 }
 
 .foodcare-prototype-lab__heading > div > span {
-    color: #65c8ed;
+    color: #0a6f91;
 }
 
 .foodcare-prototype-lab__heading h3 {
     max-width: 700px;
     margin: 20px 0 0;
-    color: #fff;
-    font-size: clamp(2.2rem, 4vw, 4rem);
+    color: #10232c;
+    font-size: clamp(2.1rem, 3.4vw, 3.45rem);
     line-height: 0.98;
 }
 
 .foodcare-prototype-lab__heading p {
     max-width: 720px;
     margin: 22px 0 0;
-    color: #a9bbc3;
+    color: #4d626a;
     font-size: 0.86rem;
 }
 
@@ -4218,7 +4222,7 @@ textarea {
     gap: 1px;
     margin: 0;
     padding: 1px;
-    background: rgba(84, 168, 202, 0.25);
+    background: rgba(41, 105, 123, 0.2);
     list-style: none;
 }
 
@@ -4227,13 +4231,13 @@ textarea {
     grid-template-columns: 31px minmax(0, 1fr);
     gap: 10px;
     padding: 12px 14px;
-    color: #b9cbd2;
-    background: rgba(5, 13, 18, 0.92);
+    color: #435a63;
+    background: rgba(248, 252, 252, 0.88);
     font-size: 0.68rem;
 }
 
 .foodcare-prototype-lab__heading li span {
-    color: var(--senior-blue);
+    color: #0a6f91;
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.54rem;
 }
@@ -4243,17 +4247,19 @@ textarea {
 }
 
 .foodcare-prototype-lab__heading li strong {
-    color: #fff;
+    color: #10232c;
 }
 
 .foodcare-figma-embed {
     overflow: hidden;
-    height: clamp(590px, 68vw, 820px);
-    margin-top: 42px;
-    border: 1px solid rgba(84, 168, 202, 0.44);
+    width: min(100%, 920px);
+    height: auto;
+    aspect-ratio: 16 / 10;
+    margin: 36px auto 0;
+    border: 1px solid rgba(32, 91, 107, 0.38);
     border-radius: 8px;
     background: #000;
-    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+    box-shadow: 0 18px 48px rgba(22, 55, 65, 0.24);
 }
 
 .foodcare-figma-embed iframe {
@@ -4266,21 +4272,22 @@ textarea {
 .foodcare-prototype-lab__footer {
     display: grid;
     grid-template-columns: minmax(0, 0.62fr) minmax(260px, 0.38fr);
+    width: min(100%, 920px);
     gap: 30px;
     align-items: center;
-    margin-top: 22px;
+    margin: 18px auto 0;
     padding-top: 22px;
-    border-top: 1px solid rgba(84, 168, 202, 0.26);
+    border-top: 1px solid rgba(32, 91, 107, 0.22);
 }
 
 .foodcare-prototype-lab__footer p {
     margin: 0;
-    color: #90a4ad;
+    color: #52666e;
     font-size: 0.7rem;
 }
 
 .foodcare-prototype-lab__footer p strong {
-    color: #d8e8ee;
+    color: #18323c;
 }
 
 .foodcare-prototype-lab__footer > div {
@@ -4291,12 +4298,15 @@ textarea {
 }
 
 .foodcare-prototype-lab__footer .text-link {
-    color: #7ed6f5;
+    color: #086b8d;
 }
 
 .foodcare-system-section {
     position: relative;
     overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(35, 201, 67, 0.09), transparent 27%),
+        linear-gradient(150deg, #111a14, #080b09 72%);
 }
 
 .foodcare-system-section::before {
@@ -4316,44 +4326,49 @@ textarea {
 }
 
 .foodcare-paper-prototype {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(350px, 0.7fr);
+    width: min(100%, 1040px);
     overflow: hidden;
-    margin: 58px 0 0;
-    border: 1px solid #3d423f;
+    margin: 52px auto 0;
+    border: 1px solid #bdb5a9;
     border-radius: 8px;
-    background: #f3efe6;
+    background: #e9e3d8;
     box-shadow: 0 30px 72px rgba(0, 0, 0, 0.22);
 }
 
 .foodcare-paper-prototype__image {
     display: flex;
-    min-height: 390px;
+    min-height: 0;
     align-items: center;
     justify-content: center;
-    padding: clamp(14px, 2vw, 28px);
+    padding: 24px;
     background:
-        linear-gradient(rgba(34, 29, 25, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34, 29, 25, 0.035) 1px, transparent 1px),
-        #f3efe6;
+        linear-gradient(rgba(34, 29, 25, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 29, 25, 0.04) 1px, transparent 1px),
+        #d8d3c8;
     background-size: 26px 26px;
 }
 
 .foodcare-paper-prototype__image img {
     display: block;
     width: 100%;
-    height: auto;
-    max-height: 680px;
+    height: 100%;
+    max-height: 410px;
     object-fit: contain;
     object-position: center;
+    filter: contrast(1.03) saturate(0.9);
+    mix-blend-mode: multiply;
 }
 
 .foodcare-paper-prototype figcaption {
     display: grid;
-    grid-template-columns: minmax(260px, 0.4fr) minmax(0, 0.6fr);
-    gap: 42px;
-    align-items: end;
-    padding: clamp(24px, 3vw, 38px);
-    border-top: 1px solid #3d423f;
-    background: #121613;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-content: center;
+    padding: 30px;
+    border-left: 1px solid #bdb5a9;
+    background: #e8e2d7;
 }
 
 .foodcare-paper-prototype__copy > span {
@@ -4367,23 +4382,23 @@ textarea {
 .foodcare-paper-prototype__copy h3 {
     max-width: 520px;
     margin: 16px 0 0;
-    color: #fff;
-    font-size: clamp(1.6rem, 2.6vw, 2.45rem);
+    color: #1c271f;
+    font-size: clamp(1.55rem, 2.2vw, 2.15rem);
     line-height: 1.05;
 }
 
 .foodcare-paper-prototype__copy p {
     max-width: 610px;
     margin: 16px 0 0;
-    color: #aeb6b0;
-    font-size: 0.77rem;
+    color: #536057;
+    font-size: 0.73rem;
     line-height: 1.65;
 }
 
 .foodcare-paper-prototype__copy small {
     display: block;
     margin-top: 14px;
-    color: #7f8982;
+    color: #737a73;
     font-family: "IBM Plex Mono", monospace;
     font-size: 0.49rem;
     text-transform: uppercase;
@@ -4391,21 +4406,21 @@ textarea {
 
 .foodcare-paper-prototype__steps {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1px;
     margin: 0;
     padding: 1px;
-    background: #353b37;
+    background: #c7c0b5;
     list-style: none;
 }
 
 .foodcare-paper-prototype__steps li {
     display: grid;
-    min-height: 82px;
+    min-height: 62px;
     align-content: space-between;
-    gap: 14px;
-    padding: 12px;
-    background: #181d19;
+    gap: 10px;
+    padding: 10px 11px;
+    background: #f2eee5;
 }
 
 .foodcare-paper-prototype__steps li:last-child {
@@ -4419,8 +4434,8 @@ textarea {
 }
 
 .foodcare-paper-prototype__steps strong {
-    color: #d8ded9;
-    font-size: 0.64rem;
+    color: #303a33;
+    font-size: 0.6rem;
     line-height: 1.3;
 }
 
@@ -5450,15 +5465,18 @@ textarea {
     overflow: hidden;
     aspect-ratio: 1.14;
     margin-top: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 12px;
+    border: 1px solid rgba(180, 216, 187, 0.28);
     border-radius: 6px;
-    background: #dedede;
+    background: #dbe3dc;
 }
 
 .foodcare-flow-family-media img {
     width: 125%;
     max-width: none;
     height: auto;
+    filter: saturate(0.92);
+    mix-blend-mode: multiply;
     object-fit: initial;
 }
 
@@ -5665,20 +5683,28 @@ textarea {
     display: grid;
     grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
     gap: 26px;
-    align-items: stretch;
+    align-items: start;
     margin-top: 76px;
 }
 
 .seniorcare-flow-figure .media-frame {
-    height: 100%;
-    min-height: 680px;
-    border-color: rgba(255, 255, 255, 0.16);
-    background: #fff;
+    height: auto;
+    min-height: 0;
+    padding: 20px;
+    border-color: rgba(167, 208, 220, 0.32);
+    background: #dbe7e9;
 }
 
 .seniorcare-flow-figure .media-frame img {
-    height: 100%;
+    height: auto;
+    max-height: 610px;
+    filter: saturate(0.94);
+    mix-blend-mode: multiply;
     object-fit: contain;
+}
+
+.seniorcare-flow-figure .caption {
+    color: #a9bec7;
 }
 
 .seniorcare-user-flow {
@@ -6106,8 +6132,8 @@ textarea {
     }
 
     .foodcare-paper-prototype figcaption {
-        grid-template-columns: minmax(240px, 0.44fr) minmax(0, 0.56fr);
-        gap: 28px;
+        grid-template-columns: 1fr;
+        gap: 22px;
     }
 
     .foodcare-system-map {
@@ -6340,17 +6366,26 @@ textarea {
     }
 
     .foodcare-paper-prototype {
+        grid-template-columns: 1fr;
         margin-top: 42px;
     }
 
     .foodcare-paper-prototype__image {
+        height: auto;
         min-height: 0;
         padding: 10px;
+    }
+
+    .foodcare-paper-prototype__image img {
+        height: auto;
+        max-height: none;
     }
 
     .foodcare-paper-prototype figcaption {
         grid-template-columns: 1fr;
         gap: 26px;
+        border-top: 1px solid #bdb5a9;
+        border-left: 0;
     }
 
     .foodcare-paper-prototype__steps {
