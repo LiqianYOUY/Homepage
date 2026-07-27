@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description"
         content="MoodBall case study: a physical computing prototype that translates touch and sensor input into music, light, projection, and shared emotional feedback.">
     <meta property="og:title" content="MoodBall | Liqian You Prototype Studio">
@@ -304,11 +305,18 @@
                 </figure>
 
                 <div class="video-frame">
-                    <iframe src="https://www.youtube.com/embed/bwEPWWMTuLs"
+                    <iframe
+                        src="https://www.youtube.com/embed/bwEPWWMTuLs?origin=https%3A%2F%2Fliqianyouy.github.io&amp;playsinline=1"
                         title="MoodBall prototype demonstration video"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        referrerpolicy="strict-origin-when-cross-origin"
                         allowfullscreen loading="lazy"></iframe>
                 </div>
+                <p class="video-fallback">
+                    <span>Player unavailable in this browser?</span>
+                    <a href="https://www.youtube.com/watch?v=bwEPWWMTuLs" target="_blank" rel="noopener">Watch directly on
+                        YouTube &nearr;</a>
+                </p>
 
                 <div class="document-links" aria-label="MoodBall project documents">
                     <a href="../../assets/documents/moodball/proposal.pdf">Project proposal</a>

@@ -2722,6 +2722,25 @@ textarea {
     border: 0;
 }
 
+.video-fallback {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    justify-content: space-between;
+    margin: 12px 0 0;
+    color: var(--muted-dark);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.video-fallback a {
+    color: var(--cyan);
+    font-weight: 700;
+    text-underline-offset: 4px;
+}
+
 .document-links {
     display: flex;
     flex-wrap: wrap;
