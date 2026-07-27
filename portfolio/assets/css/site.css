@@ -2722,6 +2722,99 @@ textarea {
     border: 0;
 }
 
+.video-frame--external {
+    position: relative;
+    background: #050806;
+}
+
+.video-link-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: var(--white);
+    text-decoration: none;
+}
+
+.video-link-card::after {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(5, 8, 6, 0.9) 0%, rgba(5, 8, 6, 0.48) 50%, rgba(5, 8, 6, 0.12) 100%),
+        linear-gradient(0deg, rgba(5, 8, 6, 0.76), transparent 54%);
+    content: "";
+}
+
+.video-link-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.05) saturate(0.82);
+    transition: filter 180ms ease, transform 180ms ease;
+}
+
+.video-link-card__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 74px;
+    height: 74px;
+    padding-left: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 50%;
+    color: var(--ink);
+    background: var(--acid);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.3);
+    font-size: 1.35rem;
+    transform: translate(-50%, -50%);
+    transition: background 180ms ease, transform 180ms ease;
+}
+
+.video-link-card__copy {
+    position: absolute;
+    right: clamp(24px, 5vw, 64px);
+    bottom: clamp(24px, 5vw, 58px);
+    left: clamp(24px, 5vw, 64px);
+    z-index: 2;
+    display: grid;
+    gap: 8px;
+}
+
+.video-link-card__copy small,
+.video-link-card__copy > span {
+    color: var(--cyan);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.video-link-card__copy strong {
+    max-width: 680px;
+    font-size: clamp(1.45rem, 3.2vw, 3.3rem);
+    line-height: 1.05;
+}
+
+.video-link-card__copy > span {
+    color: var(--acid);
+}
+
+.video-link-card:hover img,
+.video-link-card:focus-visible img {
+    filter: contrast(1.08) saturate(0.92);
+    transform: scale(1.015);
+}
+
+.video-link-card:hover .video-link-card__play,
+.video-link-card:focus-visible .video-link-card__play {
+    background: var(--cyan);
+    transform: translate(-50%, -50%) scale(1.06);
+}
+
 .video-fallback {
     display: flex;
     flex-wrap: wrap;
@@ -3239,6 +3332,38 @@ textarea {
     .case-intro-grid h2 + p,
     .case-copy h2 + p {
         margin-top: 26px;
+    }
+
+    .video-link-card__play {
+        top: 18px;
+        right: 18px;
+        left: auto;
+        width: 48px;
+        height: 48px;
+        font-size: 0.95rem;
+        transform: none;
+    }
+
+    .video-link-card__copy {
+        right: 18px;
+        bottom: 16px;
+        left: 18px;
+        gap: 4px;
+    }
+
+    .video-link-card__copy small,
+    .video-link-card__copy > span {
+        font-size: 0.48rem;
+    }
+
+    .video-link-card__copy strong {
+        max-width: 245px;
+        font-size: 1.15rem;
+    }
+
+    .video-link-card:hover .video-link-card__play,
+    .video-link-card:focus-visible .video-link-card__play {
+        transform: scale(1.06);
     }
 
     .falitang-cover-art {
@@ -3921,7 +4046,11 @@ textarea {
     padding: 16px;
     object-fit: contain;
     object-position: center;
-    background: #eef3ed;
+    background: transparent;
+}
+
+.foodcare-process-artifact--iterate {
+    background: transparent;
 }
 
 .foodcare-process-artifact figcaption {
@@ -4327,7 +4456,7 @@ textarea {
 
 .foodcare-paper-prototype {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(350px, 0.7fr);
+    grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
     width: 100%;
     overflow: hidden;
     margin: 52px auto 0;
@@ -4352,7 +4481,7 @@ textarea {
 
 .foodcare-paper-prototype__image img {
     display: block;
-    width: min(82%, 620px);
+    width: min(94%, 620px);
     height: auto;
     max-height: 340px;
     object-fit: contain;
@@ -5184,12 +5313,10 @@ textarea {
     overflow: hidden;
     width: 100%;
     aspect-ratio: 0.56;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 5px;
-    background-color: #dedede;
+    border: 0;
+    background-color: transparent;
     background-position: top left;
     background-repeat: no-repeat;
-    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.25);
 }
 
 .foodcare-flow-node .foodcare-flow-screen {
@@ -5199,9 +5326,8 @@ textarea {
 
 .foodcare-flow-screen--a1,
 .foodcare-flow-screen--a2,
-.foodcare-flow-screen--a3,
-.foodcare-flow-screen--a4 {
-    background-image: url("../images/foodcare/figma-flow-profile-to-guidance.png");
+.foodcare-flow-screen--a3 {
+    background-image: url("../images/foodcare/figma-flow-profile-to-guidance-cutout.png");
     background-size: 435.9% auto;
 }
 
@@ -5217,37 +5343,38 @@ textarea {
     background-position: 59.54% top;
 }
 
-.foodcare-flow-screen--a4 {
-    background-position: 89.31% top;
-}
-
+.foodcare-flow-screen--a4,
 .foodcare-flow-screen--b5,
 .foodcare-flow-screen--b6,
 .foodcare-flow-screen--b7,
 .foodcare-flow-screen--b8,
 .foodcare-flow-screen--b12 {
-    background-image: url("../images/foodcare/figma-flow-feedback-to-voice.png");
-    background-size: 564.1% auto;
+    background-position: center;
+    background-size: contain;
+}
+
+.foodcare-flow-screen--a4 {
+    background-image: url("../images/foodcare/figma-phone-diet-conflict-cutout.png");
 }
 
 .foodcare-flow-screen--b5 {
-    background-position: 0 top;
+    background-image: url("../images/foodcare/figma-phone-spoilage-risk-cutout.png");
 }
 
 .foodcare-flow-screen--b6 {
-    background-position: 21.55% top;
+    background-image: url("../images/foodcare/figma-phone-nutrition-benefit-cutout.png");
 }
 
 .foodcare-flow-screen--b7 {
-    background-position: 43.09% top;
+    background-image: url("../images/foodcare/figma-phone-inventory-cutout.png");
 }
 
 .foodcare-flow-screen--b8 {
-    background-position: 64.64% top;
+    background-image: url("../images/foodcare/figma-phone-voice-intake-cutout.png");
 }
 
 .foodcare-flow-screen--b12 {
-    background-position: 86.19% top;
+    background-image: url("../images/foodcare/figma-phone-upload-success-cutout.png");
 }
 
 .foodcare-flow-node__copy {
@@ -5466,9 +5593,7 @@ textarea {
     aspect-ratio: 1.14;
     margin-top: 4px;
     padding: 12px;
-    border: 1px solid rgba(180, 216, 187, 0.28);
-    border-radius: 6px;
-    background: #dbe3dc;
+    background: transparent;
 }
 
 .foodcare-flow-family-media img {
@@ -5476,7 +5601,6 @@ textarea {
     max-width: none;
     height: auto;
     filter: saturate(0.92);
-    mix-blend-mode: multiply;
     object-fit: initial;
 }
 
@@ -5688,18 +5812,23 @@ textarea {
 }
 
 .seniorcare-flow-figure .media-frame {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
     height: auto;
     min-height: 0;
-    padding: 20px;
+    padding: 0;
     border-color: rgba(167, 208, 220, 0.32);
-    background: #dbe7e9;
+    background: transparent;
 }
 
 .seniorcare-flow-figure .media-frame img {
+    width: auto;
     height: auto;
+    max-width: 100%;
     max-height: 610px;
     filter: saturate(0.94);
-    mix-blend-mode: multiply;
+    mix-blend-mode: normal;
     object-fit: contain;
 }
 
@@ -5708,6 +5837,7 @@ textarea {
 }
 
 .seniorcare-user-flow {
+    min-height: 610px;
     padding: 30px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 6px;
@@ -6149,6 +6279,10 @@ textarea {
     }
 
     .seniorcare-flow-figure .media-frame {
+        min-height: 0;
+    }
+
+    .seniorcare-user-flow {
         min-height: 0;
     }
 
