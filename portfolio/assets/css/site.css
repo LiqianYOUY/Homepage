@@ -4039,7 +4039,11 @@ textarea {
     padding: 10px;
     object-fit: contain;
     object-position: center;
-    background: #e5e9e3;
+    background: transparent;
+}
+
+.foodcare-process-artifact--high {
+    background: transparent;
 }
 
 .foodcare-process-artifact--iterate img {
