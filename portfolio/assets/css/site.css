@@ -3894,12 +3894,15 @@ textarea {
 .foodcare-process-artifact--high img {
     padding: 10px;
     object-fit: contain;
-    object-position: top;
+    object-position: center;
     background: #dedede;
 }
 
 .foodcare-process-artifact--iterate img {
-    object-position: top center;
+    padding: 16px;
+    object-fit: contain;
+    object-position: center;
+    background: #fff;
 }
 
 .foodcare-process-artifact figcaption {
@@ -4291,6 +4294,119 @@ textarea {
 
 .foodcare-system-section .shell {
     position: relative;
+}
+
+.foodcare-paper-prototype {
+    overflow: hidden;
+    margin: 58px 0 0;
+    border: 1px solid #3d423f;
+    border-radius: 8px;
+    background: #f3efe6;
+    box-shadow: 0 30px 72px rgba(0, 0, 0, 0.22);
+}
+
+.foodcare-paper-prototype__image {
+    display: flex;
+    min-height: 390px;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(14px, 2vw, 28px);
+    background:
+        linear-gradient(rgba(34, 29, 25, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 29, 25, 0.035) 1px, transparent 1px),
+        #f3efe6;
+    background-size: 26px 26px;
+}
+
+.foodcare-paper-prototype__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 680px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.foodcare-paper-prototype figcaption {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.4fr) minmax(0, 0.6fr);
+    gap: 42px;
+    align-items: end;
+    padding: clamp(24px, 3vw, 38px);
+    border-top: 1px solid #3d423f;
+    background: #121613;
+}
+
+.foodcare-paper-prototype__copy > span {
+    color: #ff635d;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.foodcare-paper-prototype__copy h3 {
+    max-width: 520px;
+    margin: 16px 0 0;
+    color: #fff;
+    font-size: clamp(1.6rem, 2.6vw, 2.45rem);
+    line-height: 1.05;
+}
+
+.foodcare-paper-prototype__copy p {
+    max-width: 610px;
+    margin: 16px 0 0;
+    color: #aeb6b0;
+    font-size: 0.77rem;
+    line-height: 1.65;
+}
+
+.foodcare-paper-prototype__copy small {
+    display: block;
+    margin-top: 14px;
+    color: #7f8982;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.49rem;
+    text-transform: uppercase;
+}
+
+.foodcare-paper-prototype__steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 1px;
+    background: #353b37;
+    list-style: none;
+}
+
+.foodcare-paper-prototype__steps li {
+    display: grid;
+    min-height: 82px;
+    align-content: space-between;
+    gap: 14px;
+    padding: 12px;
+    background: #181d19;
+}
+
+.foodcare-paper-prototype__steps li:last-child {
+    grid-column: span 2;
+}
+
+.foodcare-paper-prototype__steps span {
+    color: #ff635d;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.52rem;
+}
+
+.foodcare-paper-prototype__steps strong {
+    color: #d8ded9;
+    font-size: 0.64rem;
+    line-height: 1.3;
+}
+
+.foodcare-paper-prototype + .foodcare-system-map {
+    margin-top: 32px;
 }
 
 .case-heading-copy {
@@ -5970,6 +6086,11 @@ textarea {
         gap: 22px;
     }
 
+    .foodcare-paper-prototype figcaption {
+        grid-template-columns: minmax(240px, 0.44fr) minmax(0, 0.56fr);
+        gap: 28px;
+    }
+
     .foodcare-system-map {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -6197,6 +6318,24 @@ textarea {
 
     .foodcare-prototype-lab__footer > div {
         justify-content: flex-start;
+    }
+
+    .foodcare-paper-prototype {
+        margin-top: 42px;
+    }
+
+    .foodcare-paper-prototype__image {
+        min-height: 0;
+        padding: 10px;
+    }
+
+    .foodcare-paper-prototype figcaption {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    .foodcare-paper-prototype__steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .foodcare-system-map {
