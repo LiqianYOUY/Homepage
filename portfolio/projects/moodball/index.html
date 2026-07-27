@@ -21,10 +21,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&amp;family=Manrope:wght@400;600;700;800&amp;display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="../../assets/css/site.css?v=20260727-3">
 </head>
 
-<body class="project-body">
+<body class="project-body moodball-page">
     <a class="skip-link" href="#case-content">Skip to case study</a>
 
     <nav class="site-nav project-nav" aria-label="Project navigation">
@@ -34,9 +34,11 @@
                 <span>Prototype Studio</span>
             </a>
             <div class="nav-links">
-                <a href="../../#work">Work</a>
                 <a href="#concept">Concept</a>
+                <a href="#evolution">Evolution</a>
                 <a href="#process">Process</a>
+                <a href="#evaluation">Evaluation</a>
+                <a href="#system">System</a>
                 <a href="#outcome">Outcome</a>
             </div>
             <a class="nav-cta" href="../../#contact">Start an idea</a>
@@ -48,25 +50,25 @@
             <p class="case-kicker">Physical computing / Emotion interaction / 2021</p>
             <h1 class="case-title">MoodBall</h1>
             <p class="case-lede">
-                A touchable music-sharing object that senses physical interaction and translates it into light, sound,
-                projected visuals, and a remote emotional signal.
+                A paired physical-computing object that turns pressure, movement, and touch into music, light,
+                projected motion, and a shared emotional signal across distance.
             </p>
             <dl class="case-meta">
                 <div>
                     <dt>Context</dt>
-                    <dd>UQ Interaction Design</dd>
+                    <dd>UQ Physical Computing</dd>
                 </div>
                 <div>
-                    <dt>Format</dt>
-                    <dd>Team prototype</dd>
+                    <dt>Team</dt>
+                    <dd>Pop5 / five members</dd>
                 </div>
                 <div>
                     <dt>My contribution</dt>
-                    <dd>Research, evaluation, media, web</dd>
+                    <dd>UX research, evaluation, media, web</dd>
                 </div>
                 <div>
-                    <dt>Tools</dt>
-                    <dd>Arduino, sensors, Unity</dd>
+                    <dt>Prototype</dt>
+                    <dd>Arduino, sensors, Unity, projection</dd>
                 </div>
             </dl>
         </div>
@@ -78,63 +80,94 @@
                 <div class="case-intro-grid">
                     <p class="section-index">01 / Brief</p>
                     <div>
-                        <h2>Make emotion tangible without requiring words.</h2>
+                        <h2>Turn music into a shared physical language.</h2>
                         <p>
-                            MoodBall began with a question: could music become a physical, shared language between
-                            people in different places? The concept combines a tactile object with sensing, sound,
-                            light, and projection so that emotion can be expressed through interaction rather than a
-                            screen.
+                            The proposal began as <strong>Connection</strong>: a multi-person music installation in
+                            which every participant contributed an instrument or melody. The richer the group
+                            interaction, the richer the combined sound and coloured light became.
                         </p>
                         <p>
-                            Users touch, squeeze, shake, rotate, or press the ball. Sensor values are interpreted as an
-                            emotional state, which changes the music and visual feedback. A paired ball can replay the
-                            same signal for a remote friend or family member.
+                            Research and pitch feedback shifted the project toward a smaller object for homes and
+                            classrooms. MoodBall kept the original idea of synchronous music sharing, but focused it on
+                            close relationships: one person handles the ball, the system interprets the interaction,
+                            and a paired ball can mirror the response for someone elsewhere.
                         </p>
+                        <a class="moodball-source-link"
+                            href="../../assets/documents/moodball/proposal.pdf">Source: project proposal &nearr;</a>
                     </div>
                 </div>
 
-                <div class="fact-grid">
+                <div class="moodball-evidence-strip" aria-label="MoodBall project evidence">
                     <article>
                         <strong>05</strong>
-                        <h3>Interaction modes</h3>
-                        <p>Touch, squeeze, shake, rotate, and press create a direct physical vocabulary.</p>
+                        <span>Team members</span>
+                        <p>Interaction design, hardware, software, media, and research were developed collaboratively.</p>
                     </article>
                     <article>
-                        <strong>03</strong>
-                        <h3>Sensor channels</h3>
-                        <p>Pressure, galvanic skin response, and accelerometer data inform the response.</p>
+                        <strong>05</strong>
+                        <span>Evaluation participants</span>
+                        <p>The formative protocol tested comprehension, interaction flow, and preferred mappings.</p>
                     </article>
                     <article>
-                        <strong>04</strong>
-                        <h3>Feedback states</h3>
-                        <p>Calm, happy, angry, and energetic states map to music, colour, and projection.</p>
+                        <strong>06</strong>
+                        <span>Candidate gestures</span>
+                        <p>Touch, shake, hold, throw, squeeze, and roll were explored through bodystorming.</p>
+                    </article>
+                    <article>
+                        <strong>08</strong>
+                        <span>Mood labels</span>
+                        <p>The protocol linked music features to a broader emotional vocabulary before simplification.</p>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section class="case-section case-section--dark">
+        <section class="case-section case-section--dark moodball-evolution" id="evolution">
             <div class="shell">
                 <div class="case-heading">
-                    <p class="section-index">02 / Interaction system</p>
-                    <h2>Input becomes interpretation, then shared feedback.</h2>
+                    <p class="section-index">02 / Concept evolution</p>
+                    <h2>Feedback moved the experience from public performance to personal connection.</h2>
                 </div>
 
-                <div class="principles-grid">
+                <div class="moodball-decision-grid">
                     <article>
-                        <span class="project-number">A</span>
-                        <h3>Physical input</h3>
-                        <p>The ball invites expressive gestures instead of menu selection or verbal disclosure.</p>
+                        <span>01 / CONTEXT</span>
+                        <small>Initial proposal</small>
+                        <h3>Public, fixed installation</h3>
+                        <i aria-hidden="true">&darr;</i>
+                        <small>Design response</small>
+                        <strong>Homes, classrooms, and familiar groups</strong>
                     </article>
                     <article>
-                        <span class="project-number">B</span>
-                        <h3>Sensor interpretation</h3>
-                        <p>Multiple signals are combined to avoid relying on one ambiguous interaction value.</p>
+                        <span>02 / INTERACTION</span>
+                        <small>Initial proposal</small>
+                        <h3>People touch each other to build music</h3>
+                        <i aria-hidden="true">&darr;</i>
+                        <small>Design response</small>
+                        <strong>A personal ball creates a safer tactile interface</strong>
                     </article>
                     <article>
-                        <span class="project-number">C</span>
-                        <h3>Multimodal output</h3>
-                        <p>Music, coloured light, and projected motion make the response immediate and immersive.</p>
+                        <span>03 / CONNECTION</span>
+                        <small>Initial proposal</small>
+                        <h3>One local group performance</h3>
+                        <i aria-hidden="true">&darr;</i>
+                        <small>Design response</small>
+                        <strong>Paired balls mirror feedback across distance</strong>
+                    </article>
+                </div>
+
+                <div class="moodball-context-grid">
+                    <article>
+                        <span>Audience</span>
+                        <p>Friends, families, neighbours, and classmates who already have a trusted relationship.</p>
+                    </article>
+                    <article>
+                        <span>Moment</span>
+                        <p>When someone wants to check, express, or share a mood without leading with words.</p>
+                    </article>
+                    <article>
+                        <span>Environment</span>
+                        <p>A shared indoor space, ideally with lower ambient light so LEDs and projection remain visible.</p>
                     </article>
                 </div>
 
@@ -165,15 +198,15 @@
             <div class="shell">
                 <div class="case-heading">
                     <p class="section-index">03 / Design process</p>
-                    <h2>Research moved the idea from public performance to personal connection.</h2>
+                    <h2>Research, scenarios, bodystorming, and prototyping narrowed the interaction.</h2>
                 </div>
 
                 <div class="process-list">
                     <article>
                         <span>01</span>
                         <h3>Explore the domain</h3>
-                        <p>World Cafe sessions and precedent research mapped music, physical interaction, remote
-                            connection, and emotional wellbeing.</p>
+                        <p>Precedent research, a survey, interviews, and literature review mapped music, embodied
+                            interaction, remote connection, and emotional support.</p>
                     </article>
                     <article>
                         <span>02</span>
@@ -184,7 +217,7 @@
                     <article>
                         <span>03</span>
                         <h3>Prototype the mapping</h3>
-                        <p>Body-storming and evaluation activities connected gestures with perceived emotional states
+                        <p>Bodystorming and evaluation activities connected gestures with perceived emotional states
                             and exposed ambiguous mappings.</p>
                     </article>
                     <article>
@@ -195,46 +228,146 @@
                     </article>
                 </div>
 
-                <div class="media-grid media-grid--three stack-top-md">
+                <div class="media-grid media-grid--two moodball-process-media stack-top-md">
                     <figure class="media-item">
-                        <div class="media-frame media-frame--contain">
-                            <img src="../../assets/images/moodball/research-map.png"
+                        <div class="media-frame media-frame--cutout">
+                            <img src="../../assets/images/moodball/research-map-cutout.png"
                                 alt="MoodBall research affinity map of problems, opportunities, audiences, and goals"
                                 loading="lazy" decoding="async">
                         </div>
                         <figcaption class="caption">Domain framing and emerging experience goals.</figcaption>
                     </figure>
                     <figure class="media-item">
-                        <div class="media-frame">
-                            <img src="../../assets/images/moodball/storyboard.jpg"
+                        <div class="media-frame media-frame--cutout">
+                            <img src="../../assets/images/moodball/storyboard-cutout.png"
                                 alt="Storyboard showing remote emotion sharing through MoodBall" loading="lazy"
                                 decoding="async">
                         </div>
                         <figcaption class="caption">A scenario made the remote interaction concrete.</figcaption>
                     </figure>
-                    <figure class="media-item">
-                        <div class="media-frame media-frame--contain">
-                            <img src="../../assets/images/moodball/interaction-test.png"
-                                alt="Evaluation results mapping ball gestures to perceived emotions" loading="lazy"
-                                decoding="async">
-                        </div>
-                        <figcaption class="caption">Gesture-to-emotion mapping from participant feedback.</figcaption>
-                    </figure>
                 </div>
             </div>
         </section>
 
-        <section class="case-section case-section--dark">
+        <section class="case-section case-section--paper moodball-evaluation-section" id="evaluation">
+            <div class="shell">
+                <div class="case-intro-grid">
+                    <p class="section-index">04 / Evaluation</p>
+                    <div>
+                        <h2>Test the interaction vocabulary before treating it as emotion data.</h2>
+                        <p>
+                            Evaluation protocol TEST001 was designed to check the main functions and interaction flow,
+                            gather user requirements, and turn observations into construction decisions. Five
+                            participants completed listening, mapping, and bodystorming activities.
+                        </p>
+                        <p>
+                            The session evaluated the prototype, not the participant. Consent, voluntary withdrawal,
+                            privacy, and a clear statement that personal information would not be shared were built into
+                            the introduction.
+                        </p>
+                        <a class="moodball-source-link"
+                            href="../../assets/documents/moodball/evaluation-protocol.pdf">Source: evaluation protocol
+                            &nearr;</a>
+                    </div>
+                </div>
+
+                <div class="moodball-protocol-meta" aria-label="Evaluation protocol summary">
+                    <article><strong>TEST001</strong><span>Evaluation ID</span></article>
+                    <article><strong>05</strong><span>Participants</span></article>
+                    <article><strong>06</strong><span>Gesture options</span></article>
+                    <article><strong>03</strong><span>Closing questions</span></article>
+                </div>
+
+                <div class="moodball-evaluation-layout">
+                    <div class="moodball-protocol-card">
+                        <span>SESSION FLOW / 16 APR 2021</span>
+                        <ol>
+                            <li>
+                                <strong>Consent and orientation</strong>
+                                <p>Explain the concept, data use, voluntary participation, and withdrawal rights.</p>
+                            </li>
+                            <li>
+                                <strong>Music and mood labelling</strong>
+                                <p>Listen to four music types and relate them to the eight mood categories.</p>
+                            </li>
+                            <li>
+                                <strong>Gesture mapping</strong>
+                                <p>Match touch, shake, hold, throw, squeeze, and roll with preferred emotional functions.</p>
+                            </li>
+                            <li>
+                                <strong>Bodystorming and debrief</strong>
+                                <p>Think aloud during interaction, then discuss value, confusion, and improvements.</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <figure class="media-item moodball-evaluation-figure">
+                        <div class="media-frame media-frame--cutout">
+                            <img src="../../assets/images/moodball/interaction-test-cutout.png"
+                                alt="Participant gesture-to-emotion mapping from the MoodBall bodystorming evaluation"
+                                loading="lazy" decoding="async">
+                        </div>
+                        <figcaption class="caption">Participant labels reveal that one gesture can carry several emotional
+                            meanings.</figcaption>
+                    </figure>
+                </div>
+
+                <div class="moodball-mood-scale" aria-label="Music mood categories in the evaluation protocol">
+                    <span>Energetic</span>
+                    <span>Exuberant</span>
+                    <span>Happy</span>
+                    <span>Contentment</span>
+                    <span>Calm</span>
+                    <span>Anxious / sad</span>
+                    <span>Frantic</span>
+                    <span>Depression</span>
+                </div>
+
+                <div class="moodball-findings-grid">
+                    <article>
+                        <span>01 / MAPPING</span>
+                        <h3>Gestures were interpretable, but not universal.</h3>
+                        <p>The same movement was assigned to different moods, so a fixed one-gesture-one-emotion rule
+                            would overstate certainty.</p>
+                    </article>
+                    <article>
+                        <span>02 / CALIBRATION</span>
+                        <h3>Physical thresholds excluded lighter interaction.</h3>
+                        <p>Later exhibition feedback showed that children and teenagers sometimes could not trigger
+                            intended modes with the same pressure settings.</p>
+                    </article>
+                    <article>
+                        <span>03 / DESIGN RESPONSE</span>
+                        <h3>Keep the output expressive and correctable.</h3>
+                        <p>Future versions should adapt thresholds, expose uncertainty, and let people override an
+                            inferred mood before sharing it.</p>
+                    </article>
+                </div>
+
+                <p class="moodball-evaluation-boundary">
+                    Formative prototype research - not a psychological or clinical emotion classifier.
+                </p>
+            </div>
+        </section>
+
+        <section class="case-section case-section--dark moodball-system-section" id="system">
             <div class="shell">
                 <div class="case-heading">
-                    <p class="section-index">04 / Prototype architecture</p>
-                    <h2>A deliberately visible system from sensing to feedback.</h2>
+                    <p class="section-index">05 / Prototype architecture</p>
+                    <h2>A deliberately visible system from sensing to shared feedback.</h2>
                 </div>
+
+                <ol class="moodball-system-path" aria-label="MoodBall system path">
+                    <li><span>01 / SENSE</span><strong>Pressure, GSR, and motion</strong></li>
+                    <li><span>02 / INTERPRET</span><strong>Thresholds suggest a mood state</strong></li>
+                    <li><span>03 / MODULATE</span><strong>Music, LEDs, and projection respond</strong></li>
+                    <li><span>04 / SHARE</span><strong>A paired ball mirrors the signal</strong></li>
+                </ol>
 
                 <div class="system-grid">
                     <figure class="media-item">
-                        <div class="media-frame media-frame--contain">
-                            <img src="../../assets/images/moodball/system-flow.png"
+                        <div class="media-frame media-frame--cutout media-frame--cutout-dark">
+                            <img src="../../assets/images/moodball/system-flow-cutout.png"
                                 alt="MoodBall system flow from sensor input to emotional state and output" loading="lazy"
                                 decoding="async">
                         </div>
@@ -256,16 +389,16 @@
 
                 <div class="media-grid media-grid--two stack-top-sm">
                     <figure class="media-item">
-                        <div class="media-frame media-frame--contain">
-                            <img src="../../assets/images/moodball/sensor-layout.jpg"
+                        <div class="media-frame media-frame--cutout media-frame--cutout-dark">
+                            <img src="../../assets/images/moodball/sensor-layout-cutout.png"
                                 alt="Arduino wiring plan for MoodBall pressure, motion, and skin conductance sensors"
                                 loading="lazy" decoding="async">
                         </div>
                         <figcaption class="caption">Sensor and Arduino wiring plan.</figcaption>
                     </figure>
                     <figure class="media-item">
-                        <div class="media-frame media-frame--contain">
-                            <img src="../../assets/images/moodball/system-connection.png"
+                        <div class="media-frame media-frame--cutout media-frame--cutout-dark">
+                            <img src="../../assets/images/moodball/system-connection-cutout.png"
                                 alt="Diagram of MoodBall connection to Unity, speaker, and projector" loading="lazy"
                                 decoding="async">
                         </div>
@@ -279,20 +412,39 @@
         <section class="case-section case-section--paper" id="outcome">
             <div class="shell">
                 <div class="case-intro-grid">
-                    <p class="section-index">05 / Outcome</p>
+                    <p class="section-index">06 / Outcome</p>
                     <div>
                         <h2>The exhibit proved the experience and exposed the limits.</h2>
                         <p>
-                            Visitors understood the core interaction quickly and were drawn to the combination of
-                            music, light, and projection. The public test also showed that the sensor thresholds did not
-                            respond equally to every age group or interaction strength.
+                            The final prototype integrated pressure, motion, and skin-conductance sensing with music,
+                            internal LEDs, and Unity projection. Visitors were drawn to the local, immersive response
+                            and quickly explored which feedback their interactions would trigger.
                         </p>
                         <p>
-                            That limitation became the most useful design finding: emotion should not be treated as a
-                            single fixed classification. Future iterations would require adjustable thresholds, clearer
-                            feedback about uncertainty, and more ways for users to correct the system.
+                            The exhibit also made the boundary visible. Outdoor brightness weakened light and
+                            projection, pressure thresholds worked unevenly across ages, and the remote connection was
+                            less compelling than the ball itself. The strongest next step is therefore not more
+                            classification, but more calibration, transparency, and user control.
                         </p>
                     </div>
+                </div>
+
+                <div class="moodball-outcome-grid">
+                    <article>
+                        <span>WORKED</span>
+                        <h3>Local feedback felt immediate.</h3>
+                        <p>Music, colour, and projected motion created a legible cause-and-effect loop around the object.</p>
+                    </article>
+                    <article>
+                        <span>FRICTION</span>
+                        <h3>One threshold did not fit every body.</h3>
+                        <p>Lighter pressure made some modes difficult to trigger for younger visitors.</p>
+                    </article>
+                    <article>
+                        <span>NEXT</span>
+                        <h3>Calibrate before sharing.</h3>
+                        <p>Add per-user setup, confidence cues, manual correction, and a clearer remote comfort flow.</p>
+                    </article>
                 </div>
 
                 <figure class="media-item stack-top-md">
@@ -304,19 +456,31 @@
                     <figcaption class="caption">Public exhibit at the University of Queensland, 2021.</figcaption>
                 </figure>
 
-                <div class="video-frame">
-                    <iframe
-                        src="https://www.youtube.com/embed/bwEPWWMTuLs?origin=https%3A%2F%2Fliqianyouy.github.io&amp;playsinline=1"
-                        title="MoodBall prototype demonstration video"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen loading="lazy"></iframe>
+                <div class="moodball-contribution">
+                    <div>
+                        <span>MY CONTRIBUTION</span>
+                        <h3>Research, evaluation, and the digital story around the prototype.</h3>
+                    </div>
+                    <ul>
+                        <li>Survey, semi-structured interviews, precedent research, and literature review</li>
+                        <li>Evaluation protocol, bodystorming preparation, data collection, and documentation</li>
+                        <li>Graphic design, video production, front-end development, and remote technical support</li>
+                    </ul>
                 </div>
-                <p class="video-fallback">
-                    <span>Player unavailable in this browser?</span>
-                    <a href="https://www.youtube.com/watch?v=bwEPWWMTuLs" target="_blank" rel="noopener">Watch directly on
-                        YouTube &nearr;</a>
-                </p>
+
+                <div class="video-frame video-frame--external">
+                    <a class="video-link-card" href="https://www.youtube.com/watch?v=bwEPWWMTuLs" target="_blank"
+                        rel="noopener" aria-label="Watch the MoodBall prototype demonstration on YouTube in a new tab">
+                        <img src="../../assets/images/moodball/hero.jpg"
+                            alt="Illuminated MoodBall physical computing prototype">
+                        <span class="video-link-card__play" aria-hidden="true">&#9654;</span>
+                        <span class="video-link-card__copy">
+                            <small>MOODBALL / PROTOTYPE DEMO</small>
+                            <strong>Watch the physical interaction in motion</strong>
+                            <span>External playback &nearr;</span>
+                        </span>
+                    </a>
+                </div>
 
                 <div class="document-links" aria-label="MoodBall project documents">
                     <a href="../../assets/documents/moodball/proposal.pdf">Project proposal</a>
