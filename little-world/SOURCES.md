@@ -53,3 +53,11 @@ GitHub Pages 的共享到访与明信片通过 Sites / Cloudflare Worker + D1 �
 v8 增加可收起卡片和地面方向箭头，修复电视待机纹理水平镜像；方向移动使用原模型碰撞并逐小步检测。
 
 v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审校主页面、阅读器和保存提示。
+
+## 2026-09-06 展示封面更新
+
+`../portfolio/assets/images/foodcare/combined-showcase.jpg` 由上表中的 FoodCare 深色厨房硬件图和手机界面通过内置 imagegen 合成，用于作品集与小屋工作室的统一封面。原始两张素材保留；新图为作品展示合成图。
+
+提示词：将 FoodCare 手机原型完整放在深色厨房台面的左侧，保留右侧摄像头、果蔬和计算机；匹配光照和接触阴影，保留 FoodCare / care for your health / Submit / Link to Costco 的界面文字；输出一张 16:9 场景图，不加标题或边框。
+
+`../portfolio/assets/images/little-world/home-preview.jpg` 来自本项目更新后的实时三维场景。

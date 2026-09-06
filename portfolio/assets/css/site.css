@@ -498,32 +498,13 @@ textarea {
 }
 
 .project-media--foodcare {
-    position: relative;
     overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #171716;
 }
 
 .project-media--foodcare .project-cover {
-    object-position: 62% center;
-}
-
-.project-media--foodcare::after {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(90deg, rgba(9, 9, 11, 0.18), transparent 48%);
-    content: "";
-    pointer-events: none;
-}
-
-.project-media--foodcare .project-ui-preview {
-    position: absolute;
-    bottom: -7%;
-    left: 7%;
-    z-index: 2;
-    width: auto;
-    height: 76%;
     object-fit: contain;
-    filter: drop-shadow(0 24px 28px rgba(0, 0, 0, 0.42));
 }
 
 .project-copy {
@@ -859,7 +840,7 @@ textarea {
 
 .prototype-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
 }
 

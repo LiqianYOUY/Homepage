@@ -66,9 +66,50 @@ export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setS
    const b={id,object:g,index:i,state:{species,stage:Number.isFinite(old.stage)?THREE.MathUtils.clamp(old.stage,0,4):3,watered:Number(old.watered)||0,fertilized:Number(old.fertilized)||0,flowers:Number(old.flowers)||0},plant:null};beds.push(b);grow(b);
    b.record={id,label:'花箱 '+(i+1)+' · '+names[species],kind:'garden',object:g,hotspot:false,anchor:g.position.clone().add(new THREE.Vector3(0,.9,0)),click:()=>openGarden(id)};register(b.record);
  }
- // Two quiet seats, clear of the sliding doors and the planting aisle.
- const table=group('Terrace little tea table');table.position.copy(P(659,249));const top=cyl(table,'Terrace cafe tabletop',.33,.33,.04,stone,'furniture');top.position.y=.68;const stem=cyl(table,'Terrace cafe table leg',.034,.042,.65,metal,'furniture');stem.position.y=.325;const base=cyl(table,'Terrace cafe table foot',.22,.24,.03,metal,'furniture');base.position.y=.015;
- for(const [dx,dz,angle] of [[-.63,.15,Math.PI/2],[.55,-.19,-Math.PI/2]]){const g=group('Terrace cafe chair');g.position.set(table.position.x+dx,0,table.position.z+dz);g.rotation.y=angle;const seat=box(g,'Terrace chair seat',.43,.06,.42,wood,'furniture');seat.position.y=.43;const back=box(g,'Terrace chair back',.43,.30,.045,wood,'furniture');back.position.set(0,.70,.18);for(const x of [-.17,.17])for(const z of [-.15,.15]){const leg=cyl(g,'Terrace chair leg',.014,.018,.41,metal,'furniture');leg.position.set(x,.205,z);}}
+ // The west-end outdoor dining set leaves both sliding doors and the facade aisle clear.
+ const teak=mat('Terrace honey teak furniture',0x98734e),teakLight=mat('Terrace teak alternate grain',0xad8a61),rattan=mat('Terrace natural rattan weave',0xbf9868),rattanShade=mat('Terrace rattan cross weave',0x9e774e),linen=mat('Terrace oatmeal outdoor cushions',0xeee7d6,.98),grillBlack=mat('Terrace barbecue charcoal enamel',0x303936,.38,{metalness:.3}),steel=mat('Terrace barbecue brushed steel',0xa9aaa0,.30,{metalness:.75}),rubber=mat('Terrace barbecue wheels',0x34332d,.95),pepper=mat('Terrace barbecue pepper skewers',0xb56d48),herb=mat('Terrace barbecue vegetable skewers',0x78814d);
+ function roundedSlab(parent,name,w,h,d,r,m,category='decoration'){
+   const s=new THREE.Shape(),x=-w/2,z=-d/2;
+   s.moveTo(x+r,z);s.lineTo(x+w-r,z);s.quadraticCurveTo(x+w,z,x+w,z+r);s.lineTo(x+w,z+d-r);s.quadraticCurveTo(x+w,z+d,x+w-r,z+d);s.lineTo(x+r,z+d);s.quadraticCurveTo(x,z+d,x,z+d-r);s.lineTo(x,z+r);s.quadraticCurveTo(x,z,x+r,z);
+   const geometry=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:false,curveSegments:4});geometry.rotateX(-Math.PI/2);geometry.translate(0,-h/2,0);return mesh(parent,name,geometry,m,category);
+ }
+ function wickerTube(parent,name,points,radius,m,category='decoration'){
+   return mesh(parent,name,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),Math.max(8,points.length*2),radius,5,false),m,category);
+ }
+ const table=group('Terrace slatted teak dining table');table.position.copy(P(661,249,.025));
+ for(let i=0;i<5;i++){const plank=roundedSlab(table,'Terrace teak tabletop plank '+i,1.04,.055,.122,.025,i%2?teak:teakLight,'furniture');plank.position.set(0,.71,(i-2)*.134);}
+ for(const z of [-.23,.23]){const apron=box(table,'Terrace table support apron',.93,.09,.035,teak,'furniture');apron.position.set(0,.63,z);}
+ for(const x of [-.43,.43])for(const z of [-.23,.23]){const leg=box(table,'Terrace tapered teak table leg',.05,.64,.05,teak,'furniture');leg.position.set(x,.32,z);leg.rotation.z=-Math.sign(x)*.045;}
+ const tray=roundedSlab(table,'Terrace tea tray',.30,.025,.21,.04,rattanShade);tray.position.set(.19,.752,.02);
+ for(const x of [.10,.26]){const cup=cyl(table,'Terrace outdoor tea cup',.043,.034,.065,cream);cup.position.set(x,.795,.02);const tea=cyl(table,'Terrace tea surface',.034,.034,.004,soil);tea.position.set(x,.829,.02);}
+ for(const [index,dx,angle] of [[0,-.91,-Math.PI/2],[1,.91,Math.PI/2]]){
+   const g=group('Terrace woven rattan armchair '+(index+1));g.position.set(table.position.x+dx,table.position.y,table.position.z);g.rotation.y=angle;
+   const seat=roundedSlab(g,'Terrace rattan chair seat frame',.60,.065,.56,.12,rattanShade,'furniture');seat.position.y=.415;
+   const cushion=roundedSlab(g,'Terrace linen seat cushion',.51,.08,.46,.10,linen,'furniture');cushion.position.set(0,.481,-.012);
+   for(const x of [-.22,.22])for(const z of [-.19,.19]){const leg=cyl(g,'Terrace rattan chair teak leg',.020,.029,.40,teak,'furniture');leg.position.set(x,.20,z);leg.rotation.z=-Math.sign(x)*.075;leg.rotation.x=Math.sign(z)*.075;}
+   // A curved, open-front basket: crossed cane stays legible from the overhead views.
+   const weavePoint=(angle,t,offset=0)=>{const spread=.91+.12*t+offset,height=.66+.32*Math.max(0,Math.cos(angle));return new THREE.Vector3(Math.sin(angle)*.33*spread,.43+(height-.43)*t,Math.cos(angle)*.29*spread);};
+   for(let row=0;row<12;row++){const t=row/11,points=[];for(let k=0;k<=18;k++)points.push(weavePoint(-2.08+k*4.16/18,t));wickerTube(g,'Terrace rattan horizontal woven cane '+row,points,row===0||row===11?.016:.0095,rattan,row===11?'furniture':'decoration');}
+   for(let rib=0;rib<23;rib++){const angle=-2.08+rib*4.16/22,points=[];for(let k=0;k<=6;k++)points.push(weavePoint(angle,k/6,k%2?.012:-.004));wickerTube(g,'Terrace rattan vertical woven cane '+rib,points,.008,rattanShade);}
+ }
+ // A compact barbecue cart occupies the spare bay west of the living-room door.
+ const bbq=group('Terrace outdoor barbecue cart');bbq.position.copy(P(749,249,.025));
+ const firebox=roundedSlab(bbq,'Terrace barbecue firebox',.80,.23,.54,.07,grillBlack,'furniture');firebox.position.y=.84;
+ const grate=box(bbq,'Terrace barbecue recessed cooking bed',.69,.025,.43,soil);grate.position.y=.958;
+ for(let i=0;i<15;i++){const bar=box(bbq,'Terrace barbecue stainless grill grate '+i,.016,.015,.44,steel);bar.position.set((i-7)*.045,.984,0);}
+ for(const x of [-.33,.33])for(const z of [-.20,.20]){const leg=box(bbq,'Terrace barbecue cart leg',.032,.65,.032,steel,'furniture');leg.position.set(x,.395,z);}
+ const shelf=roundedSlab(bbq,'Terrace barbecue lower storage shelf',.74,.035,.45,.035,teak,'furniture');shelf.position.y=.22;
+ for(const x of [-.35,.35]){const wheel=cyl(bbq,'Terrace barbecue wheel',.075,.075,.04,rubber,'furniture');wheel.rotation.z=Math.PI/2;wheel.position.set(x,.077,.20);const hub=cyl(bbq,'Terrace barbecue wheel hub',.026,.026,.044,steel);hub.rotation.z=Math.PI/2;hub.position.copy(wheel.position);}
+ const sideShelf=roundedSlab(bbq,'Terrace barbecue teak preparation shelf',.30,.04,.46,.035,teakLight,'furniture');sideShelf.position.set(.56,.93,0);
+ const lid=group('Terrace barbecue raised lid',bbq);lid.position.set(0,.968,-.27);lid.rotation.x=-1.15;
+ const lidShell=roundedSlab(lid,'Terrace barbecue open enamel hood',.82,.07,.54,.08,grillBlack,'furniture');lidShell.position.z=.27;
+ const lidHandle=box(lid,'Terrace barbecue lid handle',.35,.028,.035,steel);lidHandle.position.set(0,.092,.43);
+ for(const x of [-.145,.145]){const mount=box(lid,'Terrace barbecue lid handle mount',.025,.075,.025,steel);mount.position.set(x,.058,.43);}
+ const controls=box(bbq,'Terrace barbecue steel control fascia',.73,.105,.026,steel);controls.position.set(0,.854,.28);
+ for(const x of [-.22,0,.22]){const knob=cyl(bbq,'Terrace barbecue burner knob',.031,.031,.025,grillBlack);knob.rotation.x=Math.PI/2;knob.position.set(x,.854,.308);}
+ for(let skewer=0;skewer<3;skewer++){const z=(skewer-1)*.10,stick=box(bbq,'Terrace barbecue bamboo skewer',.45,.009,.009,teakLight);stick.position.set(-.06,1.008,z);for(let bite=0;bite<4;bite++){const food=box(bbq,'Terrace barbecue vegetable bite',.065,.032,.066,(bite+skewer)%2?pepper:herb);food.position.set(-.20+bite*.081,1.013,z);food.rotation.y=(bite%2-.5)*.3;}}
+ const board=roundedSlab(bbq,'Terrace barbecue chopping board',.24,.018,.28,.025,rattan);board.position.set(.56,.959,.015);
+ for(const x of [.53,.57]){const tong=box(bbq,'Terrace barbecue serving tongs',.014,.012,.22,steel);tong.position.set(x,.975,.025);tong.rotation.y=x===.53?.10:-.10;}
  const can=group('Terrace watering can');can.position.copy(P(1160,276));const canBody=cyl(can,'Watering can body',.105,.12,.20,leafMats[0]);canBody.position.y=.10;const spout=cyl(can,'Watering can spout',.026,.018,.27,metal);spout.rotation.z=-.85;spout.position.set(.14,.17,0);const handle=mesh(can,'Watering can loop',new THREE.TorusGeometry(.10,.012,8,20),metal);handle.position.set(-.075,.16,0);register({id:'terrace-garden',label:'露台 · 浇水施肥',kind:'garden',object:can,anchor:P(860,190,1.12),click:()=>openGarden()});can.traverse(o=>o.userData.noMerge=true);
  let wateredBed=null,waterUntil=0,time=0;const spray=group('Terrace watering droplets');spray.visible=false;spray.userData.noMerge=true;for(let i=0;i<12;i++){const d=sphere(spray,'Watering droplet',.013,waterMat);d.scale.y=2;d.userData.phase=i/12;d.userData.noMerge=true;}
  function getBed(id){const b=beds.find(b=>b.id===id)||beds[0],s=b.state;return{id:b.id,index:b.index,...s,name:names[s.species],canHarvest:s.stage>=4&&['lavender','daisy'].includes(s.species),label:s.stage===0?'一颗种子，等着探头。':s.stage<2?'小苗慢慢长高了。':s.stage<3?'叶子舒展开，绿意正好。':s.stage<4?(['daisy','lavender'].includes(s.species)?'长得很好，花也悄悄开了。':'枝叶长得很好，空气里有草木香。'):'满满的生命力，今天也越来越好。'};}

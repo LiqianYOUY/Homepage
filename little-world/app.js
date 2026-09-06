@@ -9,13 +9,14 @@ import {setupStudio} from './studio.js';
 import {createWalkCollision} from './walk-collision.js';
 import {optimizeScene} from './optimize-scene.js';
 import {setupSmartHome} from './smart-home.js?v=9';
-import {setupTerrace} from './terrace-v7.js';
-import {setupCabinetryV7} from './cabinetry-v7.js';
+import {setupTerrace} from './terrace-v7.js?v=10';
+import {setupCabinetryV7} from './cabinetry-v7.js?v=10';
+import {setupLivingRoom} from './living-room.js?v=10';
 import {createCommunityClient} from './community-client.js?v=9';
 import {communityAPI} from './community-config.js?v=9';
 import {createWelcomeWorld} from './welcome-world.js?v=9';
 import {setupTelevision} from './television.js?v=9';
-import {houseIcon,visitorAvatar,fryingPanIcon,footprintsIcon} from './little-icons.js?v=9';
+import {houseIcon,visitorAvatar,fryingPanIcon,footprintsIcon,roomIcons} from './little-icons.js?v=10';
 import {raiseDialog,consumeDialogEscape,topDialog} from './dialog-stack.js';
 import {createGroundNavigation} from './ground-navigation.js?v=9';
 
@@ -34,7 +35,7 @@ const communityClient=await createCommunityClient({apiBase:communityAPI()});visi
 async function refreshCommunity(){community=await communityClient.refresh();visitor=communityClient.visitor;worldUI?.updateTop();return community;}
 async function postcard(kind,text=''){community=await communityClient.postcard(kind,text);return community;}
 $('#house-icon').innerHTML=houseIcon;document.querySelector('link[rel=icon]').href='data:image/svg+xml,'+encodeURIComponent(houseIcon.replace('aria-hidden="true"','xmlns="http://www.w3.org/2000/svg"'));$('#cat-avatar-button').innerHTML=visitorAvatar(48);
-$('[data-room="kitchen"]').innerHTML=fryingPanIcon+' <span>厨房</span>';
+for(const button of document.querySelectorAll('[data-room]')){const label=button.querySelector('span').textContent;button.innerHTML=(roomIcons[button.dataset.room]||fryingPanIcon)+' <span>'+label+'</span>';}
 updateWalkButton(false);
 stateStore=await createStore(()=>{refreshCare();studio?.updateNotes();studio?.refreshBooks?.();if(lightingReady)applyLighting();},message=>$('#save-status').textContent='生活记录 · '+message,{visitor,communityClient});
 const state=()=>stateStore.get(),setState=patch=>stateStore.set(patch);
@@ -89,7 +90,7 @@ function setReduced(on){setState({settings:{reducedMotion:on}});document.body.da
 document.body.dataset.reducedMotion=String(!!state().settings.reducedMotion);$('#reduce-motion').checked=!!state().settings.reducedMotion;
 $('#light-mode').onclick=()=>{setState({settings:{night:!state().settings.night}});applyLighting();};$('#reduce-motion').onchange=e=>setReduced(e.target.checked);for(const id of ['full-walls','show-glass','show-ceiling'])$('#'+id).onchange=applyVisibility;
 
-const views={terrace:{eye:[-5.5,5.4,-12.4],target:[-1.2,.45,-6.3]},overview:{eye:[15,22,27],target:[-1,.6,0]},television:{eye:[-7.117,1.65,-3.9],target:[-7.117,1.42,.683]},living:{eye:[-6.8,3.8,-5.3],target:[-6.6,.65,-1.5]},study:{eye:[4.2,2.35,-4.4],target:[1.65,1.14,-3.18]},kitchen:{eye:[-4.8,3.7,-4.6],target:[-1.0,.8,-1.6]},master:{eye:[-9.0,4.5,.1],target:[-6.7,.55,3.43]},garden:{eye:[-6.7,4.8,1.8],target:[-10.8,.6,-1.6]}};
+const views={terrace:{eye:[-10,7.3,-12.5],target:[-5.8,.4,-5.7]},overview:{eye:[15,22,27],target:[-1,.6,0]},television:{eye:[-7.117,1.65,-3.9],target:[-7.117,1.42,.683]},living:{eye:[-7.05,6.0,-4.0],target:[-7.0,.55,-1.8]},study:{eye:[4.2,2.35,-4.4],target:[1.65,1.14,-3.18]},kitchen:{eye:[-4.8,3.7,-4.6],target:[-1.0,.8,-1.6]},master:{eye:[-9.0,4.5,.1],target:[-6.7,.55,3.43]},garden:{eye:[-6.7,4.8,1.8],target:[-10.8,.6,-1.6]}};
 function go(room,instant=false){if(!model)return;watchingCat=false;if(walk)exitWalk(false);currentRoom=room==='television'?'living':room;const v=views[room]||views.overview;let eye=new THREE.Vector3(...v.eye),target=new THREE.Vector3(...v.target);if(room==='overview'){const bounds=new THREE.Box3().setFromObject(model),center=bounds.getCenter(new THREE.Vector3());center.y=.5;const direction=eye.clone().sub(target).normalize();const right=new THREE.Vector3().crossVectors(camera.up,direction).normalize(),up=new THREE.Vector3().crossVectors(direction,right).normalize();const tanV=Math.tan(THREE.MathUtils.degToRad(camera.fov/2)),tanH=tanV*camera.aspect;const safeX=innerWidth>1000?.76:.9;let distance=0;for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){const d=new THREE.Vector3(x,y,z).sub(center);distance=Math.max(distance,d.dot(direction)+Math.abs(d.dot(right))/(tanH*safeX),d.dot(direction)+Math.abs(d.dot(up))/(tanV*.78));}target=center;eye=center.clone().addScaledVector(direction,distance);}
  if(innerWidth<760&&room!=='overview')eye=target.clone().add(eye.sub(target).multiplyScalar(1.18));
  document.body.classList.toggle('close-view',room!=='overview');document.querySelectorAll('[data-room]').forEach(b=>b.classList.toggle('active',b.dataset.room===currentRoom));
@@ -98,7 +99,7 @@ function go(room,instant=false){if(!model)return;watchingCat=false;if(walk)exitW
 document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>go(b.dataset.room));
 $('#desk-shortcut').onclick=()=>{go('study');personal.openNotes();};$('#book-shortcut').onclick=()=>{go('study');personal.openLibrary();};$('#music-shortcut').onclick=()=>personal.openMusic();
 const PORTFOLIO='https://liqianyouy.github.io/Homepage/portfolio/';
-function openPortfolio(url=PORTFOLIO){$('#portfolio-window').hidden=false;$('#portfolio-frame').src='./portfolio-room.html';$('#portfolio-external').href=url;raiseDialog($('#portfolio-window'));$('#portfolio-close').focus();}
+function openPortfolio(url=PORTFOLIO){$('#portfolio-window').hidden=false;$('#portfolio-frame').src='./portfolio-room.html?v=10';$('#portfolio-external').href=url;raiseDialog($('#portfolio-window'));$('#portfolio-close').focus();}
 function closePortfolio(){$('#portfolio-window').hidden=true;$('#portfolio-frame').src='about:blank';}
 $('#portfolio-shortcut').onclick=()=>{go('study');openPortfolio();};$('#portfolio-close').onclick=closePortfolio;
 let floatingDrag=null;$('#portfolio-drag').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const r=$('#portfolio-window').getBoundingClientRect();floatingDrag={id:e.pointerId,x:e.clientX,y:e.clientY,left:r.left,top:r.top};e.currentTarget.setPointerCapture(e.pointerId);});$('#portfolio-drag').addEventListener('pointermove',e=>{if(!floatingDrag||e.pointerId!==floatingDrag.id)return;const panel=$('#portfolio-window');panel.style.left=THREE.MathUtils.clamp(floatingDrag.left+e.clientX-floatingDrag.x,0,innerWidth-180)+'px';panel.style.top=THREE.MathUtils.clamp(floatingDrag.top+e.clientY-floatingDrag.y,0,innerHeight-70)+'px';});$('#portfolio-drag').addEventListener('pointerup',()=>floatingDrag=null);
@@ -163,8 +164,9 @@ function updateHotspots(){
 try{
  const loaded=await new GLTFLoader().loadAsync('./apartment.glb',e=>{if(e.total)$('#load-detail').textContent='小屋准备中 '+Math.round(e.loaded/e.total*100)+'%';});model=loaded.scene;scene.add(model);model.updateMatrixWorld(true);
  model.traverse(o=>{if(!o.isMesh)return;o.castShadow=!o.material?.transparent;o.receiveShadow=true;if(o.material?.transparent){o.material.depthWrite=false;o.renderOrder=2;}const c=o.userData.category;if(['wall','upperWall'].includes(c)){const b=new THREE.Box3().setFromObject(o);if(b.max.y>.2)wallBoxes.push(b);}});
+ diagnostics.livingRoom=setupLivingRoom({THREE,model}).audit;
  applyVisibility();house=setupHouseInteractions({THREE,scene,model,register,toast,getState:state,setState});
- let navigation=null;try{const r=await fetch('./cat-navigation.json');if(r.ok)navigation=await r.json();}catch{}
+ let navigation=null;try{const r=await fetch('./cat-navigation.json?v=10');if(r.ok)navigation=await r.json();}catch{}
  smart=setupSmartHome({THREE,scene,model,register,getState:state,setState,toast,openControls:()=>worldUI.openControls(),openGarden:()=>{go('garden');worldUI.openGarden();},navigation:navigation||{}});cabinetry=setupCabinetryV7({THREE,scene,model,register,getState:state,setState,toast,house});diagnostics.cabinetry=cabinetry.audit;terrace=setupTerrace({THREE,model,register,getState:state,setState,toast,openGarden:id=>worldUI.openTerrace(id),onDoorOpen:()=>smart.setCurtains(true)});house.colliderRoots=[...smart.colliderRoots,...cabinetry.colliderRoots,...terrace.colliderRoots];diagnostics.terrace=terrace.audit;applyVisibility();
  walkCollision=createWalkCollision({THREE,model,house});diagnostics.walk=walkCollision.audit;
  studio=setupStudio({THREE,scene,model,register,openNotes:()=>personal.openNotes(),openLibrary:id=>personal.openLibrary(id),openMusic:()=>personal.openMusic(),openPortfolio,getState:state,setState,toast,turnLightsOn:()=>smart.setLights(true)});

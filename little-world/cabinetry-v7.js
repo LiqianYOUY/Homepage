@@ -16,9 +16,19 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   const white=material('V7 glazed ceramic',{color:0xf0ede2,roughness:.23});
   const graphite=material('V7 cookware graphite',{color:0x52534d,metalness:.68,roughness:.32});
   const cloth=[material('V7 cream folded cotton',{color:0xded8cb,roughness:1}),material('V7 sage clothing',{color:0x889080,roughness:1}),material('V7 terracotta clothing',{color:0xb88874,roughness:1}),material('V7 blue grey clothing',{color:0x7e8c92,roughness:1})];
+  const dressSage=material('V7 sage linen dress',{color:0x779382,roughness:1});
+  const eveningRose=material('V7 dusty rose evening gown',{color:0xb67980,roughness:.64});
+  const suitNavy=material('V7 tailored navy suit',{color:0x384b63,roughness:.92});
+  const labelPaper=material('V7 pantry cream paper labels',{color:0xf4e9cf,roughness:.87});
+  const amber=material('V7 amber condiment bottles',{color:0x98622f,roughness:.31});
+  const olive=material('V7 olive oil green bottles',{color:0x526a3d,roughness:.31});
+  const snackGold=material('V7 golden snack packets',{color:0xd6ab58,roughness:.78});
+  const snackCoral=material('V7 coral snack packets',{color:0xc77d66,roughness:.78});
+  const grain=material('V7 dry goods oat jars',{color:0xd0b58b,roughness:.72});
   const plaster=find('TV wall · cutaway')?.material||cream;
   function group(name,parent=model){const g=new THREE.Group();g.name=name;parent.add(g);roots.push(g);return g;}
-  function mesh(g,m,p,name,category='furniture'){geometries.add(g);const o=new THREE.Mesh(g,m);o.name=name;o.userData={name,category};for(let a=p;a;a=a.parent)if(a.userData.interactionId){o.userData.interactionId=a.userData.interactionId;o.userData.noMerge=true;break;}o.castShadow=true;o.receiveShadow=true;p.add(o);return o;}
+  function mesh(g,m,p,name,category='furniture'){geometries.add(g);const o=new THREE.Mesh(g,m);o.name=name;o.userData={name,category};for(let a=p;a;a=a.parent){if(a.userData.cabinetContent){o.userData.cabinetContent=true;o.userData.category='cabinetContents';}if(a.userData.interactionId){o.userData.interactionId=a.userData.interactionId;o.userData.noMerge=true;break;}}o.castShadow=true;o.receiveShadow=true;p.add(o);return o;}
+  function contents(name,parent){const g=group(name,parent);g.userData.cabinetContent=true;return g;}
   const box=(p,n,w,h,d,m=oak,c='furniture')=>mesh(new THREE.BoxGeometry(w,h,d),m,p,n,c);
   const cylinder=(p,n,r,h,m=metal,segments=16)=>mesh(new THREE.CylinderGeometry(r,r,h,segments),m,p,n);
   function rod(p,n,a,b,r=.006,m=metal){const d=new THREE.Vector3().subVectors(b,a),o=cylinder(p,n,r,d.length(),m,10);o.position.copy(a).add(b).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return o;}
@@ -87,15 +97,44 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
     const shelf=box(body,name+' folded clothing shelf',w,.018,d-.04,innerOak);shelf.position.set(x,level,-.01);
     for(let k=0;k<3;k++){const fold=box(body,name+' folded cotton stack',Math.min(.34,w-.035),.052,Math.min(.28,d-.06),cloth[(i+k)%cloth.length]);fold.position.set(x,level+.009+.026+k*.052,.018);}
   }}
+  let garmentIndex=0;
+  function clothingPanel(parent,name,points,mat,depth=.018,z=0){
+    const shape=new THREE.Shape();shape.moveTo(...points[0]);points.slice(1).forEach(p=>shape.lineTo(...p));shape.closePath();
+    const panel=mesh(new THREE.ExtrudeGeometry(shape,{depth,bevelEnabled:true,bevelThickness:.002,bevelSize:.002,bevelSegments:1,steps:1}),mat,parent,name);panel.position.z=z;return panel;
+  }
   function hanging(body,name,x,w,d,h){const level=h-.50;
     rod(body,name+' supported hanging rail',new THREE.Vector3(x-w/2,level,0),new THREE.Vector3(x+w/2,level,0),.011,metal);
     for(const xx of [x-w/2,x+w/2]){const bracket=box(body,name+' rail mounting block',.023,.050,.042,metal);bracket.position.set(xx,level,0);}
     const shelf=box(body,name+' high wardrobe shelf',w,.018,d-.035,innerOak);shelf.position.set(x,h-.25,-.007);
-    for(let i=0;i<3;i++){const xx=x+(i-1)*Math.min(.125,w/3.4),neck=level-.09,shoulder=neck-.11;
-      tube(body,name+' curved hanger hook',[new THREE.Vector3(xx,neck,0),new THREE.Vector3(xx,level,.023),new THREE.Vector3(xx,level+.023,0),new THREE.Vector3(xx,level,-.019)],.004,metal);
-      for(const [a,b] of [[[xx,neck,0],[xx,shoulder,-.185]],[[xx,shoulder,-.185],[xx,shoulder,.185]],[[xx,shoulder,.185],[xx,neck,0]]])rod(body,name+' triangular clothes hanger',new THREE.Vector3(...a),new THREE.Vector3(...b),.004,metal);
-      const shape=new THREE.Shape();const y=shoulder+.015;const pts=[[-.025,y+.013],[-.09,y+.018],[-.175,y-.018],[-.23,y-.13],[-.165,y-.17],[-.135,y-.105],[-.135,y-.52],[.135,y-.52],[.135,y-.105],[.165,y-.17],[.23,y-.13],[.175,y-.018],[.09,y+.018],[.025,y+.013],[0,y-.026]];shape.moveTo(...pts[0]);pts.slice(1).forEach(p=>shape.lineTo(...p));shape.closePath();
-      const shirt=mesh(new THREE.ExtrudeGeometry(shape,{depth:.020,bevelEnabled:true,bevelThickness:.003,bevelSize:.003,bevelSegments:1,steps:1}),cloth[i%4],body,name+' hanging shirt');shirt.rotation.y=-Math.PI/2;shirt.position.x=xx+.01;
+    // Two angled hangers leave each silhouette readable through an open leaf.
+    // Scale against the narrowest bay; hems remain clear of dividers and the back.
+    for(let i=0;i<2;i++){
+      const kind=['linen dress','evening gown','collared shirt','tailored suit'][garmentIndex++%4];
+      const angle=kind==='linen dress'||kind==='evening gown'?.22:.97;
+      const garment=contents(name+' hanging clothing · '+kind,body);garment.position.set(x+(i?1:-1)*w*.22,level-.17,0);garment.rotation.y=-angle;
+      garment.scale.x=Math.min(1,(w*.28-.022)/(.232*Math.cos(angle)+.021*Math.sin(angle)));
+      tube(garment,name+' clothing curved hanger hook',[new THREE.Vector3(0,.075,0),new THREE.Vector3(0,.17,.023),new THREE.Vector3(0,.193,0),new THREE.Vector3(0,.17,-.019)],.004,metal);
+      for(const [a,b] of [[[0,.075,0],[-.175,-.005,0]],[[-.175,-.005,0],[.175,-.005,0]],[[.175,-.005,0],[0,.075,0]]])rod(garment,name+' clothing triangular hanger',new THREE.Vector3(...a),new THREE.Vector3(...b),.004,metal);
+      if(kind==='linen dress'||kind==='evening gown'){
+        const formal=kind==='evening gown',hem=formal?1.36:1.02,mat=formal?eveningRose:dressSage;
+        clothingPanel(garment,name+' clothing '+kind,[[-.034,.018],[-.09,.027],[-.13,-.055],[-.094,-.36],[-.225,-hem],[.225,-hem],[.094,-.36],[.13,-.055],[.09,.027],[.034,.018],[0,-.07]],mat);
+        const belt=box(garment,name+' clothing dress waist ribbon',.194,.035,.012,formal?metal:cloth[0]);belt.position.set(0,-.355,.025);
+        for(const side of [-1,1])rod(garment,name+' clothing skirt seam',new THREE.Vector3(side*.07,-.40,.022),new THREE.Vector3(side*.145,-hem+.04,.022),.003,formal?eveningRose:cloth[1]);
+        if(formal){const clasp=mesh(new THREE.SphereGeometry(.012,8,6),metal,garment,name+' clothing evening gown clasp');clasp.position.set(.01,-.354,.037);}
+      }else{
+        const suit=kind==='tailored suit',mat=suit?suitNavy:white,hem=suit?.70:.58;
+        clothingPanel(garment,name+' clothing '+kind,[[-.033,.018],[-.11,.028],[-.17,-.035],[-.218,-.44],[-.16,-.46],[-.12,-.15],[-.12,-hem],[.12,-hem],[.12,-.15],[.16,-.46],[.218,-.44],[.17,-.035],[.11,.028],[.033,.018],[0,-.015]],mat);
+        if(suit){
+          clothingPanel(garment,name+' clothing suit shirt front',[[-.057,.013],[.057,.013],[0,-.30]],white,.005,.022);
+          for(const side of [-1,1])clothingPanel(garment,name+' clothing suit tailored lapel',[[side*.06,.013],[side*.11,-.09],[side*.037,-.30],[0,-.22]],cloth[3],.006,.027);
+          for(const side of [-1,1]){const trouser=box(garment,name+' clothing suit trouser leg',.098,.64,.026,suitNavy);trouser.position.set(side*.057,-.95,.004);}
+          const tie=box(garment,name+' clothing suit silk tie',.020,.21,.005,eveningRose);tie.position.set(0,-.13,.035);
+        }else{
+          for(const side of [-1,1])clothingPanel(garment,name+' clothing shirt pointed collar',[[side*.029,.025],[side*.083,-.012],[side*.039,-.081],[0,-.012]],cloth[0],.007,.024);
+          const pocket=box(garment,name+' clothing shirt chest pocket',.047,.051,.006,cloth[0]);pocket.position.set(-.071,-.16,.026);
+        }
+        for(const yy of (suit?[-.36,-.49]:[-.11,-.23,-.35,-.47])){const button=mesh(new THREE.SphereGeometry(.005,6,4),suit?metal:cloth[3],garment,name+' clothing front button');button.position.set(suit?.025:0,yy,.031);}
+      }
     }
   }
   function bowl(body,name,x,y,z,r=.10,m=white){const profile=[[0,0],[r*.59,0],[r*.75,.009],[r,.07],[r*.95,.076],[r*.88,.064],[r*.57,.010],[0,.010]].map(([x,y])=>new THREE.Vector2(x,y));const o=mesh(new THREE.LatheGeometry(profile,24),m,body,name);o.position.set(x,y,z);return o;}
@@ -104,14 +143,59 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   function cookingPot(body,name,x,y,z,r=.095,h=.12){const shell=mesh(new THREE.CylinderGeometry(r,r*.92,h,24,1,true),graphite,body,name+' hollow pot wall');shell.position.set(x,y+h/2,z);const bottom=cylinder(body,name+' flat pot base',r*.92,.009,graphite,24);bottom.position.set(x,y+.0045,z);
     for(const zz of [-1,1]){const handle=mesh(new THREE.TorusGeometry(.035,.007,8,18,Math.PI*1.5),metal,body,name+' loop handle');handle.rotation.set(Math.PI/2,0,zz>0?-.75:2.39);handle.position.set(x,y+h*.72,z+zz*(r+.012));}
   }
+  function pantryJar(parent,name,x,y,z,r=.046,height=.16,mat=grain){
+    const jar=cylinder(parent,name+' storage jar',r,height,mat,16);jar.position.set(x,y+height/2,z);
+    const lid=cylinder(parent,name+' storage jar oak lid',r+.003,.018,oak,16);lid.position.set(x,y+height+.009,z);
+    const label=box(parent,name+' storage jar paper label',r*1.3,height*.38,.008,labelPaper);label.position.set(x,y+height*.52,z+r-.001);
+    const mark=box(parent,name+' storage jar label stripe',r*.63,.009,.002,mat===grain?olive:snackCoral);mark.position.set(x,y+height*.52,z+r+.004);
+  }
+  function condimentBottle(parent,name,x,y,z,height=.22,mat=olive){
+    const radius=.030,bodyHeight=height-.064;
+    const vessel=cylinder(parent,name+' seasoning bottle body',radius,bodyHeight,mat,12);vessel.position.set(x,y+bodyHeight/2,z);
+    const shoulder=mesh(new THREE.CylinderGeometry(.013,radius,.028,12),mat,parent,name+' seasoning bottle shoulder');shoulder.position.set(x,y+bodyHeight+.014,z);
+    const neck=cylinder(parent,name+' seasoning bottle neck',.013,.030,mat,12);neck.position.set(x,y+height-.021,z);
+    const cap=cylinder(parent,name+' seasoning bottle cap',.016,.018,dark,12);cap.position.set(x,y+height-.009,z);
+    const label=box(parent,name+' seasoning bottle paper label',.044,.053,.006,labelPaper);label.position.set(x,y+bodyHeight*.52,z+radius-.001);
+    const stripe=box(parent,name+' seasoning bottle label stripe',.027,.010,.002,mat);stripe.position.set(x,y+bodyHeight*.52,z+radius+.003);
+  }
+  function snackPacket(parent,name,x,y,z,width=.10,height=.17,mat=snackGold){
+    const pack=box(parent,name+' snack packet',width,height,.061,mat);pack.position.set(x,y+height/2,z);pack.rotation.z=-.025;
+    for(const yy of [y+.009,y+height-.009]){const seam=box(parent,name+' snack packet sealed edge',width+.004,.012,.065,mat);seam.position.set(x,yy,z);}
+    const label=box(parent,name+' snack packet cream label',width*.70,height*.37,.005,labelPaper);label.position.set(x,y+height*.55,z+.033);
+    const biscuit=cylinder(parent,name+' snack packet biscuit emblem',width*.18,.004,mat===snackGold?snackCoral:grain,12);biscuit.rotation.x=Math.PI/2;biscuit.position.set(x,y+height*.55,z+.038);
+  }
+  function cutleryTray(parent,name,x,y,z,width=.28){
+    const tray=box(parent,name+' cutlery tray base',width,.014,.20,oak);tray.position.set(x,y+.007,z);
+    for(const dx of [-width/2+.006,width/2-.006]){const edge=box(parent,name+' cutlery tray edge',.012,.028,.20,oak);edge.position.set(x+dx,y+.021,z);}
+    for(const dz of [-.094,.094]){const edge=box(parent,name+' cutlery tray rim',width,.028,.012,oak);edge.position.set(x,y+.021,z+dz);}
+    for(let i=0;i<3;i++){
+      const xx=x+(i-1)*width*.27,yy=y+.023;
+      const grip=box(parent,name+' cutlery '+['fork','knife','spoon'][i]+' handle',.011,.007,.082,metal);grip.position.set(xx,yy,z+.030);
+      if(i===0){const shoulder=box(parent,name+' cutlery fork shoulder',.028,.007,.018,metal);shoulder.position.set(xx,yy,z-.019);for(let k=0;k<4;k++){const tine=box(parent,name+' cutlery fork tine',.004,.007,.029,metal);tine.position.set(xx+(k-1.5)*.007,yy,z-.04);}}
+      else if(i===1){const blade=box(parent,name+' cutlery knife blade',.021,.008,.072,metal);blade.position.set(xx-.005,yy,z-.042);}
+      else{const spoon=mesh(new THREE.SphereGeometry(1,10,6),metal,parent,name+' cutlery spoon bowl');spoon.scale.set(.018,.005,.025);spoon.position.set(xx,yy,z-.036);}
+    }
+  }
   function kitchenContents(body,name,x,w,d,h,base,kind,index){const span=h-base;const levels=span>1?[base+.30,base+.76,base+1.22,base+1.70].filter(v=>v<h-.12):[base+.21];
+    const items=contents(name+' organized cabinet contents '+index,body),front=Math.min(.085,d*.14);
     for(let j=0;j<levels.length;j++){const yy=levels[j],s=box(body,name+' storage shelf',w,.018,d-.04,innerOak);s.position.set(x,yy,-.004);const top=yy+.009;
-      if(kind==='pantry'){for(let k=0;k<3;k++){const jar=cylinder(body,name+' pantry jar',Math.min(.055,w/7),.15,white,16);jar.position.set(x+(k-1)*w*.24,top+.075,0);const lid=cylinder(body,name+' jar oak lid',Math.min(.058,w/7+.003),.018,oak,16);lid.position.set(jar.position.x,top+.159,0);}}
-      else if(kind==='services'){const bin=box(body,name+' laundry storage basket',Math.min(w-.025,.40),.20,Math.min(.32,d-.06),cloth[j%4]);bin.position.set(x,top+.10,0);}
-      else if(kind==='comms'){if(j===0){const router=box(body,name+' router on shelf',Math.min(.26,w-.025),.04,.16,white);router.position.set(x,top+.02,0);for(const dx of [-.08,.08])rod(body,name+' router aerial',new THREE.Vector3(x+dx,top+.04,-.055),new THREE.Vector3(x+dx,top+.16,-.055),.004,dark);}else{const storage=box(body,name+' labelled household box',Math.min(.27,w-.025),.15,.20,cloth[0]);storage.position.set(x,top+.075,0);}}
-      else if((index+j)%3===0){for(let k=0;k<5;k++)plate(body,name+' stacked plate',x,top+k*.017,0,Math.min(.115,w*.42));}
-      else if((index+j)%3===1){for(const offset of [-1,1])mug(body,name+' stored mug',x+offset*Math.min(.077,w*.2),top,0);}
-      else{cookingPot(body,name+' stored saucepan',x,top,0,Math.min(.095,w*.38),.105);}
+      if(kind==='pantry'){
+        if(j===0){for(let k=0;k<3;k++)snackPacket(items,name+' biscuits and crisps',x+(k-1)*w*.28,top,front,Math.min(.10,w*.23),.17+(k%2)*.03,k%2?snackCoral:snackGold);}
+        else if(j===1){for(let k=0;k<3;k++)pantryJar(items,name+' oats nuts and dried fruit',x+(k-1)*w*.28,top,front,Math.min(.047,w*.11),.15+(k%2)*.035,k%2?amber:grain);}
+        else if(j===2){for(let k=0;k<3;k++)condimentBottle(items,name+' soy sauce oil and vinegar',x+(k-1)*w*.28,top,front,.21+(k%2)*.025,k%2?amber:olive);}
+        else{pantryJar(items,name+' tea jar',x-w*.23,top,front,.047,.16,olive);snackPacket(items,name+' crackers',x+w*.16,top,front,Math.min(.13,w*.28),.21,snackCoral);}
+      }
+      else if(kind==='services'){const bin=box(items,name+' laundry storage basket',Math.min(w-.025,.40),.20,Math.min(.32,d-.06),cloth[j%4]);bin.position.set(x,top+.10,0);}
+      else if(kind==='comms'){if(j===0){const router=box(items,name+' router on shelf',Math.min(.26,w-.025),.04,.16,white);router.position.set(x,top+.02,0);for(const dx of [-.08,.08])rod(items,name+' router aerial',new THREE.Vector3(x+dx,top+.04,-.055),new THREE.Vector3(x+dx,top+.16,-.055),.004,dark);}else{const storage=box(items,name+' labelled household box',Math.min(.27,w-.025),.15,.20,cloth[0]);storage.position.set(x,top+.075,0);}}
+      else{
+        const arrangement=span>1?(index*2+j)%6:index%4;
+        if(arrangement===0){for(let k=0;k<5;k++)plate(items,name+' stacked dinner plate',x-w*.18,top+k*.017,front,Math.min(.108,w*.26));pantryJar(items,name+' salt seasoning',x+w*.28,top,front,.035,.115,white);}
+        else if(arrangement===1){for(const offset of [-1,1])mug(items,name+' stored ceramic mug',x+offset*Math.min(.10,w*.22),top,front);}
+        else if(arrangement===2){cutleryTray(items,name+' fork knife spoon organizer',x,top,front,Math.min(.31,w-.045));}
+        else if(arrangement===3){cookingPot(items,name+' stored saucepan',x-w*.17,top,front,Math.min(.09,w*.23),.105);for(let k=0;k<2;k++)bowl(items,name+' stacked serving bowl',x+w*.27,top+k*.022,front,.065);}
+        else if(arrangement===4){for(let k=0;k<3;k++)condimentBottle(items,name+' kitchen spices and oil',x+(k-1)*w*.27,top,front,.20+(k%2)*.035,k%2?amber:olive);}
+        else{snackPacket(items,name+' pantry snack biscuits',x-w*.19,top,front,.115,.19,snackGold);pantryJar(items,name+' tea and coffee canister',x+w*.23,top,front,.05,.165,amber);}
+      }
     }
   }
 
@@ -197,7 +281,7 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   for(let i=0;i<4;i++){const x=(i-1.5)*.018;rod(tools,'Wooden utensil handle',new THREE.Vector3(x,.012,0),new THREE.Vector3(x,.26,.01),.007,oak);const head=mesh(new THREE.SphereGeometry(1,12,8),oak,tools,i%2?'Wooden cooking spatula':'Wooden serving spoon');head.scale.set(i%2?.021:.018,i%2?.032:.022,.007);head.position.set(x,.27,.010);}
 
   // Door motion keeps the actual wall/furniture footprints; one kitchen leaf opens at a time.
-  const blockers=[];model.updateWorldMatrix(true,true);model.traverse(o=>{if(!o.isMesh||o.userData.category==='floor'||o.material?.transparent||/skirting|folded|hanging|hanger|rail mounting|pantry jar|cup|plate|pot|saucepan|bowl|shelf|router|aerial|clothing/i.test(raw(o)))return;const b=new THREE.Box3().setFromObject(o);if(!b.isEmpty()&&b.max.y>.11&&b.min.y<2.5)blockers.push({object:o,owner:o.parent,bounds:b});});
+  const blockers=[];model.updateWorldMatrix(true,true);model.traverse(o=>{if(!o.isMesh||o.userData.cabinetContent||o.userData.category==='floor'||o.material?.transparent||/skirting|folded|hanging|hanger|rail mounting|pantry jar|cup|plate|pot|saucepan|bowl|shelf|router|aerial|clothing/i.test(raw(o)))return;const b=new THREE.Box3().setFromObject(o);if(!b.isEmpty()&&b.max.y>.11&&b.min.y<2.5)blockers.push({object:o,owner:o.parent,bounds:b});});
   function polygon(o){o.updateWorldMatrix(true,false);o.geometry.computeBoundingBox();const b=o.geometry.boundingBox;return [[b.min.x,b.min.z],[b.max.x,b.min.z],[b.max.x,b.max.z],[b.min.x,b.max.z]].map(([x,z])=>new THREE.Vector3(x,0,z).applyMatrix4(o.matrixWorld));}
   function overlap(a,b,tolerance=.002){const axes=[new THREE.Vector2(1,0),new THREE.Vector2(0,1)];for(let i=0;i<2;i++){const dx=a[i+1].x-a[i].x,dz=a[i+1].z-a[i].z;axes.push(new THREE.Vector2(-dz,dx).normalize());}for(const axis of axes){const pa=a.map(p=>p.x*axis.x+p.z*axis.y),pb=b.map(p=>p.x*axis.x+p.z*axis.y);if(Math.min(Math.max(...pa),Math.max(...pb))-Math.max(Math.min(...pa),Math.min(...pb))<=tolerance)return false;}return true;}
   function clashes(d){const hits=[];
@@ -216,7 +300,7 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
     for(const d of doors){if(Math.abs(d.amount-d.target)<.0001)continue;const before=d.amount,next=before+(d.target-before)*(1-Math.exp(-dt*8));d.apply(Math.abs(next-d.target)<.0002?d.target:next);if(clashes(d).length){d.apply(before);if(!d.blocked){toast('柜门前有物品，先保留当前开度');d.blocked=true;}}else d.blocked=false;}
   }
   function reset(){pendingDoor=null;for(const d of doors){d.target=0;d.apply(0);}const values={...(getState()?.doors||{})};for(const d of doors)values[d.id]=0;setState({doors:values});}
-  const audit={sourceGLBUnchanged:true,wardrobes:wardrobeSpecs.map(s=>({name:s.name,boundsPlan:[s.x1,s.z1,s.x2,s.z2]})),repairs,cabinetCount:cabinets.length,interactiveDoors:doors.length,doorSweep:sweep,appliances:['countertop microwave','rice cooker','hob pot','frying pan','serving bowls','utensil crock'],notes:['All geometry is conceptual and follows the recovered plan; no construction dimensions are implied.','Wardrobe doors use 60mm side stiles so open handles remain within adjacent-wall clearances.','Opposing kitchen doors open sequentially to preserve hinge clearance.','Fixed cabinet cases and contents live in model for pre-optimization collision capture; moving leaves remain outside static batching.']};
+  const audit={sourceGLBUnchanged:true,wardrobes:wardrobeSpecs.map(s=>({name:s.name,boundsPlan:[s.x1,s.z1,s.x2,s.z2]})),repairs,cabinetCount:cabinets.length,interactiveDoors:doors.length,contents:['linen dresses','evening gowns','collared shirts','tailored suits with trousers','oil and seasoning bottles','dry goods jars','ceramic mugs and tableware','fork knife spoon trays','biscuits and snack packets'],doorSweep:sweep,appliances:['countertop microwave','rice cooker','hob pot','frying pan','serving bowls','utensil crock'],notes:['All geometry is conceptual and follows the recovered plan; no construction dimensions are implied.','Wardrobe doors use 60mm side stiles so open handles remain within adjacent-wall clearances.','Opposing kitchen doors open sequentially to preserve hinge clearance.','Fixed cabinet cases and contents live in model for pre-optimization collision capture; moving leaves remain outside static batching.']};
   function dispose(){if(disposed)return;disposed=true;for(const [o,s] of originals){s.parent?.add(o);o.position.copy(s.position);o.quaternion.copy(s.rotation);o.scale.copy(s.scale);o.visible=s.visible;}roots.forEach(r=>r.removeFromParent());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
   return {update,colliderRoots,doors,cabinets,repairs,appliances,audit,reset,dispose};
 }

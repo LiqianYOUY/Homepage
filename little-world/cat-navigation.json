@@ -256,7 +256,7 @@
     "status": "PASS",
     "model_sha256": "d85a971ab2a77dacadf67e496c39c590f902cfd4bd7744f531511a48d48c9636",
     "model_node_count": 1459,
-    "mesh_bounds_method": "Actual POSITION buffer vertices transformed through glTF scene matrices; Y-up metres",
+    "mesh_bounds_method": "Three.js GLTFLoader transformed mesh bounds plus living-room.js final replacement furniture envelopes; Y-up metres",
     "requestedRegionXZ": [
       -8.9,
       -4.4,
@@ -279,26 +279,89 @@
     "extraConservativeRadiusBeyondRequestedM": 0.21,
     "conservativeRadiusReason": "Additional clearance for the rendered cat head/tail during turns and the feeding bowl placed 0.39m ahead; keeps all static furniture outside a 0.50m radius.",
     "floorRule": "Entire edge plus 0.14m footprint is supported inside one actual floor slab AABB",
-    "obstacleRule": "Solid mesh AABBs intersecting y=[0.006,0.51], with sofa/chair/coffee-table component unions; rugs excluded, glass/window/curtain/column retained",
+    "obstacleRule": "Solid mesh AABBs intersecting y=[0.006,0.51] plus complete new table/piano/bench envelopes; rugs excluded, glass/window/curtain/column retained",
     "edgeRule": "Four-connected lattice; exact continuous segment-versus-inflated-AABB slab intersection, tangency rejected",
-    "rawTraversablePoints": 25,
-    "rejectedGridPoints": 281,
-    "allComponentSizes": [
-      25
-    ],
     "selectedPointCount": 25,
     "selectedEdgeCount": 36,
-    "obstacleCount": 53,
-    "initialDistanceToRequestedM": 0.29154759474226505,
-    "minimumSampledCenterClearanceM": 0.5578240020502481,
-    "minimumSampledProxySurfaceGapM": 0.41782400205024806,
-    "nearestObstacle": "Lounge east 2 (whole furniture envelope)",
+    "obstacleCount": 98,
+    "minimumSampledCenterClearanceM": 0.5743049694176089,
+    "minimumSampledProxySurfaceGapM": 0.4343049694176089,
+    "nearestObstacle": "TV floating media bench",
     "denseEdgeVerificationSamples": 936,
     "allOutputEdgesContinuouslyClear": true,
     "glassIgnored": false,
     "floorNames": [
-      "Living dining kitchen · oak floor"
+      "Living dining kitchen \u00b7 oak floor"
     ],
-    "scope": "Static GLB only; newly added interactive objects must keep this activity area clear. Requested body proxy is 0.28m wide and 0.48m high; the larger 0.50m planar radius also conservatively accommodates the longer rendered silhouette and food bowl."
+    "scope": "Static GLB with living-room.js replacements. Four lounge chairs and two old nesting tables are removed; replacement coffee table, west-window digital piano and bench are included. Other runtime interactions keep separate collision handling.",
+    "routePolicy": "Keep existing 25-point, 36-edge activity route and feeding dock; revalidate every edge against updated furniture without extending household routes.",
+    "runtimeFurniture": {
+      "removedMeshCount": 30,
+      "removedPrefixes": [
+        "Lounge west 1",
+        "Lounge west 2",
+        "Lounge east 1",
+        "Lounge east 2",
+        "Coffee table large",
+        "Coffee table small",
+        "Coffee tray",
+        "Coffee ceramic bowl"
+      ],
+      "obstacles": [
+        {
+          "name": "Living shared coffee table",
+          "min": [
+            -7.880000014305114,
+            0.014999999999999963,
+            -2.469999973773956
+          ],
+          "max": [
+            -6.159999985694885,
+            0.5649999996125699,
+            -1.2900000262260436
+          ]
+        },
+        {
+          "name": "Living west-window digital piano",
+          "min": [
+            -9.24499999344349,
+            -1.255262957725348e-17,
+            -3.3300000071525573
+          ],
+          "max": [
+            -8.81200000038743,
+            1.055040144440355,
+            -1.9699999928474425
+          ]
+        },
+        {
+          "name": "Living piano bench",
+          "min": [
+            -8.509999996423721,
+            1.1920928966180355e-09,
+            -2.9600000023841857
+          ],
+          "max": [
+            -8.190000003576278,
+            0.5150000029802322,
+            -2.339999997615814
+          ]
+        }
+      ]
+    },
+    "feedingBowls": {
+      "positionsXZ": [
+        [
+          -5.907053211124524,
+          -0.8161700935788386
+        ],
+        [
+          -6.083829906421161,
+          -0.9929467888754756
+        ]
+      ],
+      "minimumCenterFurnitureClearanceM": 0.3066635074426337,
+      "fixedDockUnchanged": true
+    }
   }
 }
