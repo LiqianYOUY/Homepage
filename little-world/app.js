@@ -11,13 +11,13 @@ import {optimizeScene} from './optimize-scene.js';
 import {setupSmartHome} from './smart-home.js';
 import {setupTerrace} from './terrace-v7.js';
 import {setupCabinetryV7} from './cabinetry-v7.js';
-import {createCommunityClient} from './community-client.js?v=8';
-import {communityAPI} from './community-config.js?v=8';
-import {createWelcomeWorld} from './welcome-world.js?v=8';
-import {setupTelevision} from './television.js?v=8';
-import {houseIcon,visitorAvatar} from './little-icons.js?v=8';
+import {createCommunityClient} from './community-client.js?v=8.1';
+import {communityAPI} from './community-config.js?v=8.1';
+import {createWelcomeWorld} from './welcome-world.js?v=8.1';
+import {setupTelevision} from './television.js?v=8.1';
+import {houseIcon,visitorAvatar} from './little-icons.js?v=8.1';
 import {raiseDialog,consumeDialogEscape,topDialog} from './dialog-stack.js';
-import {createGroundNavigation} from './ground-navigation.js?v=8';
+import {createGroundNavigation} from './ground-navigation.js?v=8.1';
 
 const $=s=>document.querySelector(s);const S=.022381665533985514;
 const P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S);
@@ -31,7 +31,7 @@ window.addEventListener('unhandledrejection',e=>diagnostics.errors.push(String(e
 function toast(message){const el=$('#toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2700);}
 function refreshCare(){if(!stateStore)return;const c=stateStore.get().cat;$('#cat-name').textContent=c.name||'小橘';$('#rename-cat').value=c.name||'小橘';const fed=(c.fedDays||[]).includes(localDay());$('#cat-fed').textContent=fed?'✓ 今天已添粮':'今日还没喂食';$('#feed-cat').textContent=fed?'陪她吃两口':'添一碗猫粮';const start=new Date(c.adopted+'T00:00:00Z');const today=new Date(localDay()+'T00:00:00Z');const days=Math.max(1,Math.round((today-start)/86400000)+1);$('#cat-days').textContent=`相伴第 ${days} 天`;$('#cat-follow').checked=c.following!==false;$('#cat-mute').textContent=c.muted?'♩':'♪';$('#cat-mute').setAttribute('aria-pressed',String(!!c.muted));const catRecord=records.get('cat');if(catRecord){catRecord.label=(c.name||'小橘')+' · 摸摸她';const h=hotspotEntries.find(x=>x.record.id==='cat');if(h){h.button.textContent=catRecord.label;h.button.setAttribute('aria-label',catRecord.label);}}}
 const communityClient=await createCommunityClient({apiBase:communityAPI()});visitor=communityClient.visitor;community=communityClient.community;
-async function refreshCommunity(){community=await communityClient.refresh();return community;}
+async function refreshCommunity(){community=await communityClient.refresh();visitor=communityClient.visitor;worldUI?.updateTop();return community;}
 async function postcard(kind,text=''){community=await communityClient.postcard(kind,text);return community;}
 $('#house-icon').innerHTML=houseIcon;document.querySelector('link[rel=icon]').href='data:image/svg+xml,'+encodeURIComponent(houseIcon.replace('aria-hidden="true"','xmlns="http://www.w3.org/2000/svg"'));$('#cat-avatar-button').innerHTML=visitorAvatar(48);
 stateStore=await createStore(()=>{refreshCare();studio?.updateNotes();studio?.refreshBooks?.();if(lightingReady)applyLighting();},message=>$('#save-status').textContent=message,{visitor,communityClient});

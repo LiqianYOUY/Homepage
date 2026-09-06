@@ -46,7 +46,7 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
  try{storage?.setItem(DEVICE_KEY,device);}catch{}
  async function request(name,{method='GET',body}={}){
   if(!config.apiBase||!fetchImpl)throw Error('当前没有连接共享社区服务。');
-  const response=await fetchImpl(new URL(name,config.apiBase).href,{method,credentials:config.isLocalServer?'include':'omit',cache:'no-store',signal:AbortSignal.timeout(5000),headers:{...(!config.isLocalServer?{'X-Little-World-Device':device}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})});
+  const response=await fetchImpl(new URL(name,config.apiBase).href,{method,credentials:config.isLocalServer?'include':'omit',cache:'no-store',signal:AbortSignal.timeout(config.isLocalServer?5000:20000),headers:{...(!config.isLocalServer?{'X-Little-World-Device':device}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})});
   let value=null;try{value=await response.json();}catch{throw Error('社区服务返回了无法识别的内容。');}
   if(!response.ok)throw Error(value?.error||'社区服务暂时没有连上，请稍后再试。');
   return value;
@@ -55,13 +55,17 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
   if(!isObject(value)||!Number.isFinite(value.today)||!Number.isFinite(value.total)||!Array.isArray(value.history)||!Array.isArray(value.postcards))throw Error('社区记录格式不正确。');
   return {...value,scope:config.isLocalServer?'same-server':'site',timezone:'Australia/Sydney'};
  }
- if(config.apiBase){
-  try{
+ let connecting=null;
+ async function connect(){
+  if(connecting)return connecting;
+  connecting=(async()=>{
    const result=await request('visitor');
    if(!visitorValid(result?.visitor))throw Error('匿名身份没有正确载入。');
-   community=sharedSummary(result.community);visitor={...result.visitor,isOwner:config.isLocalServer&&result.visitor.isOwner===true};mode='server';stateEnabled=result.stateEnabled!==false;
-  }catch(error){startupError=error.message;}
+   community=sharedSummary(result.community);visitor={...result.visitor,isOwner:config.isLocalServer&&result.visitor.isOwner===true};mode='server';stateEnabled=result.stateEnabled!==false;startupError=null;return community;
+  })();
+  try{return await connecting;}finally{connecting=null;}
  }
+ if(config.apiBase){try{await connect();}catch(error){startupError=error.message;}}
  function freshRecord(){
   const saved=readJSON(storage,BROWSER_KEY);
   if(isObject(saved)&&visitorValid(saved.visitor))return saved;
@@ -104,7 +108,7 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
  const client={
   get visitor(){return visitor;},get community(){return community;},get mode(){return mode;},get apiBase(){return config.apiBase;},stateTransport,
   getStatus(){return {mode,scope:mode==='browser'?'browser':config.isLocalServer?'same-server':'site',apiBase:config.apiBase,isLocalServer:config.isLocalServer&&mode==='server',startupError,persisted:mode==='browser'?persisted:true};},
-  async refresh(){if(disposed)throw Error('窗口已关闭。');if(mode==='browser')return browserVisit();community=sharedSummary(await request('community'));return community;},
+  async refresh(){if(disposed)throw Error('窗口已关闭。');if(mode==='browser'){if(config.configured&&!config.isLocalServer){try{return await connect();}catch(error){startupError=error.message;throw Error('共享信箱连接得慢了一点，请稍后再打开。');}}return browserVisit();}community=sharedSummary(await request('community'));return community;},
   async postcard(kind,text=''){
    if(disposed)throw Error('窗口已关闭。');const clean=message(kind,text);
    if(mode==='server'){community=sharedSummary(await request('community',{method:'POST',body:{kind,text:clean,...(!config.isLocalServer?{id:id()}: {})}}));return community;}
