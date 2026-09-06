@@ -15,9 +15,9 @@
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const ideas = [
     { question: 'What if you could hold a feeling?', label: 'Meet MoodBall', url: 'projects/moodball/' },
-    { question: 'Could everyday objects help us care?', label: 'Explore FoodCare', url: 'projects/foodcare/' },
-    { question: 'When should a smart object ask us?', label: 'Explore the research', url: 'projects/smart-medication/' },
-    { question: 'Could a washer listen, then wait?', label: 'Meet Washing Machine', url: 'projects/washing-machine/' }
+    { question: 'What’s in the fridge today?', label: 'Explore FoodCare', url: 'projects/foodcare/' },
+    { question: 'How could a medicine reminder help?', label: 'Explore the research', url: 'projects/smart-medication/' },
+    { question: 'What if your washer understood you?', label: 'Meet Washing Machine', url: 'projects/washing-machine/' }
   ];
   let width = 0, height = 0, frame = 0, lastTime = 0, time = 0;
   let paused = preference.matches, visible = true, index = 0;
