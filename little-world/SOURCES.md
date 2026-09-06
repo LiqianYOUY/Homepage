@@ -1,0 +1,46 @@
+# 来源与素材 · v7
+
+## 户型、模型与界面
+
+户型来自用户提供的 One Circular Quay Apartment Type C 平面图。`apartment.glb` 为此前建模工作恢复的原静态模型：1459 节点、59472 三角面、831400 字节，保留厨房柜体与顶面空调概念修正。v7 的猫、靠墙柜体、门窗帘、露天露台与花箱、家居细节和电视界面在浏览器运行时叠加，不是新渲染的导览视频，也未写回原 GLB。
+
+[Three.js r170](https://github.com/mrdoob/three.js/tree/r170) 及所用插件已随项目本地打包，许可见 `vendor/LICENSE.txt`。小尤、访客头像、界面插画和电视待机图使用本地程序绘制；猫咪声音由 Web Audio 合成，不使用外部录音。
+
+## 书籍
+
+《平面国》《时间机器》《物种起源》《天文学简史》使用 Project Gutenberg 提供的历史英文原文。四本完整文本、制作信息与许可保存在 `books/`；逐本来源、原文哈希及排版说明见 `books/SOURCES.md`、`books/source-manifest.json`。未收录《时间简史》的受版权保护全文或现代中文译本。
+
+## 真实公开项目
+
+[完整作品集原站](https://liqianyouy.github.io/Homepage/portfolio/) 是用户已有的公开网站。匿名本地预览 `portfolio-room.html` 使用对应项目的已有素材，随用户授权发布原公开项目素材的副本：
+
+| 项目 | 本地素材 | 来源说明 |
+|---|---|---|
+| MoodBall | `assets/moodball.jpg` | 原作品中的交互项目图片 |
+| Compact washer | `assets/washer.svg` | 原作品中的紧凑洗衣机概念示意 |
+| 智能药盒 / Smart Medication Support | `assets/smart-medication.jpg` | [公开项目页](https://liqianyouy.github.io/Homepage/portfolio/projects/smart-medication/)的 `concept-cover.jpg`，研究用药支持的透明反馈、确认与修正 |
+| FoodCare + SeniorCare | `assets/foodcare.jpg`、`assets/foodcare-mobile.png` | [公开项目页](https://liqianyouy.github.io/Homepage/portfolio/projects/foodcare/)的 `hero-banner.jpg` 与 `mobile-prototype.png`，食物识别、移动交互和长者关怀研究原型 |
+
+药盒与 FoodCare 的三张新增图片和原公开项目素材逐字节一致。住宅界面与本地作品预览使用「小尤」等匿名名称；外部原作品网站及 URL 可能显示真实姓名或账号。
+
+## 音乐与电视
+
+Flower Dance — DJ Okawari 使用原平台提供的播放器或入口：
+
+- [Spotify 曲目](https://open.spotify.com/track/6RaJbbhKDOuBGQhbZCubCW) 与 [官方嵌入](https://open.spotify.com/embed/track/6RaJbbhKDOuBGQhbZCubCW)。
+- [艺术家官方 YouTube 音频入口](https://www.youtube.com/watch?v=3ZIFNKYQj7g)，音乐窗不内嵌 YouTube 视频。
+
+电视的两条来源与 `television.js` 保持一致：
+
+- [达令港的烟花](https://www.youtube.com/watch?v=d-NUlz3FXpw)。
+- [海港大桥 · 跨年烟花](https://www.youtube.com/watch?v=8Ff5rpgoWWM)：City of Sydney 2024 年跨年烟花官方完整版。
+
+外部音视频由原平台控制，可能受网络、地区、账号及嵌入规则限制。本轮已在浏览器中验证达令港和海港大桥的实拍烟花播放。项目没有下载或打包这些歌曲、电视视频；用户选择的本地视频只临时播放、不上传，本地音频由用户自行导入并保存在浏览器。
+
+## 数据与验证范围
+
+GitHub Pages 公开页面的匿名身份、按悉尼日期记录的到访日记和明信片来自当前浏览器本地存储；页面明确标为本机记录，不代表全站数据。桌面 Python 服务另以 Cookie / SQLite 记录访问同一本机服务的匿名身份，并为不同访客隔离个人档案。两者均不用示例数字冒充访问量，桌面数据库不会上传到公开包。
+
+桌面完整项目保留几何、柜门扫掠、露台通行、猫与机器人、社区状态和发布边界的自动检查。它们不替代实际页面或外部音视频播放检查。
+
+露台、橱柜内物品、衣服、粉色马尾头像及猫咪表面由本项目程序生成，不使用未授权外部模型。

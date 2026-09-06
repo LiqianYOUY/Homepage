@@ -1,0 +1,50 @@
+[
+  {
+    "id": "pg97",
+    "source": "https://www.gutenberg.org/ebooks/97",
+    "download": "https://www.gutenberg.org/cache/epub/97/pg97.txt",
+    "sourceFile": "source/pg97.txt",
+    "sourceBytes": 219360,
+    "sha256": "eb84ae1a164f9d54c7bd831c847f99046f6a3199ba78b0bd7c98c09d108a3a9a",
+    "htmlBytes": 235270,
+    "bodyChars": 194113,
+    "tocEntries": 25,
+    "fullLicenseRetained": true
+  },
+  {
+    "id": "pg35",
+    "source": "https://www.gutenberg.org/ebooks/35",
+    "download": "https://www.gutenberg.org/cache/epub/35/pg35.txt",
+    "sourceFile": "source/pg35.txt",
+    "sourceBytes": 204384,
+    "sha256": "2892e919000e17c83e1dac51b30f4675db50536b644d7579fe8a89bb399a9bdc",
+    "htmlBytes": 215690,
+    "bodyChars": 179708,
+    "tocEntries": 18,
+    "fullLicenseRetained": true
+  },
+  {
+    "id": "pg1228",
+    "source": "https://www.gutenberg.org/ebooks/1228",
+    "download": "https://www.gutenberg.org/cache/epub/1228/pg1228.txt",
+    "sourceFile": "source/pg1228.txt",
+    "sourceBytes": 970612,
+    "sha256": "ededa9c0bf8761efed092c303b46c1c92de956838cba6249a33bedfd6d7363b4",
+    "htmlBytes": 1005318,
+    "bodyChars": 932996,
+    "tocEntries": 34,
+    "fullLicenseRetained": true
+  },
+  {
+    "id": "pg59212",
+    "source": "https://www.gutenberg.org/ebooks/59212",
+    "download": "https://www.gutenberg.org/cache/epub/59212/pg59212.txt",
+    "sourceFile": "source/pg59212.txt",
+    "sourceBytes": 1017095,
+    "sha256": "a34520d51c495ee31cf9ed8cd3ab9c896082cbf1064b66d05c8c7d8b283177f6",
+    "htmlBytes": 1121499,
+    "bodyChars": 971788,
+    "tocEntries": 210,
+    "fullLicenseRetained": true
+  }
+]

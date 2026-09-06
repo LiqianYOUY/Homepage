@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="700" viewBox="0 0 440 590"><title>Washing Machine front section — linework from the project design reference</title><defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 z" fill="#245b78" />
+    </marker>
+    <style>
+      .outline{fill:none;stroke:#202b33;stroke-width:2.2}
+      .heavy{fill:none;stroke:#111820;stroke-width:3}
+      .thin{fill:none;stroke:#647784;stroke-width:1.2}
+      .hidden{fill:none;stroke:#8c9aa3;stroke-width:1.2;stroke-dasharray:7 6}
+      .water{fill:#9edcf2;fill-opacity:.42;stroke:#3b9fc5;stroke-width:1.5}
+      .metal{fill:#d8e0e5;stroke:#303c45;stroke-width:1.6}
+      .print{fill:#eef3f5;stroke:#303c45;stroke-width:1.6}
+      .electronics{fill:#ffe8a3;fill-opacity:.65;stroke:#9c7720;stroke-width:1.6}
+      .motor{fill:#d9c7ee;stroke:#654c82;stroke-width:1.6}
+      .dim{fill:none;stroke:#245b78;stroke-width:1.4;marker-start:url(#arrow);marker-end:url(#arrow)}
+      .ext{fill:none;stroke:#668293;stroke-width:1}
+      .center{fill:none;stroke:#b05555;stroke-width:1;stroke-dasharray:10 4 2 4}
+      text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;fill:#18232b}
+      .title{font-size:28px;font-weight:700}
+      .view{font-size:21px;font-weight:700}
+      .label{font-size:16px}
+      .small{font-size:14px;fill:#43545f}
+      .dtxt{font-size:17px;font-weight:700;fill:#245b78}
+      .note{font-size:15px;fill:#714f00}
+    </style>
+  </defs>
+
+  <g id="front-section" transform="translate(45,35)">
+    <rect x="22" y="24" width="306" height="427.5" rx="16" class="outline" />
+    <rect x="30" y="31" width="290" height="17" rx="6" class="print" />
+    <path d="M62 43 Q175 16 288 43" class="outline" />
+    <line x1="175" y1="14" x2="175" y2="466" class="center" />
+
+    
+    <path d="M58 54 L58 317 Q58 326 67 326 L283 326 Q292 326 292 317 L292 54" class="metal" />
+    <path d="M67 62 L67 310 Q67 317 75 317 L275 317 Q283 317 283 310 L283 62" fill="white" stroke="#303c45" stroke-width="1.4" />
+    <rect x="67" y="132" width="216" height="185" class="water" />
+    <line x1="67" y1="132" x2="283" y2="132" stroke="#238bb4" stroke-width="2" />
+    <path d="M87 305 Q175 284 263 305 L263 316 L87 316 Z" class="print" />
+    <rect x="168" y="295" width="14" height="86" class="metal" />
+    <rect x="151" y="323" width="48" height="49" rx="6" class="metal" />
+    <rect x="142" y="380" width="66" height="44" rx="8" class="motor" />
+    <line x1="22" y1="316.5" x2="328" y2="316.5" class="hidden" />
+    <rect x="43" y="451.5" width="26" height="30.6" rx="5" class="print" />
+    <rect x="281" y="451.5" width="26" height="30.6" rx="5" class="print" />
+    <path d="M111 451.5 L111 477 L137 477" class="outline" />
+    </g>
+
+  
+  </svg>

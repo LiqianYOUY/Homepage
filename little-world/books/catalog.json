@@ -1,0 +1,42 @@
+[
+  {
+    "id": "pg97",
+    "title": "平面国",
+    "author": "Edwin Abbott Abbott",
+    "description": "跟随一个正方形，从二维世界走向更高维度的想象。",
+    "originalTitle": "Flatland: A Romance of Many Dimensions",
+    "url": "books/flatland.html",
+    "source": "https://www.gutenberg.org/ebooks/97",
+    "language": "英文原版"
+  },
+  {
+    "id": "pg35",
+    "title": "时间机器",
+    "author": "H. G. Wells",
+    "description": "一场遥远未来的旅行，关于时间、文明与人类的命运。",
+    "originalTitle": "The Time Machine",
+    "url": "books/time-machine.html",
+    "source": "https://www.gutenberg.org/ebooks/35",
+    "language": "英文原版"
+  },
+  {
+    "id": "pg1228",
+    "title": "物种起源",
+    "author": "Charles Darwin",
+    "description": "1859 年第一版，阅读达尔文如何一步步展开自然选择的论证。",
+    "originalTitle": "On the Origin of Species By Means of Natural Selection",
+    "url": "books/origin-of-species.html",
+    "source": "https://www.gutenberg.org/ebooks/1228",
+    "language": "英文原版"
+  },
+  {
+    "id": "pg59212",
+    "title": "天文学简史",
+    "author": "Arthur Berry",
+    "description": "从早期观星到近代天文学，沿着观测与理论发展的历史阅读。",
+    "originalTitle": "A Short History of Astronomy",
+    "url": "books/short-history-of-astronomy.html",
+    "source": "https://www.gutenberg.org/ebooks/59212",
+    "language": "英文原版"
+  }
+]

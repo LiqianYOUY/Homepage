@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <title>原型与日常 · 小小栖居</title>
+  <style>
+    :root{font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#354338;background:#f5f3ec;font-synthesis:none;line-height:1.65;--ink:#354338;--muted:#6e796d;--sage:#697c60;--line:#dce1d4}
+    *{box-sizing:border-box}body{margin:0}a{color:inherit}a:focus-visible{outline:3px solid #718b5c;outline-offset:5px}main{width:min(1060px,100%);margin:0 auto;padding:34px 34px 28px}.eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:650;letter-spacing:.16em;color:var(--sage)}.seed{width:11px;height:15px;border-radius:70% 25% 70% 25%;background:#9aaa89;transform:rotate(20deg)}header{padding:12px 0 28px}h1{font-size:clamp(30px,5.5vw,51px);line-height:1.18;font-weight:580;letter-spacing:-.045em;margin:22px 0 7px}.english{margin:0;color:#86907e;font-size:clamp(18px,3vw,27px);font-family:Georgia,"Times New Roman",serif;font-style:italic}.intro{max-width:600px;margin:20px 0 18px;font-size:14px;color:var(--muted)}.tags{display:flex;flex-wrap:wrap;gap:7px}.tags span{font-size:11px;letter-spacing:.03em;border:1px solid var(--line);border-radius:99px;padding:5px 10px;background:#f9f8f3}.projects{display:grid;grid-template-columns:1fr 1fr;gap:20px}.project{overflow:hidden;border:1px solid #dce0d3;border-radius:18px;background:#fffcf6;box-shadow:0 5px 20px #475c3510;display:flex;flex-direction:column}.picture{aspect-ratio:4/3;padding:20px;background:#e8ecdf;display:flex;align-items:center;justify-content:center;overflow:hidden}.picture img{display:block;width:100%;height:100%;object-fit:contain;border-radius:8px}.project:nth-child(even) .picture{background:#eee9df}.project-link{display:inline-flex;gap:10px;align-items:center;margin-top:17px;font-size:12px;font-weight:600;text-decoration:none;color:#536d49}.project-link:hover{text-decoration:underline}.foodcare-picture{position:relative}.foodcare-picture img:first-child{width:82%;margin-right:auto}.foodcare-picture .foodcare-app{position:absolute;right:7%;bottom:8%;height:77%;width:auto;max-width:28%;border-radius:9px;box-shadow:0 8px 23px #384b3829}.project p.stage{margin-top:12px;font-size:11px;color:#78836c}.copy{padding:21px 23px 23px}.project-number{font-size:10px;letter-spacing:.15em;font-weight:650;color:#859379}.project h2{font-size:22px;font-weight:560;line-height:1.3;letter-spacing:-.02em;margin:9px 0 7px}.project p{font-size:13px;line-height:1.8;color:var(--muted);margin:0}.project .note{margin-top:16px;font-size:10px;letter-spacing:.08em;color:#89907f}footer{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:25px;padding-top:22px;border-top:1px solid var(--line)}.footer-note{margin:0;max-width:330px;font-size:12px;color:var(--muted)}.full-link{display:inline-flex;gap:18px;align-items:center;flex-shrink:0;padding:11px 17px;border-radius:99px;text-decoration:none;font-size:12px;font-weight:550;background:var(--sage);color:#fffdf6;transition:background .15s}.full-link:hover{background:#526548}.arrow{font-size:18px;line-height:1}.tiny{font-size:10px;color:#919986;margin:24px 0 0;letter-spacing:.09em}
+    @media(max-width:600px){main{padding:22px 20px 20px}header{padding-top:5px}.projects{grid-template-columns:1fr;gap:17px}.picture{aspect-ratio:16/11;padding:18px}.copy{padding:18px 20px 21px}footer{align-items:flex-start;flex-direction:column;gap:16px}.full-link{width:100%;justify-content:space-between}h1{margin-top:20px}.intro{font-size:13px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow"><span class="seed" aria-hidden="true"></span>A LITTLE WORLD / SELECTED WORK</div>
+      <h1>原型与日常</h1>
+      <p class="english" lang="en">Ideas made testable.</p>
+      <p class="intro">从一个观察开始，把想法做成可以感受、可以尝试的原型。这里放着关于人与技术，也关于日常关怀的四段探索。</p>
+      <div class="tags" aria-label="关注方向"><span>HCI · 人机交互</span><span>Responsible AI · 负责任的 AI</span><span>Everyday care · 日常关怀</span></div>
+    </header>
+    <section class="projects" aria-label="精选项目">
+      <article class="project">
+        <div class="picture"><img src="./assets/moodball.jpg" alt="MoodBall 项目展示图" width="800" height="600" decoding="async"></div>
+        <div class="copy">
+          <span class="project-number">01 / INTERACTION</span>
+          <h2 lang="en">MoodBall</h2>
+          <p>从情绪与交互出发，探索一个可触及的小物件如何参与日常体验。</p>
+          <p class="note">情绪 · 交互 · 原型</p>
+        </div>
+      </article>
+      <article class="project">
+        <div class="picture"><img src="./assets/smart-medication.jpg" alt="智能药盒与用药支持研究的公开概念图" width="900" height="600" loading="lazy" decoding="async"></div>
+        <div class="copy">
+          <span class="project-number">02 / RESPONSIBLE AI</span>
+          <h2>智能药盒 · 用药支持</h2>
+          <p>Smart Medication Support 探索识别、提醒与记录的自动化边界：把系统看到了什么、准备做什么说清楚，也让人能够确认、调整与纠正。</p>
+          <p class="stage">研究原型 · 透明反馈与用户控制</p>
+          <a class="project-link" href="https://liqianyouy.github.io/Homepage/portfolio/projects/smart-medication/" target="_blank" rel="noopener noreferrer" aria-label="查看智能药盒项目，在新标签页打开">查看项目 <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+      <article class="project">
+        <div class="picture foodcare-picture"><img src="./assets/foodcare.jpg" alt="FoodCare 摄像头、树莓派与食物识别硬件原型" width="900" height="600" loading="lazy" decoding="async"><img class="foodcare-app" src="./assets/foodcare-mobile.png" alt="FoodCare 移动端界面原型" width="303" height="597" loading="lazy" decoding="async"></div>
+        <div class="copy">
+          <span class="project-number">03 / CONNECTED CARE</span>
+          <h2 lang="en">FoodCare + SeniorCare</h2>
+          <p>把食物识别、储存信息和可查看的饮食提示连接起来。通过硬件与移动界面原型，再向适合长者与家庭的语音辅助关怀延伸。</p>
+          <p class="stage">研究与交互原型 · 食物识别、信任与日常关怀</p>
+          <a class="project-link" href="https://liqianyouy.github.io/Homepage/portfolio/projects/foodcare/" target="_blank" rel="noopener noreferrer" aria-label="查看 FoodCare 项目，在新标签页打开">查看项目 <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+      <article class="project">
+        <div class="picture"><img src="./assets/washer.svg" alt="Compact washer 产品概念示意图" width="800" height="600" decoding="async"></div>
+        <div class="copy">
+          <span class="project-number">04 / EVERYDAY OBJECTS</span>
+          <h2 lang="en">Compact washer</h2>
+          <p>围绕洗衣这件日常小事，探索紧凑产品与生活空间之间的关系。</p>
+          <p class="note">产品 · 空间 · 日常关怀</p>
+        </div>
+      </article>
+    </section>
+    <footer>
+      <p class="footer-note">这是房间里的作品一览。项目过程与更多探索，收录在完整作品集中。</p>
+      <a class="full-link" href="https://liqianyouy.github.io/Homepage/portfolio/" target="_blank" rel="noopener noreferrer" aria-label="查看完整作品集，在新标签页打开">查看完整作品集 <span class="arrow" aria-hidden="true">↗</span></a>
+    </footer>
+    <p class="tiny">小小栖居 · 留一点空间给新的想法</p>
+  </main>
+</body>
+</html>

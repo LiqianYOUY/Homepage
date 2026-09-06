@@ -1,0 +1,304 @@
+{
+  "points": [
+    [
+      -7.75,
+      -0.65
+    ],
+    [
+      -7.5,
+      -0.65
+    ],
+    [
+      -7.25,
+      -0.65
+    ],
+    [
+      -7.0,
+      -0.65
+    ],
+    [
+      -6.75,
+      -0.65
+    ],
+    [
+      -6.5,
+      -0.65
+    ],
+    [
+      -6.25,
+      -0.65
+    ],
+    [
+      -7.75,
+      -0.4
+    ],
+    [
+      -7.5,
+      -0.4
+    ],
+    [
+      -7.25,
+      -0.4
+    ],
+    [
+      -7.0,
+      -0.4
+    ],
+    [
+      -6.75,
+      -0.4
+    ],
+    [
+      -6.5,
+      -0.4
+    ],
+    [
+      -6.25,
+      -0.4
+    ],
+    [
+      -8.5,
+      -0.15
+    ],
+    [
+      -8.25,
+      -0.15
+    ],
+    [
+      -8.0,
+      -0.15
+    ],
+    [
+      -7.75,
+      -0.15
+    ],
+    [
+      -7.5,
+      -0.15
+    ],
+    [
+      -7.25,
+      -0.15
+    ],
+    [
+      -7.0,
+      -0.15
+    ],
+    [
+      -6.75,
+      -0.15
+    ],
+    [
+      -6.5,
+      -0.15
+    ],
+    [
+      -6.25,
+      -0.15
+    ],
+    [
+      -6.0,
+      -0.15
+    ]
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      9
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      10
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      11
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      5,
+      12
+    ],
+    [
+      6,
+      13
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      7,
+      17
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      8,
+      18
+    ],
+    [
+      9,
+      10
+    ],
+    [
+      9,
+      19
+    ],
+    [
+      10,
+      11
+    ],
+    [
+      10,
+      20
+    ],
+    [
+      11,
+      12
+    ],
+    [
+      11,
+      21
+    ],
+    [
+      12,
+      13
+    ],
+    [
+      12,
+      22
+    ],
+    [
+      13,
+      23
+    ],
+    [
+      14,
+      15
+    ],
+    [
+      15,
+      16
+    ],
+    [
+      16,
+      17
+    ],
+    [
+      17,
+      18
+    ],
+    [
+      18,
+      19
+    ],
+    [
+      19,
+      20
+    ],
+    [
+      20,
+      21
+    ],
+    [
+      21,
+      22
+    ],
+    [
+      22,
+      23
+    ],
+    [
+      23,
+      24
+    ]
+  ],
+  "initialPosition": [
+    -6.25,
+    0.03,
+    -0.65
+  ],
+  "audit": {
+    "status": "PASS",
+    "model_sha256": "d85a971ab2a77dacadf67e496c39c590f902cfd4bd7744f531511a48d48c9636",
+    "model_node_count": 1459,
+    "mesh_bounds_method": "Actual POSITION buffer vertices transformed through glTF scene matrices; Y-up metres",
+    "requestedRegionXZ": [
+      -8.9,
+      -4.4,
+      -3.9,
+      0.42
+    ],
+    "effectiveRegionXZ": [
+      -8.5,
+      -4.4,
+      -3.9,
+      0.42
+    ],
+    "regionNote": "Intersection with current cat.js safeBox minX=-8.5; keeps setNavigation input valid.",
+    "gridStepM": 0.25,
+    "catProxyHeightM": 0.48,
+    "catProxyWidthM": 0.28,
+    "catRootYM": 0.03,
+    "extraFurnitureGapM": 0.15,
+    "obstacleInflationM": 0.5,
+    "extraConservativeRadiusBeyondRequestedM": 0.21,
+    "conservativeRadiusReason": "Additional clearance for the rendered cat head/tail during turns and the feeding bowl placed 0.39m ahead; keeps all static furniture outside a 0.50m radius.",
+    "floorRule": "Entire edge plus 0.14m footprint is supported inside one actual floor slab AABB",
+    "obstacleRule": "Solid mesh AABBs intersecting y=[0.006,0.51], with sofa/chair/coffee-table component unions; rugs excluded, glass/window/curtain/column retained",
+    "edgeRule": "Four-connected lattice; exact continuous segment-versus-inflated-AABB slab intersection, tangency rejected",
+    "rawTraversablePoints": 25,
+    "rejectedGridPoints": 281,
+    "allComponentSizes": [
+      25
+    ],
+    "selectedPointCount": 25,
+    "selectedEdgeCount": 36,
+    "obstacleCount": 53,
+    "initialDistanceToRequestedM": 0.29154759474226505,
+    "minimumSampledCenterClearanceM": 0.5578240020502481,
+    "minimumSampledProxySurfaceGapM": 0.41782400205024806,
+    "nearestObstacle": "Lounge east 2 (whole furniture envelope)",
+    "denseEdgeVerificationSamples": 936,
+    "allOutputEdgesContinuouslyClear": true,
+    "glassIgnored": false,
+    "floorNames": [
+      "Living dining kitchen · oak floor"
+    ],
+    "scope": "Static GLB only; newly added interactive objects must keep this activity area clear. Requested body proxy is 0.28m wide and 0.48m high; the larger 0.50m planar radius also conservatively accommodates the longer rendered silhouette and food bowl."
+  }
+}
