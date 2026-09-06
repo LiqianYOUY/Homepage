@@ -2,22 +2,22 @@ import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {createStore,localDay} from './state.js';
-import {createPersonalSpace} from './personal-space.js';
+import {createPersonalSpace} from './personal-space.js?v=9';
 import {createCat} from './cat.js';
 import {setupHouseInteractions} from './home-interactions.js';
 import {setupStudio} from './studio.js';
 import {createWalkCollision} from './walk-collision.js';
 import {optimizeScene} from './optimize-scene.js';
-import {setupSmartHome} from './smart-home.js';
+import {setupSmartHome} from './smart-home.js?v=9';
 import {setupTerrace} from './terrace-v7.js';
 import {setupCabinetryV7} from './cabinetry-v7.js';
-import {createCommunityClient} from './community-client.js?v=8.1';
-import {communityAPI} from './community-config.js?v=8.1';
-import {createWelcomeWorld} from './welcome-world.js?v=8.1';
-import {setupTelevision} from './television.js?v=8.1';
-import {houseIcon,visitorAvatar} from './little-icons.js?v=8.1';
+import {createCommunityClient} from './community-client.js?v=9';
+import {communityAPI} from './community-config.js?v=9';
+import {createWelcomeWorld} from './welcome-world.js?v=9';
+import {setupTelevision} from './television.js?v=9';
+import {houseIcon,visitorAvatar,fryingPanIcon,footprintsIcon} from './little-icons.js?v=9';
 import {raiseDialog,consumeDialogEscape,topDialog} from './dialog-stack.js';
-import {createGroundNavigation} from './ground-navigation.js?v=8.1';
+import {createGroundNavigation} from './ground-navigation.js?v=9';
 
 const $=s=>document.querySelector(s);const S=.022381665533985514;
 const P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S);
@@ -34,9 +34,11 @@ const communityClient=await createCommunityClient({apiBase:communityAPI()});visi
 async function refreshCommunity(){community=await communityClient.refresh();visitor=communityClient.visitor;worldUI?.updateTop();return community;}
 async function postcard(kind,text=''){community=await communityClient.postcard(kind,text);return community;}
 $('#house-icon').innerHTML=houseIcon;document.querySelector('link[rel=icon]').href='data:image/svg+xml,'+encodeURIComponent(houseIcon.replace('aria-hidden="true"','xmlns="http://www.w3.org/2000/svg"'));$('#cat-avatar-button').innerHTML=visitorAvatar(48);
-stateStore=await createStore(()=>{refreshCare();studio?.updateNotes();studio?.refreshBooks?.();if(lightingReady)applyLighting();},message=>$('#save-status').textContent=message,{visitor,communityClient});
+$('[data-room="kitchen"]').innerHTML=fryingPanIcon+' <span>厨房</span>';
+updateWalkButton(false);
+stateStore=await createStore(()=>{refreshCare();studio?.updateNotes();studio?.refreshBooks?.();if(lightingReady)applyLighting();},message=>$('#save-status').textContent='生活记录 · '+message,{visitor,communityClient});
 const state=()=>stateStore.get(),setState=patch=>stateStore.set(patch);
-personal=createPersonalSpace({getState:state,setState,onNotesChange:notes=>studio?.updateNotes(notes),onMusicState:info=>{document.body.dataset.musicPlaying=String(info.playing===true);},toast});
+personal=createPersonalSpace({getState:state,setState,getSaveStatus:()=>stateStore.getStatus(),onNotesChange:notes=>studio?.updateNotes(notes),onMusicState:info=>{document.body.dataset.musicPlaying=String(info.playing===true);},toast});
 refreshCare();
 worldUI=createWelcomeWorld({getVisitor:()=>visitor,getCommunity:()=>community,refreshCommunity,postcard,getSmart:()=>smart,getTerrace:()=>terrace,toast,onStateChange:()=>applyLighting(),onTV:()=>tv?.open(),onMusic:()=>personal.openMusic(),onBooks:()=>{go('study');personal.openLibrary();},onCat:()=>{petCat();$('#focus-cat').click();},onWave:()=>cat?.greet()});
 $('#my-world').onclick=()=>worldUI.openProfile();$('#garden-shortcut').onclick=()=>{go('terrace');worldUI.openTerrace();};$('#postcard-shortcut').onclick=()=>worldUI.openPostcards();
@@ -111,7 +113,7 @@ setInterval(refreshCare,60000);
 
 $('#show-settings').onclick=()=>{$('#settings').hidden=!$('#settings').hidden;if(!$('#settings').hidden)raiseDialog($('#settings'));};for(const selector of ['#portfolio-window','#settings']){const panel=$(selector);panel.addEventListener('pointerdown',()=>raiseDialog(panel));panel.addEventListener('focusin',()=>raiseDialog(panel));}$('#close-settings').onclick=()=>$('#settings').hidden=true;
 $('#toggle-hotspots').onclick=()=>{showHotspots=!showHotspots;$('#toggle-hotspots').textContent=showHotspots?'隐藏提示':'显示物品提示';};
-$('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('可使用浏览器的全屏功能。');}};
+$('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('这次没能切到全屏，继续在这里看也可以。');}};
 $('#reset-furniture').onclick=()=>{cabinetry?.reset();house?.reset();toast('家具回到最初的位置了。');};
 $('#export-data').onclick=()=>{const a=document.createElement('a'),url=URL.createObjectURL(new Blob([stateStore.export()],{type:'application/json'}));a.href=url;a.download='小小栖居-生活记录-'+localDay()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import-data').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>2_000_000)throw Error('备份文件太大');const backup=JSON.parse(await file.text());if(backup.version!==5||!Array.isArray(backup.notes))throw Error('请选择有效的生活记录备份');personal.closeAll();worldUI.closeAll();stateStore.import(backup);location.reload();}catch(err){toast(err.message||'无法读取备份');}e.target.value='';};
@@ -119,8 +121,16 @@ $('#import-data').onchange=async e=>{const file=e.target.files?.[0];if(!file)ret
 function insideFloor(x,z){const px=x/S+935,pz=z/S+512;return (px>=393&&px<=1163&&pz>=279&&pz<=583)||(px>=418&&px<=945&&pz>=551&&pz<=740)||(px>=1166&&px<=1478&&pz>=280&&pz<=600);}
 function blockers(){const list=wallBoxes.slice();if(house?.doors)for(const d of house.doors){const o=d.object||d.pivot||d.root;if(o)list.push(new THREE.Box3().setFromObject(o));}return list;}
 function collision(position){if(walkCollision)return walkCollision.collision(position);if(!insideFloor(position.x,position.z))return true;const radius=.18;for(const b of blockers()){if(b.max.y<.12||b.min.y>1.73)continue;if(position.x>b.min.x-radius&&position.x<b.max.x+radius&&position.z>b.min.z-radius&&position.z<b.max.z+radius)return true;}return false;}
-function enterWalk(){if(!loadDone)return;watchingCat=false;walk=true;moveTween=null;controls.enabled=false;camera.position.copy(P(1130,542,1.57));groundNavigation.cancelInput();lookYaw=0;lookPitch=-.32;camera.rotation.set(lookPitch,lookYaw,0,'YXZ');document.body.classList.add('walk-mode');$('#walk-mode').classList.add('active');$('#walk-mode').innerHTML='⌂ <span>退出行走</span>';$('#controls-help').textContent='点击地面箭头走一步 · 长按连续走 · 拖动转头 · WASD 也可以';toast('点地上的方向箭头走一步，按住就能一直走。');}
-function exitWalk(restore=true){walk=false;groundNavigation.cancelInput();controls.enabled=true;document.body.classList.remove('walk-mode');$('#walk-mode').classList.remove('active');$('#walk-mode').innerHTML='♧ <span>走进家里</span>';$('#controls-help').textContent='拖动旋转 · 滚轮缩放 · 点击物品使用 · 拖动门和椅子';if(restore)go('overview');}
+function updateControlsHelp(){if(!walk)$('#controls-help').textContent=innerWidth<=760?'拖动看看 · 双指缩放 · 点点家里的物品':'拖动旋转 · 滚轮缩放 · 点击物品使用 · 拖动门和椅子';}
+window.addEventListener('resize',updateControlsHelp);updateControlsHelp();
+function updateWalkButton(active){
+ const button=$('#walk-mode'),label=active?'退出行走':'走进家里';
+ button.innerHTML=footprintsIcon+' <span>'+label+'</span>';
+ button.setAttribute('aria-label',label);
+ button.setAttribute('aria-pressed',String(active));
+}
+function enterWalk(){if(!loadDone)return;watchingCat=false;walk=true;moveTween=null;controls.enabled=false;camera.position.copy(P(1130,542,1.57));groundNavigation.cancelInput();lookYaw=0;lookPitch=-.32;camera.rotation.set(lookPitch,lookYaw,0,'YXZ');document.body.classList.add('walk-mode');$('#walk-mode').classList.add('active');updateWalkButton(true);$('#controls-help').textContent='点击地面箭头走一步 · 长按连续走 · 拖动转头 · WASD 也可以';toast('点地上的方向箭头走一步，按住就能一直走。');}
+function exitWalk(restore=true){walk=false;groundNavigation.cancelInput();controls.enabled=true;document.body.classList.remove('walk-mode');$('#walk-mode').classList.remove('active');updateWalkButton(false);updateControlsHelp();if(restore)go('overview');}
 $('#walk-mode').onclick=()=>walk?exitWalk():enterWalk();
 function typing(e){return /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable||e.target.closest('[data-personal-space],[data-home-ui],.studio-window');}
 document.addEventListener('keydown',e=>{if(consumeDialogEscape(e,$('#portfolio-window')))closePortfolio();else if(consumeDialogEscape(e,$('#settings')))$('#settings').hidden=true;},true);
@@ -151,7 +161,7 @@ function updateHotspots(){
 }
 
 try{
- const loaded=await new GLTFLoader().loadAsync('./apartment.glb',e=>{if(e.total)$('#load-detail').textContent='恢复的模型 '+Math.round(e.loaded/e.total*100)+'%';});model=loaded.scene;scene.add(model);model.updateMatrixWorld(true);
+ const loaded=await new GLTFLoader().loadAsync('./apartment.glb',e=>{if(e.total)$('#load-detail').textContent='小屋准备中 '+Math.round(e.loaded/e.total*100)+'%';});model=loaded.scene;scene.add(model);model.updateMatrixWorld(true);
  model.traverse(o=>{if(!o.isMesh)return;o.castShadow=!o.material?.transparent;o.receiveShadow=true;if(o.material?.transparent){o.material.depthWrite=false;o.renderOrder=2;}const c=o.userData.category;if(['wall','upperWall'].includes(c)){const b=new THREE.Box3().setFromObject(o);if(b.max.y>.2)wallBoxes.push(b);}});
  applyVisibility();house=setupHouseInteractions({THREE,scene,model,register,toast,getState:state,setState});
  let navigation=null;try{const r=await fetch('./cat-navigation.json');if(r.ok)navigation=await r.json();}catch{}
@@ -165,7 +175,7 @@ try{
  register({id:'cat-water',label:'给小橘添清水',kind:'cat-bowl',object:cat.bowls.water,anchor:new THREE.Box3().setFromObject(cat.bowls.water).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:()=>cat.water()});smart.setObstacles([cat.root,cat.bowls.food,cat.bowls.water]);
  cat.setFollowing(state().cat.following!==false);diagnostics.loaded=true;loadDone=true;$('#loading').hidden=true;go('overview',true);refreshCare();
  window.homeApp={scene,model,camera,controls,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
-}catch(e){console.error(e);diagnostics.errors.push(String(e));$('#load-detail').textContent='载入未完成：'+e.message;$('#loading h2').textContent='请使用「打开3D家」启动';}
+}catch(e){console.error(e);diagnostics.errors.push(String(e));$('#load-detail').textContent='画面还没载入完成，检查一下网络，再刷新试试吧。';$('#loading h2').textContent='小屋暂时没打开';}
 let last=performance.now(),elapsed=0,lastCatAction='';
 function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}
 requestAnimationFrame(tick);

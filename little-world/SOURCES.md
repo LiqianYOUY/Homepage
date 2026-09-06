@@ -1,4 +1,4 @@
-# 来源与素材 · v7
+# 来源与素材
 
 ## 户型、模型与界面
 
@@ -30,12 +30,14 @@ Flower Dance — DJ Okawari 使用原平台提供的播放器或入口：
 - [Spotify 曲目](https://open.spotify.com/track/6RaJbbhKDOuBGQhbZCubCW) 与 [官方嵌入](https://open.spotify.com/embed/track/6RaJbbhKDOuBGQhbZCubCW)。
 - [艺术家官方 YouTube 音频入口](https://www.youtube.com/watch?v=3ZIFNKYQj7g)，音乐窗不内嵌 YouTube 视频。
 
-电视的两条来源与 `television.js` 保持一致：
+电视默认播放用户明确指定并授权公开的 Uluru 日出日落旅行视频。`media/uluru-sunrise-sunset.mp4` 是该原片的网页播放副本，`assets/uluru-poster.jpg` 截取自同一视频。转码保留完整画幅与音轨，移除设备、时间和位置等源文件元数据；原片未修改。
+
+另外两条在线节目来源与 `television.js` 保持一致：
 
 - [达令港的烟花](https://www.youtube.com/watch?v=d-NUlz3FXpw)。
 - [海港大桥 · 跨年烟花](https://www.youtube.com/watch?v=8Ff5rpgoWWM)：City of Sydney 2024 年跨年烟花官方完整版。
 
-外部音视频由原平台控制，可能受网络、地区、账号及嵌入规则限制。本轮已在浏览器中验证达令港和海港大桥的实拍烟花播放。项目没有下载或打包这些歌曲、电视视频；用户选择的本地视频只临时播放、不上传，本地音频由用户自行导入并保存在浏览器。
+外部音视频由原平台控制，可能受网络、地区、账号及嵌入规则限制。项目没有下载或打包这些外部歌曲与烟花视频。Uluru 旅行视频使用同站原生播放器，不依赖上述平台；访客自选的视频只临时播放、不上传，本地音频由用户自行导入并保存在浏览器。
 
 ## 数据与验证范围
 
@@ -49,3 +51,5 @@ GitHub Pages 的共享到访与明信片通过 Sites / Cloudflare Worker + D1 �
 
 
 v8 增加可收起卡片和地面方向箭头，修复电视待机纹理水平镜像；方向移动使用原模型碰撞并逐小步检测。
+
+v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审校主页面、阅读器和保存提示。

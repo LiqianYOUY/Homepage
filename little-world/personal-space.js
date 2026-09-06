@@ -33,6 +33,14 @@ const link = (label, url, kind = '') => el('a', {class: `ps-button ${kind}`, tex
 const BUILTIN_BOOKS = new Set(['flatland.html', 'time-machine.html', 'origin-of-species.html', 'short-history-of-astronomy.html']);
 const isLoopback = host => ['localhost', '127.0.0.1', '[::1]'].includes(host.toLowerCase());
 
+function isBundledBook(value) {
+  try {
+    const url = new URL(value, document.baseURI), filename = url.pathname.split('/').pop();
+    return url.origin === location.origin && BUILTIN_BOOKS.has(filename) && url.pathname === new URL('books/' + filename, document.baseURI).pathname;
+  } catch { return false; }
+}
+
+
 /** Keep book paths portable across local ports and hosting; never proxy publishers. */
 export function validatePersonalURL(raw, {paper = false} = {}) {
   const value = String(raw || '').trim();
@@ -66,7 +74,7 @@ export function validatePersonalURL(raw, {paper = false} = {}) {
   return null;
 }
 
-export function createPersonalSpace({getState = () => ({}), setState = () => {}, onNotesChange = () => {}, onMusicState = () => {}, toast = () => {}} = {}) {
+export function createPersonalSpace({getState = () => ({}), setState = () => {}, getSaveStatus = () => null, onNotesChange = () => {}, onMusicState = () => {}, toast = () => {}} = {}) {
   const root = el('div', {class: 'ps-root', 'data-personal-space': '', 'aria-label': '我的个人空间'});
   flattenDialogRoot(root);
   document.body.append(root);
@@ -80,7 +88,8 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
     try {
       const result = setState(value);
       if (result?.catch) result.catch(() => notify('保存没有完成，请检查浏览器的本地存储空间。'));
-    } catch { notify('保存没有完成，请检查浏览器的本地存储空间。'); }
+      return true;
+    } catch { notify('保存没有完成，请检查浏览器的本地存储空间。'); return false; }
   }
   function libraryPapers() {
     const current = Array.isArray(state().papers) ? state().papers : [];
@@ -191,8 +200,16 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
     let notes = (Array.isArray(state().notes) ? state().notes : []).map((n, i) => ({id: String(n.id || uid()), text: String(n.text ?? ''), color: COLORS.includes(n.color) ? n.color : 'cream', x: clamp(n.x ?? 24 + (i % 2) * 230, 0, 3000), y: clamp(n.y ?? 24 + Math.floor(i / 2) * 225, 0, 4000), updatedAt: n.updatedAt || Date.now()}));
     const board = el('div', {class: 'ps-notes-board', 'aria-label': '可拖动的便利贴'});
     const scroller = el('div', {class: 'ps-notes-scroller'}, board);
-    const saved = el('span', {class: 'ps-save-status', text: '自动保存在这台设备', 'aria-live': 'polite'});
-    saveNotes = () => { const copy = notes.map(n => ({...n})); patch({notes: copy}); onNotesChange(copy); saved.textContent = '已保存到这台设备'; };
+    const saved = el('span', {class: 'ps-save-status', text: '随编辑保存 · 保存情况见首页生活记录', 'aria-live': 'polite'});
+    saveNotes = () => {
+      const copy = notes.map(n => ({...n})), accepted = patch({notes: copy});
+      onNotesChange(copy);
+      let status = null;try { status = getSaveStatus(); } catch { /* Host status is optional. */ }
+      saved.textContent = !accepted ? '保存未完成，请查看首页生活记录'
+        : status?.browserSaved === true ? '已保存在这个浏览器'
+        : status?.browserSaved === false ? '浏览器副本未保存，请查看首页生活记录'
+        : '内容已更新 · 保存情况见首页生活记录';
+    };
     const changed = (immediate = false) => {
       saved.textContent = '正在保存…'; clearTimeout(noteTimer);
       if (immediate) saveNotes?.(); else noteTimer = setTimeout(() => saveNotes?.(), 240);
@@ -237,13 +254,13 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
     if (!safe) { notify('这个书籍链接还不能打开，请在书架中编辑地址。'); return; }
     const url = new URL(safe, document.baseURI);
     const local = url.origin === location.origin;
-    const bundled = local && BUILTIN_BOOKS.has(url.pathname.split('/').pop()) && /\/books\//.test(url.pathname);
+    const bundled = isBundledBook(safe);
     const key = `reader:${String(paper.id)}`;
     if (windows.has(key)) { const existing = windows.get(key); focusWindow(existing); existing.panel.focus(); return; }
     const win = makeWindow(key, String(paper.title || '书籍阅读'), '在自己的书桌上，慢慢读', 'ps-reader-window');
     if (!win) return;
-    const hint = el('p', {class: 'ps-hint', text: bundled ? '本地完整原著 · 英文原版。目录、字号和阅读进度保存在这台设备。' : '外部书籍由原站提供；若小窗无法显示，请使用“新标签页打开”。'});
-    const status = el('p', {class: 'ps-reader-status', role: 'status', 'aria-live': 'polite', text: local ? '正在检查本地书籍…' : '请稍候；若页面空白，使用上方的新标签页入口。'});
+    const hint = el('p', {class: 'ps-hint', text: bundled ? '英文原版 · 完整原文。字号和阅读进度留在这个浏览器。' : '外部书籍由原站提供；若小窗无法显示，请使用“新标签页打开”。'});
+    const status = el('p', {class: 'ps-reader-status', role: 'status', 'aria-live': 'polite', text: local ? '正在打开这本书…' : '请稍候；若页面空白，使用上方的新标签页入口。'});
     const frame = el('iframe', {class: 'ps-paper-frame', title: `阅读：${paper.title || '书籍'}`, loading: 'eager', referrerPolicy: 'no-referrer'});
     // Only the four bundled readers need same-origin storage for reading progress.
     frame.setAttribute('sandbox', `allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads${bundled ? ' allow-same-origin' : ''}`);
@@ -252,18 +269,18 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
     let request = null;
     async function loadBook() {
       request?.abort(); request = new AbortController();
-      status.hidden = false; status.textContent = local ? '正在检查本地书籍…' : '请稍候；若页面空白，使用上方的新标签页入口。';
+      status.hidden = false; status.textContent = local ? '正在打开这本书…' : '请稍候；若页面空白，使用上方的新标签页入口。';
       status.classList.remove('is-error'); retry.hidden = true;
       try {
         if (local) {
           const response = await fetch(url.href, {method: 'HEAD', cache: 'no-store', signal: request.signal});
-          if (!response.ok) throw new Error(`找不到这本书的本地文件（${response.status}）。请在书架中编辑链接，或恢复 books 文件夹。`);
+          if (!response.ok) throw new Error(`这本书暂时没打开，试试重新加载或检查链接。`);
         }
         if (win.panel.isConnected) frame.src = url.href;
       } catch (error) {
         if (error.name === 'AbortError' || !win.panel.isConnected) return;
         status.classList.add('is-error');
-        status.textContent = error.message?.startsWith('找不到') ? error.message : '本地书籍暂时无法连接，请确认小小栖居的本地服务仍在运行。';
+        status.textContent = '这本书暂时没打开，试试重新加载或检查链接。';
         retry.hidden = false;
       }
     }
@@ -302,7 +319,7 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
     const list = el('div', {class: 'ps-paper-list'});
     form.addEventListener('submit', event => {
       event.preventDefault(); const safe = validatePersonalURL(url.value, {paper: true});
-      if (!title.value.trim() || !safe) { message.textContent = '请填写标题，并使用 http / https 链接或同源 books/ 或 papers/ 文件路径。'; return; }
+      if (!title.value.trim() || !safe) { message.textContent = '请填写书名和有效的书籍链接。'; return; }
       papers = libraryPapers();
       if (editing && !papers.some(p => p.id === editing)) { message.textContent = '这本书已被移除，请取消编辑后重新添加。'; return; }
       const paper = {...papers.find(p => p.id === editing), id: editing || uid(), title: title.value.trim(), url: safe};
@@ -314,13 +331,13 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
     function render() {
       papers = libraryPapers();
       list.replaceChildren();
-      if (!papers.length) list.append(el('div', {class: 'ps-empty'}, el('strong', {text: '书架等你放下第一本书'}), el('p', {text: '可以放入本地原著，也可以添加想读的外部链接。'})));
+      if (!papers.length) list.append(el('div', {class: 'ps-empty'}, el('strong', {text: '书架等你放下第一本书'}), el('p', {text: '可以添加想读的书籍链接，留着下次慢慢读。'})));
       papers.forEach(paper => {
         const safe = validatePersonalURL(paper.url, {paper: true});
         const actions = el('div', {class: 'ps-actions'}, button('小窗阅读', () => openReader(paper), 'ps-primary'));
         if (safe) actions.append(link('新标签页 ↗', safe));
         actions.append(button('编辑', () => { const current = libraryPapers().find(p => p.id === paper.id); if (!current) { render(); return; } editing = current.id; title.value = current.title; url.value = current.url; submit.textContent = '保存修改'; cancel.hidden = false; form.closest('details').open = true; title.focus(); }), button('移除', () => { papers = libraryPapers().filter(p => p.id !== paper.id); patch({papers}); windows.get(`reader:${paper.id}`)?.close(); if (editing === paper.id) reset(); render(); }, 'ps-quiet'));
-        list.append(el('article', {class: 'ps-paper'}, el('span', {class: 'ps-book-mark', 'aria-hidden': 'true', text: '≡'}), el('div', {class: 'ps-paper-info'}, el('h3', {text: paper.title || '未命名书籍'}), el('p', {text: /^(?:\.\/)?books\//.test(paper.url) ? '公版原著 · 离线阅读' : paper.url}), actions)));
+        list.append(el('article', {class: 'ps-paper'}, el('span', {class: 'ps-book-mark', 'aria-hidden': 'true', text: '≡'}), el('div', {class: 'ps-paper-info'}, el('h3', {text: paper.title || '未命名书籍'}), el('p', {text: isBundledBook(paper.url) ? '公版原著 · 英文全文' : paper.url}), actions)));
       });
     }
     win.content.append(list, el('details', {class: 'ps-add-paper', open: !papers.length}, el('summary', {text: '添加 / 编辑书籍'}), form));
@@ -409,7 +426,7 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
       trackList.replaceChildren();
       if (!tracks.length) trackList.append(el('p', {class: 'ps-empty-small', text: '还没有本地音频。把喜欢的音乐文件留在这里。'}));
       tracks.forEach(track => {
-        const row = el('article', {class: 'ps-track'}, el('div', {}, el('strong', {text: track.name}), el('small', {text: `${(track.size / 1024 / 1024).toFixed(1)} MB${track.temporary ? ' · 仅本次可用' : ' · 保存在本机'}`})));
+        const row = el('article', {class: 'ps-track'}, el('div', {}, el('strong', {text: track.name}), el('small', {text: `${(track.size / 1024 / 1024).toFixed(1)} MB${track.temporary ? ' · 仅本次可用' : ' · 留在此浏览器'}`})));
         row.append(button('播放', () => choose(track, true)), button('移除', async () => {
           if (!track.temporary) {
             try { await dbOp('readwrite', store => store.delete(track.id)); }

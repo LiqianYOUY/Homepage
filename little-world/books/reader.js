@@ -52,13 +52,15 @@
     if(!progressQueued){progressQueued=true;requestAnimationFrame(()=>{updateProgress();progressQueued=false;});}
     clearTimeout(saveTimer);saveTimer=setTimeout(save,180);
   },{passive:true});
+  // Embedded readers return to the existing room; standalone readers keep their link.
+  function returnToRoom(event){
+    if(window.parent===window)return;
+    event.preventDefault();event.stopPropagation();save();
+    window.parent.postMessage({type:'little-home-reader:close'},location.origin);
+  }
+  document.querySelectorAll('[data-reader-home]').forEach(link=>link.addEventListener('click',returnToRoom));
   // Keyboard events inside an iframe do not bubble into the surrounding room.
-  document.addEventListener('keydown',event=>{
-    if(event.key==='Escape' && window.parent!==window){
-      event.preventDefault();event.stopPropagation();
-      window.parent.postMessage({type:'little-home-reader:close'},location.origin);
-    }
-  });
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')returnToRoom(event);});
   window.addEventListener('resize',updateProgress);
   window.addEventListener('pagehide',save);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});
