@@ -6,54 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
         content="Liqian You Prototype Studio turns early ideas into testable digital, physical, and AI-enabled experiences through research, interaction design, and functional prototyping.">
-    <meta property="og:title" content="Liqian You Prototype Studio">
+    <meta property="og:title" content="Liqian You — A little curious. Always making.">
     <meta property="og:description"
         content="Independent prototype and idea design practice for digital products, smart objects, responsible AI, and human-centred systems.">
     <meta property="og:type" content="website">
     <meta property="og:image"
         content="https://liqianyouy.github.io/Homepage/portfolio/assets/images/moodball/hero.jpg">
     <link rel="canonical" href="https://liqianyouy.github.io/Homepage/portfolio/">
-    <link rel="icon" href="assets/images/favicon-ly.png" type="image/png">
-    <title>Liqian You Prototype Studio | Ideas Made Testable</title>
+    <link rel="icon" href="assets/images/favicon-yl.svg" type="image/svg+xml">
+    <title>Liqian You — A little curious. Always making.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&amp;family=Manrope:wght@400;600;700;800&amp;display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="assets/css/site.css">
+    <link rel="stylesheet" href="assets/css/home-intro.css?v=20260906-3">
+    <script src="assets/js/home-intro.js?v=20260906-1" defer></script>
 </head>
 
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
-    <nav class="site-nav" aria-label="Primary navigation">
-        <div class="shell nav-inner">
-            <a class="brand" href="#top" aria-label="Liqian You Prototype Studio home">
-                <span class="brand-mark">LY</span>
-                <span>Prototype Studio</span>
-            </a>
-            <div class="nav-links">
-                <a href="#work">Work</a>
-                <a href="#services">Services</a>
-                <a href="#method">Method</a>
-                <a href="#profile">Profile</a>
-                <a href="archive/">Archive</a>
-            </div>
-            <a class="nav-cta" href="#contact">Start an idea</a>
-        </div>
-    </nav>
+    <header class="global-header intro-nav" id="top"><div class="global-header-inner"><a class="global-brand" href="#top" aria-label="YL home"><svg class="global-yl" viewBox="0 0 56 42" fill="none" aria-hidden="true"><path d="M5 5 16 20 27 5M16 20v17M34 5v32h17" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"/></svg></a><nav class="global-nav" aria-label="Main navigation"><a class="site-action" href="#work">Work</a><a class="site-action" href="#interactive-title">Playground</a><a class="site-action" href="#profile">About</a></nav><a class="site-action global-contact" href="#contact">Let’s talk</a></div></header>
 
-    <header class="studio-hero" id="top">
-        <div class="shell hero-inner">
-            <p class="mono-label">Independent prototype &amp; idea design practice / Sydney</p>
-            <h1 class="hero-title">Liqian You<br><span>Prototype Studio</span></h1>
-            <p class="hero-lede">
-                I turn early ideas into experiences people can see, touch, test, and understand. The practice combines
-                interaction design, responsible AI research, product thinking, and functional prototyping.
-            </p>
-            <div class="action-row">
-                <a class="button button-primary" href="#work">Explore prototypes</a>
-                <a class="button button-secondary" href="#contact">Discuss an idea</a>
+    <header class="studio-hero">
+        <div class="shell hero-inner intro-inner">
+            <div class="intro-layout" aria-labelledby="hero-title">
+                <div class="hero-copy">
+                  <p class="eyebrow">DESIGNER · MAKER · HCI RESEARCHER</p>
+                  <p class="hello">Hi, I’m Liqian.</p>
+                  <h1 id="hero-title">Ideas that<br>light up<br><em>everyday life.</em></h1>
+                  <p class="hero-description">I design interfaces and build playful objects for everyday life.</p>
+                  <div class="hero-actions"><a class="pill-link site-action" href="#work">Explore my work </a></div>
+                </div>
+                <div class="workbench" id="workbench">
+                  <span class="bench-label mono">IDEAS IN MOTION</span>
+                  <div class="orb-stage"><canvas id="curiosity-orb" aria-hidden="true"></canvas><button class="orb-touch" id="orb-touch" aria-label="Illuminate the glass sphere. Click or press Enter to discover a project question."></button></div>
+                  <div class="bench-instruction"><span class="pointer-hint">Move to light · Click to play</span><span class="touch-hint">Touch to light · Tap to play</span></div>
+                  <div class="bench-note"><div class="idea-heading"><span class="mono">A QUESTION TO PLAY WITH</span><span id="idea-count" class="mono" aria-live="polite">01 / 04</span></div><p id="idea-question">What if you could hold a feeling?</p><a id="idea-link" href="projects/moodball/" class="site-action">Meet MoodBall </a></div>
+                  <button id="motion-toggle" class="motion-toggle site-action" type="button" aria-pressed="false">Pause motion <span aria-hidden="true">Ⅱ</span></button>
+                </div>
             </div>
             <div class="hero-index" aria-label="Studio focus">
                 <div>

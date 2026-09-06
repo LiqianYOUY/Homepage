@@ -1,0 +1,381 @@
+/* Navigation and interactive introduction from the alternate homepage.
+   Keep these rules scoped so the downloaded site's remaining sections retain
+   their original stylesheet. */
+.studio-hero {
+    min-height: 0;
+    background-color: #07090b;
+    background-image:
+        radial-gradient(ellipse at 16% 43%, #12423952, transparent 48%),
+        radial-gradient(ellipse at 76% 38%, #17463b66, transparent 48%),
+        radial-gradient(ellipse at 28% 100%, #64732224, transparent 42%),
+        url("../images/intro-network.svg?v=2");
+    background-position: center;
+    background-size: cover;
+}
+
+.studio-hero::after {
+    background-image: radial-gradient(circle, #9cebd25c .9px, transparent 1.2px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(to bottom, #00000080, #000000d9);
+    pointer-events: none;
+}
+
+.intro-nav,
+.studio-hero .intro-layout {
+    --action-bg: #151519;
+    --action-border: #595960;
+    --action-text: #ffffff;
+    --action-hover-bg: #68f4e8;
+    --action-hover-text: #09090b;
+    font-family: "Manrope", Arial, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+
+.intro-nav {
+    position: relative;
+    z-index: 20;
+    color: #ffffff;
+    background: #09090b;
+    border-bottom: 1px solid #ffffff19;
+}
+
+.intro-nav .global-header-inner {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: min(1280px, calc(100% - 96px));
+    min-height: 82px;
+    margin: 0 auto;
+}
+
+.intro-nav .global-brand {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.intro-nav .global-yl {
+    display: block;
+    width: 45px;
+    height: 36px;
+}
+
+.intro-nav .global-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.intro-nav .global-contact {
+    --action-border: #e7ff63;
+    --action-text: #e7ff63;
+    --action-hover-bg: #e7ff63;
+    margin-left: 14px;
+}
+
+.intro-nav .site-action,
+.studio-hero .intro-layout .site-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 42px;
+    padding: 11px 17px;
+    border: 1px solid var(--action-border);
+    border-radius: 3px;
+    color: var(--action-text);
+    background: var(--action-bg);
+    font: 800 11px/1.45 "Manrope", Arial, sans-serif;
+    letter-spacing: .025em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: normal;
+    cursor: pointer;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .18s, border-color .18s, color .18s;
+}
+
+.intro-nav .site-action:hover,
+.intro-nav .site-action:focus-visible,
+.studio-hero .intro-layout .site-action:hover,
+.studio-hero .intro-layout .site-action:focus-visible {
+    color: var(--action-hover-text);
+    background: var(--action-hover-bg);
+    border-color: var(--action-hover-bg);
+    transform: none;
+}
+
+.intro-nav .site-action:focus-visible,
+.intro-nav .global-brand:focus-visible,
+.studio-hero .intro-layout .site-action:focus-visible {
+    outline: 2px solid #16a79a;
+    outline-offset: 4px;
+}
+
+.intro-nav .global-nav .site-action {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 10px;
+}
+
+.studio-hero .intro-inner {
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 24px;
+}
+
+.studio-hero .hero-index {
+    margin-top: 26px;
+}
+
+.studio-hero .intro-layout {
+    display: grid;
+    grid-template-columns: minmax(0, .91fr) minmax(0, 1.09fr);
+    color: #ffffff;
+}
+
+.studio-hero .intro-layout .mono,
+.studio-hero .intro-layout .eyebrow {
+    font: 400 12px/1.6 "IBM Plex Mono", monospace;
+    letter-spacing: .045em;
+}
+
+.studio-hero .intro-layout .hero-copy {
+    position: relative;
+    z-index: 2;
+    align-self: center;
+    min-width: 0;
+    padding: 44px 0;
+}
+
+.studio-hero .intro-layout .hero-copy .eyebrow {
+    margin: 0 0 28px;
+    color: #68f4e8;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .06em;
+}
+
+.studio-hero .intro-layout .hello {
+    margin: 0 0 16px;
+    color: #bcbcc3;
+    font-size: 15px;
+}
+
+.studio-hero .intro-layout h1 {
+    margin: 0 0 28px;
+    color: #ffffff;
+    font: 800 clamp(54px, 5.4vw, 84px)/1.04 "Manrope", Arial, sans-serif;
+    letter-spacing: -.055em;
+}
+
+.studio-hero .intro-layout h1 em {
+    color: #e7ff63;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.studio-hero .intro-layout .hero-description {
+    max-width: 370px;
+    margin: 0 0 32px;
+    color: #bcbcc3;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.studio-hero .intro-layout .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.studio-hero .intro-layout .hero-actions .site-action {
+    --action-bg: #68f4e8;
+    --action-border: #68f4e8;
+    --action-text: #09090b;
+    --action-hover-bg: #e7ff63;
+}
+
+.studio-hero .intro-layout .workbench {
+    --scroll: 0;
+    position: relative;
+    min-width: 0;
+    min-height: 560px;
+    padding-bottom: 10px;
+}
+
+.studio-hero .intro-layout .bench-label {
+    position: absolute;
+    top: 30px;
+    left: 5%;
+    z-index: 2;
+    color: #a7a9b0;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.studio-hero .intro-layout .orb-stage {
+    position: absolute;
+    inset: 0 -20px 50px -38px;
+    transform: translateY(calc(var(--scroll) * 28px)) scale(calc(1 - var(--scroll) * .05));
+    transform-origin: 50% 45%;
+}
+
+.studio-hero .intro-layout .orb-stage canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.studio-hero .intro-layout .orb-touch {
+    position: absolute;
+    top: 9%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    touch-action: pan-y;
+    cursor: crosshair;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.studio-hero .intro-layout .orb-touch:focus-visible {
+    outline: 1px dashed #9ce8ff;
+    outline-offset: -5px;
+}
+
+.studio-hero .intro-layout .bench-instruction {
+    position: absolute;
+    right: 0;
+    bottom: 198px;
+    left: 7%;
+    color: #bcbcc3;
+    font-size: 12px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.studio-hero .intro-layout .bench-note {
+    position: absolute;
+    right: 0;
+    bottom: 43px;
+    z-index: 3;
+    width: min(300px, 90%);
+    padding: 13px 15px;
+    border: 1px solid #ffffff32;
+    border-radius: 6px;
+    background: #151519d9;
+    backdrop-filter: blur(14px);
+}
+
+.studio-hero .intro-layout .idea-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    color: #a7a9b0;
+}
+
+.studio-hero .intro-layout .idea-heading .mono {
+    font-size: 8px;
+}
+
+.studio-hero .intro-layout #idea-count {
+    color: #d4d4d8;
+    white-space: nowrap;
+}
+
+.studio-hero .intro-layout .bench-note p {
+    min-height: 42px;
+    margin: 9px 0 12px;
+    color: #ffffff;
+    font: 600 16px/1.35 "Manrope", Arial, sans-serif;
+    letter-spacing: -.025em;
+}
+
+.studio-hero .intro-layout .bench-note .site-action {
+    min-height: 32px;
+    padding: 7px 10px;
+    font-size: 9px;
+}
+
+.studio-hero .intro-layout .motion-toggle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 9px;
+}
+
+.studio-hero .intro-layout .site-action:disabled {
+    opacity: .65;
+    cursor: default;
+}
+
+.studio-hero .intro-layout .touch-hint {
+    display: none;
+}
+
+@media (min-width: 1500px) {
+    .studio-hero .intro-layout .hero-copy { padding: 48px 0; }
+    .studio-hero .intro-layout .workbench { min-height: 610px; }
+    .studio-hero .intro-layout .orb-stage { inset: 0 -48px 50px -30px; }
+}
+
+@media (max-width: 1050px) and (min-width: 761px) {
+    .studio-hero .intro-layout h1 { font-size: clamp(43px, 5.4vw, 57px); }
+    .studio-hero .intro-layout .hero-copy .eyebrow { max-width: 310px; font-size: 9px; }
+    .studio-hero .intro-layout .hero-description { max-width: 335px; font-size: 15px; }
+    .studio-hero .intro-layout .hero-actions { flex-wrap: wrap; gap: 18px; }
+    .studio-hero .intro-layout .bench-label { left: 0; font-size: 9px; }
+    .studio-hero .intro-layout .orb-stage { inset: 20px -40px 120px -40px; }
+    .studio-hero .intro-layout .bench-instruction { left: 0; font-size: 11px; }
+}
+
+@media (max-width: 760px) {
+    .intro-nav .global-header-inner { width: calc(100% - 36px); min-height: 66px; gap: 18px; }
+    .intro-nav .global-yl { width: 35px; height: 28px; }
+    .intro-nav .global-nav { gap: 6px; }
+    .intro-nav .global-nav .site-action { min-height: 34px; padding: 8px 9px; font-size: 9px; }
+    .intro-nav .global-contact { display: none; }
+    .studio-hero .intro-inner { padding-bottom: 20px; }
+    .studio-hero .intro-layout { display: flex; flex-direction: column; }
+    .studio-hero .intro-layout .hero-copy { align-self: stretch; padding: 32px 0 8px; }
+    .studio-hero .intro-layout .hero-copy .eyebrow { margin-bottom: 23px; font-size: 9px; letter-spacing: .03em; }
+    .studio-hero .intro-layout .hello { margin-bottom: 15px; }
+    .studio-hero .intro-layout h1 { margin-bottom: 24px; font-size: clamp(40px, 9.6vw, 65px); line-height: 1.07; letter-spacing: -.05em; }
+    .studio-hero .intro-layout .hero-description { max-width: 410px; margin-bottom: 24px; font-size: 14px; }
+    .studio-hero .intro-layout .hero-actions { gap: 20px; }
+    .studio-hero .intro-layout .site-action { font-size: 10px; }
+    .studio-hero .intro-layout .workbench { height: 480px; min-height: 480px; margin: 0 -10px 0; }
+    .studio-hero .intro-layout .bench-label { top: 24px; left: 10px; font-size: 9px; }
+    .studio-hero .intro-layout .orb-stage { inset: 34px -12px 120px; }
+    .studio-hero .intro-layout .bench-instruction { left: 0; font-size: 10px; }
+    .studio-hero .intro-layout .bench-note { right: 10px; width: min(300px, calc(100% - 20px)); }
+    .studio-hero .intro-layout .motion-toggle { right: 10px; font-size: 9px; }
+    .studio-hero .intro-layout .pointer-hint { display: none; }
+    .studio-hero .intro-layout .touch-hint { display: inline; }
+}
+
+@media (hover: none) {
+    .studio-hero .intro-layout .pointer-hint { display: none; }
+    .studio-hero .intro-layout .touch-hint { display: inline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intro-nav .site-action,
+    .studio-hero .intro-layout .site-action { transition: none; }
+    .studio-hero .intro-layout .orb-stage { transform: none; }
+}

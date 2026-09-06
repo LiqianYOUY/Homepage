@@ -1,0 +1,76 @@
+/* Shared homepage navigation on the archive and project case studies. */
+.intro-nav.subpage-nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 30;
+}
+
+.project-body .case-toc {
+    position: sticky;
+    top: 83px;
+    z-index: 19;
+    color: #18181b;
+    background: #f4f3ef;
+    border-bottom: 1px solid #d9d8d2;
+}
+
+.project-body .case-toc-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.project-body .case-toc a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 1px solid #c1c1b8;
+    border-radius: 3px;
+    color: #18181b;
+    background: #ecece6;
+    font: 800 10px/1.45 "Manrope", Arial, sans-serif;
+    letter-spacing: .025em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color .18s, border-color .18s, color .18s;
+}
+
+.project-body .case-toc a:hover,
+.project-body .case-toc a:focus-visible {
+    border-color: #18181b;
+    color: #ffffff;
+    background: #18181b;
+}
+
+.project-body .case-toc a:focus-visible {
+    outline: 2px solid #16a79a;
+    outline-offset: -3px;
+}
+
+.project-body #case-content,
+.project-body #case-content [id] {
+    scroll-margin-top: 164px;
+}
+
+.archive-body #archive-content {
+    scroll-margin-top: 99px;
+}
+
+@media (max-width: 760px) {
+    .project-body .case-toc { top: 67px; }
+    .project-body .case-toc-inner { padding: 10px 0; gap: 6px; }
+    .project-body .case-toc a { min-height: 34px; padding: 8px 10px; font-size: 9px; }
+    .project-body #case-content,
+    .project-body #case-content [id] { scroll-margin-top: 150px; }
+    .archive-body #archive-content { scroll-margin-top: 83px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-body .case-toc a { transition: none; }
+}
