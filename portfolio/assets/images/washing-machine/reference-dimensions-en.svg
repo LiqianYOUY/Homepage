@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="2480" viewBox="0 0 2000 2480" role="img" aria-labelledby="drawing-title drawing-desc">
+<title id="drawing-title">0.5 kg voice-controlled pulsator washer — V0.1 reference dimensions</title>
+<desc id="drawing-desc">Four schematic engineering views with external English annotations: front section, right side, top view and a machined shaft-seal section. Dimensions are design references in millimetres, not measured fabrication data. Overall height 509 including 34 feet; body 340 wide, 380 deep and 475 high. Dedicated notes describe the rear electronics enclosures, build dimensions, drain route and prototype limitations.</desc>
+<defs>
+  <marker id="arrow" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto-start-reverse"><path d="M0,0 L7,3.5 L0,7 Z" fill="#365fe8"/></marker>
+  <style>
+    text{font-family:Arial,Helvetica,sans-serif;fill:#172245}
+    .title{font-size:42px;font-weight:700;letter-spacing:-1px}
+    .subtitle{font-size:24px;fill:#52617e}
+    .view{font-size:28px;font-weight:700;letter-spacing:.1px}
+    .label{font-size:22px}
+    .muted{font-size:22px;fill:#52617e}
+    .small{font-size:20px;fill:#52617e}
+    .caps{font-size:20px;font-weight:700;letter-spacing:1.2px;fill:#365fe8}
+    .dtxt{font-size:22px;font-weight:700;fill:#365fe8}
+    .panel{fill:#ffffff;stroke:#dce3ef;stroke-width:1.5}
+    .outline{fill:none;stroke:#172245;stroke-width:2.2}
+    .heavy{fill:none;stroke:#172245;stroke-width:3}
+    .thin{fill:none;stroke:#8292ad;stroke-width:1.2}
+    .hidden{fill:none;stroke:#8292ad;stroke-width:1.2;stroke-dasharray:7 6}
+    .water{fill:#8bd5ef;fill-opacity:.28;stroke:#16a6c2;stroke-width:1.5}
+    .metal{fill:#dce5f0;stroke:#172245;stroke-width:1.6}
+    .print{fill:#f5f7fc;stroke:#172245;stroke-width:1.6}
+    .electronics{fill:#c8d7ff;fill-opacity:.58;stroke:#365fe8;stroke-width:1.6}
+    .motor{fill:#dce0f7;stroke:#365fe8;stroke-width:1.6}
+    .dim{fill:none;stroke:#365fe8;stroke-width:1.4;marker-start:url(#arrow);marker-end:url(#arrow)}
+    .ext{fill:none;stroke:#91a2c0;stroke-width:1}
+    .center{fill:none;stroke:#91a2c0;stroke-width:1;stroke-dasharray:10 4 2 4}
+    .leader{fill:none;stroke:#16a6c2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    .badge{fill:#ffffff;stroke:#16a6c2;stroke-width:1.8}
+    .badge-text{font-size:17px;font-weight:700;fill:#172245}
+    .tag{fill:#eef2ff;stroke:#365fe8;stroke-width:1.3}
+    .tag-text{font-size:18px;font-weight:700;fill:#365fe8}
+  </style>
+</defs>
+<rect width="2000" height="2480" fill="#f5f7fc"/>
+
+<text x="56" y="76" class="title">0.5 kg voice-controlled pulsator washer</text>
+<text x="56" y="119" class="subtitle">V0.1  /  REFERENCE DIMENSIONS</text>
+<text x="1944" y="76" class="caps" text-anchor="end">DESIGN REFERENCE  •  15 JUL 2026</text>
+<text x="1944" y="119" class="small" text-anchor="end">All dimensions in mm  •  Schematic; not to scale</text>
+<line x1="56" y1="148" x2="1944" y2="148" stroke="#172245" stroke-width="2"/>
+<rect x="56" y="180" width="920" height="670" rx="18" class="panel"/>
+<text x="84" y="223" class="view">01  /  FRONT SECTION A–A</text>
+<rect x="1000" y="180" width="944" height="670" rx="18" class="panel"/>
+<text x="1028" y="223" class="view">02  /  RIGHT SIDE &amp; ENCLOSURE ZONES</text>
+<g xmlns="http://www.w3.org/2000/svg" id="front-section" transform="translate(192,238) scale(1.05)">
+    <rect x="22" y="24" width="306" height="427.5" rx="16" class="outline" />
+    <rect x="30" y="31" width="290" height="17" rx="6" class="print" />
+    <path d="M62 43 Q175 16 288 43" class="outline" />
+    <line x1="175" y1="14" x2="175" y2="466" class="center" />
+
+
+    <path d="M58 54 L58 317 Q58 326 67 326 L283 326 Q292 326 292 317 L292 54" class="metal" />
+    <path d="M67 62 L67 310 Q67 317 75 317 L275 317 Q283 317 283 310 L283 62" fill="white" stroke="#172245" stroke-width="1.4" />
+    <rect x="67" y="132" width="216" height="185" class="water" />
+    <line x1="67" y1="132" x2="283" y2="132" stroke="#16a6c2" stroke-width="2" />
+    <path d="M87 305 Q175 284 263 305 L263 316 L87 316 Z" class="print" />
+    <rect x="168" y="295" width="14" height="86" class="metal" />
+    <rect x="151" y="323" width="48" height="49" rx="6" class="metal" />
+    <rect x="142" y="380" width="66" height="44" rx="8" class="motor" />
+    <line x1="22" y1="316.5" x2="328" y2="316.5" class="hidden" />
+    <rect x="43" y="451.5" width="26" height="30.6" rx="5" class="print" />
+    <rect x="281" y="451.5" width="26" height="30.6" rx="5" class="print" />
+    <path d="M111 451.5 L111 477 L137 477" class="outline" />
+    <line x1="22" y1="488" x2="22" y2="528" class="ext" />
+    <line x1="328" y1="488" x2="328" y2="528" class="ext" />
+    <line x1="22" y1="520" x2="328" y2="520" class="dim" />
+    <line x1="14" y1="24" x2="-30" y2="24" class="ext" />
+    <line x1="14" y1="482.1" x2="-30" y2="482.1" class="ext" />
+    <line x1="-20" y1="24" x2="-20" y2="482.1" class="dim" />
+    <line x1="58" y1="76" x2="292" y2="76" class="dim" />
+    <line x1="87" y1="285" x2="263" y2="285" class="dim" />
+    <line x1="302" y1="54" x2="337" y2="54" class="ext" />
+    <line x1="302" y1="317" x2="337" y2="317" class="ext" />
+    <line x1="329" y1="54" x2="329" y2="317" class="dim" />
+    </g>
+
+
+
+<g transform="translate(192,238) scale(1.05)">
+<text x="175" y="509" class="dtxt" text-anchor="middle">340</text>
+<text x="-33" y="253" class="dtxt" text-anchor="middle" transform="rotate(-90 -33 253)">509 overall  /  475 body</text>
+<text x="175" y="67" class="dtxt" text-anchor="middle">Ø260</text>
+<text x="175" y="273" class="dtxt" text-anchor="middle">Ø195</text>
+<text x="349" y="186" class="dtxt" text-anchor="middle" transform="rotate(-90 349 186)">292</text>
+</g>
+<text x="608" y="274" class="caps">TUB OD Ø260  /  HEIGHT 292</text>
+<circle cx="489" cy="377" r="4" fill="#16a6c2"/>
+<polyline points="489,377 552,377 574,353 589,353" class="leader"/>
+<circle cx="609" cy="353" r="19" class="badge"/>
+<text x="609" y="359" class="badge-text" text-anchor="middle">01</text>
+<text x="642" y="347" class="label">Maximum water depth: 205</text>
+<text x="642" y="378" class="label">Working volume: approx. 8–10 L</text>
+<text x="642" y="409" class="label">Calibrate using the actual tub.</text>
+<circle cx="401" cy="602" r="4" fill="#16a6c2"/>
+<polyline points="401,602 563,602 575,498 589,498" class="leader"/>
+<circle cx="609" cy="498" r="19" class="badge"/>
+<text x="609" y="504" class="badge-text" text-anchor="middle">02</text>
+<text x="642" y="491" class="label">Metal housing with two shaft</text>
+<text x="642" y="522" class="label">seals and two bearings.</text>
+<text x="642" y="553" class="label">See the shaft-seal section.</text>
+<circle cx="410" cy="662" r="4" fill="#16a6c2"/>
+<polyline points="410,662 566,662 578,613 589,613" class="leader"/>
+<circle cx="609" cy="613" r="19" class="badge"/>
+<text x="609" y="619" class="badge-text" text-anchor="middle">03</text>
+<text x="642" y="606" class="label">24 V right-angle gearmotor</text>
+<text x="642" y="637" class="label">Wet drive bay height: 150</text>
+<circle cx="309" cy="731" r="4" fill="#16a6c2"/>
+<polyline points="309,731 564,731 578,727 589,727" class="leader"/>
+<circle cx="609" cy="727" r="19" class="badge"/>
+<text x="609" y="733" class="badge-text" text-anchor="middle">04</text>
+<text x="642" y="718" class="label">Two recessed RSF54 wells</text>
+<text x="642" y="749" class="label">34-high feet protect the wells.</text>
+<g xmlns="http://www.w3.org/2000/svg" id="side-view" transform="translate(1125,238) scale(1.05)">
+    <rect x="18" y="24" width="342" height="427.5" rx="16" class="outline" />
+    <path d="M25 57 Q189 24 353 57" class="outline" />
+    <path d="M44 54 L44 317 Q44 326 53 326 L278 326 Q287 326 287 317 L287 54" class="metal" />
+    <line x1="18" y1="316.5" x2="342" y2="316.5" class="hidden" />
+
+    <path d="M291 433.5 L291 100.5 L356 91.5" fill="none" stroke="#16a6c2" stroke-width="5" />
+    <rect x="299" y="236" width="55" height="131" rx="5" class="electronics" />
+    <rect x="322" y="236" width="32" height="167" rx="3" fill="#dce5f8" fill-opacity=".72" stroke="#365fe8" stroke-width="1.5" />
+    <rect x="84" y="377" width="94" height="45" rx="8" class="motor" />
+    <path d="M230 335 L281 335 L281 350 L313 350" class="outline" />
+    <circle cx="317" cy="350" r="7" class="outline" />
+    <rect x="39" y="451.5" width="26" height="30.6" rx="5" class="print" />
+    <rect x="313" y="451.5" width="26" height="30.6" rx="5" class="print" />
+    <line x1="18" y1="488" x2="18" y2="528" class="ext" />
+    <line x1="360" y1="488" x2="360" y2="528" class="ext" />
+    <line x1="18" y1="520" x2="360" y2="520" class="dim" />
+    <line x1="289" y1="397" x2="289" y2="425" class="ext" />
+    <line x1="354" y1="397" x2="354" y2="425" class="ext" />
+    <line x1="289" y1="416" x2="354" y2="416" class="dim" />
+    </g>
+
+
+
+<g transform="translate(1125,238) scale(1.05)">
+<text x="189" y="509" class="dtxt" text-anchor="middle">380</text>
+<text x="321" y="408" class="dtxt" text-anchor="middle">72</text>
+</g>
+<circle cx="1495" cy="335" r="4" fill="#16a6c2"/>
+<polyline points="1495,335 1521,335" class="leader"/>
+<rect x="1526" y="318" width="48" height="34" rx="7" class="tag"/>
+<text x="1550" y="342" class="tag-text" text-anchor="middle">E3</text>
+<text x="1590" y="330" class="label">Continuous partition</text>
+<text x="1590" y="361" class="label">Rear-rising sealed canopy</text>
+<circle cx="1445" cy="507" r="4" fill="#16a6c2"/>
+<polyline points="1445,507 1508,507 1525,462" class="leader"/>
+<rect x="1526" y="445" width="48" height="34" rx="7" class="tag"/>
+<text x="1550" y="469" class="tag-text" text-anchor="middle">E1</text>
+<text x="1590" y="455" class="label">IP65 PC control box</text>
+<text x="1590" y="486" class="label">Purchased enclosure</text>
+<circle cx="1484" cy="591" r="4" fill="#16a6c2"/>
+<polyline points="1484,591 1507,591 1525,551" class="leader"/>
+<rect x="1526" y="534" width="48" height="34" rx="7" class="tag"/>
+<text x="1550" y="558" class="tag-text" text-anchor="middle">E2</text>
+<text x="1590" y="544" class="label">Metal resistor sub-box</text>
+<text x="1590" y="575" class="label">Separate sealed housing</text>
+<circle cx="1458" cy="606" r="4" fill="#16a6c2"/>
+<polyline points="1458,606 1505,606 1529,641" class="leader"/>
+<circle cx="1550" cy="641" r="19" class="badge"/>
+<text x="1550" y="647" class="badge-text" text-anchor="middle">05</text>
+<text x="1590" y="635" class="label">Drain pump /</text>
+<text x="1590" y="666" class="label">anti-siphon high loop</text>
+<circle cx="1496" cy="687" r="4" fill="#16a6c2"/>
+<polyline points="1496,687 1515,687 1525,734" class="leader"/>
+<rect x="1526" y="717" width="48" height="34" rx="7" class="tag"/>
+<text x="1550" y="741" class="tag-text" text-anchor="middle">E4</text>
+<text x="1590" y="727" class="label">Open rear rack</text>
+<text x="1590" y="758" class="label">Depth 72  /  height 205</text>
+<text x="1028" y="825" class="small">E1–E4 refer to the dedicated enclosure notes below.</text>
+<rect x="56" y="884" width="920" height="550" rx="18" class="panel"/>
+<text x="84" y="927" class="view">03  /  TOP VIEW</text>
+<rect x="1000" y="884" width="944" height="550" rx="18" class="panel"/>
+<text x="1028" y="927" class="view">04  /  SHAFT-SEAL SECTION</text>
+<text x="1028" y="958" class="muted">Machined load-bearing assembly; not a printed part</text>
+<g xmlns="http://www.w3.org/2000/svg" id="top-view" transform="translate(170,969) scale(1.2)">
+    <rect x="28" y="24" width="265.2" height="296.4" rx="16" class="outline" />
+    <rect x="35" y="31" width="251.2" height="282.4" rx="13" class="thin" />
+    <rect x="47.5" y="257.2" width="226.2" height="56.2" rx="4" class="electronics" />
+    <circle cx="160.6" cy="144.1" r="101.4" class="metal" />
+    <circle cx="160.6" cy="144.1" r="76.05" class="print" />
+    <circle cx="160.6" cy="144.1" r="12" class="metal" />
+    <line x1="160.6" y1="17" x2="160.6" y2="327" class="center" />
+    <line x1="20" y1="144.1" x2="301" y2="144.1" class="center" />
+    <line x1="28" y1="328" x2="28" y2="357" class="ext" />
+    <line x1="293.2" y1="328" x2="293.2" y2="357" class="ext" />
+    <line x1="28" y1="349" x2="293.2" y2="349" class="dim" />
+    <line x1="12" y1="24" x2="-18" y2="24" class="ext" />
+    <line x1="12" y1="320.4" x2="-18" y2="320.4" class="ext" />
+    <line x1="-9" y1="24" x2="-9" y2="320.4" class="dim" />
+    <line x1="59.2" y1="144.1" x2="262" y2="144.1" class="dim" />
+    </g>
+
+
+
+<g transform="translate(170,969) scale(1.2)">
+<text x="160.6" y="339" class="dtxt" text-anchor="middle">340</text>
+<text x="-22" y="172" class="dtxt" text-anchor="middle" transform="rotate(-90 -22 172)">380</text>
+<text x="160.6" y="130" class="dtxt" text-anchor="middle">Ø260</text>
+</g>
+<circle cx="437" cy="1043" r="4" fill="#16a6c2"/>
+<polyline points="437,1043 529,1043 550,1002 577,1002" class="leader"/>
+<text x="597" y="1009" class="label">Tub outside diameter: Ø260</text>
+<circle cx="454" cy="1142" r="4" fill="#16a6c2"/>
+<polyline points="454,1142 527,1142 550,1094 577,1094" class="leader"/>
+<text x="597" y="1101" class="label">Pulsator diameter: Ø195</text>
+<text x="597" y="1132" class="label">Six rounded low-profile blades</text>
+<text x="597" y="1163" class="label">Blade height: 11</text>
+<text x="597" y="1194" class="label">Nominal tub-wall clearance:</text>
+<text x="597" y="1225" class="label">27.5 per side</text>
+<circle cx="497" cy="1311" r="4" fill="#16a6c2"/>
+<polyline points="497,1311 531,1311 552,1298" class="leader"/>
+<rect x="554" y="1281" width="48" height="34" rx="7" class="tag"/>
+<text x="578" y="1305" class="tag-text" text-anchor="middle">E4</text>
+<text x="617" y="1290" class="label">Open rear rack</text>
+<text x="617" y="1321" class="label">290 × 72 × 205  (W × D × H)</text>
+<text x="617" y="1352" class="label">See enclosure notes below.</text>
+<g xmlns="http://www.w3.org/2000/svg" id="seal-detail" transform="translate(960,990) scale(1.18)">
+    <rect x="155" y="35" width="110" height="255" class="metal" />
+    <rect x="197" y="15" width="26" height="305" fill="#9caecc" stroke="#172245" stroke-width="2" />
+    <rect x="174" y="52" width="72" height="30" fill="#546e97" stroke="#172245" stroke-width="1.5" />
+    <rect x="174" y="91" width="72" height="30" fill="#546e97" stroke="#172245" stroke-width="1.5" />
+    <circle cx="210" cy="136" r="5" fill="white" stroke="#172245" />
+    <line x1="210" y1="136" x2="284" y2="136" class="outline" />
+    <rect x="174" y="155" width="72" height="38" fill="#c9d5e8" stroke="#172245" stroke-width="1.5" />
+    <rect x="174" y="215" width="72" height="38" fill="#c9d5e8" stroke="#172245" stroke-width="1.5" />
+    <path d="M145 34 H275 V52 H145 Z" class="metal" />
+    </g>
+
+
+
+<circle cx="1250" cy="1069" r="4" fill="#16a6c2"/>
+<polyline points="1250,1069 1290,1069 1304,1035" class="leader"/>
+<circle cx="1324" cy="1035" r="19" class="badge"/>
+<text x="1324" y="1041" class="badge-text" text-anchor="middle">06</text>
+<text x="1360" y="1028" class="label">Two double-lip FKM seals, 12 × 24 × 7 each</text>
+<text x="1360" y="1059" class="label">Lips toward the water side;</text>
+<text x="1360" y="1090" class="label">use food-grade waterproof grease.</text>
+<circle cx="1289" cy="1150" r="4" fill="#16a6c2"/>
+<polyline points="1289,1150 1304,1139" class="leader"/>
+<circle cx="1324" cy="1139" r="19" class="badge"/>
+<text x="1324" y="1145" class="badge-text" text-anchor="middle">07</text>
+<text x="1360" y="1132" class="label">Ø4 leak-monitoring port</text>
+<text x="1360" y="1163" class="label">Route to the leak collection tray.</text>
+<circle cx="1250" cy="1195" r="4" fill="#16a6c2"/>
+<polyline points="1250,1195 1287,1195 1304,1211" class="leader"/>
+<circle cx="1324" cy="1211" r="19" class="badge"/>
+<text x="1324" y="1217" class="badge-text" text-anchor="middle">08</text>
+<text x="1360" y="1204" class="label">Two 6001-2RS bearings, 12 × 28 × 8</text>
+<text x="1360" y="1235" class="label">Bearing centre spacing: 28</text>
+<circle cx="1273" cy="1300" r="4" fill="#16a6c2"/>
+<polyline points="1273,1300 1290,1300 1304,1291" class="leader"/>
+<circle cx="1324" cy="1291" r="19" class="badge"/>
+<text x="1324" y="1297" class="badge-text" text-anchor="middle">09</text>
+<text x="1360" y="1284" class="label">Seal flange / bearing housing:</text>
+<text x="1360" y="1315" class="label">machined 6061-T6 aluminium or 304 stainless steel</text>
+<circle cx="1223" cy="1353" r="4" fill="#16a6c2"/>
+<polyline points="1223,1353 1290,1353 1304,1370" class="leader"/>
+<circle cx="1324" cy="1370" r="19" class="badge"/>
+<text x="1324" y="1376" class="badge-text" text-anchor="middle">10</text>
+<text x="1360" y="1377" class="label">Ø12 solid shaft: 304 / 316 stainless steel</text>
+<rect x="56" y="1462" width="1888" height="250" rx="18" fill="#edf2ff" stroke="#c8d4f4" stroke-width="1.5"/>
+<text x="84" y="1508" class="view">ENCLOSURE &amp; SEPARATION NOTES</text>
+<line x1="670" y1="1540" x2="670" y2="1650" stroke="#c8d4f4"/><line x1="1292" y1="1540" x2="1292" y2="1650" stroke="#c8d4f4"/>
+<rect x="88" y="1539" width="48" height="34" rx="7" class="tag"/>
+<text x="112" y="1563" class="tag-text" text-anchor="middle">E1</text>
+<text x="153" y="1563" class="caps">IP65 PC CONTROL BOX</text>
+<text x="88" y="1605" class="label">Purchased polycarbonate control enclosure.</text>
+<text x="88" y="1636" class="label">The printed parts provide support and trim.</text>
+<rect x="702" y="1539" width="48" height="34" rx="7" class="tag"/>
+<text x="726" y="1563" class="tag-text" text-anchor="middle">E2</text>
+<text x="767" y="1563" class="caps">METAL RESISTOR SUB-BOX</text>
+<text x="702" y="1605" class="label">Separate sealed metal enclosure</text>
+<text x="702" y="1636" class="label">for the resistor module.</text>
+<rect x="1324" y="1539" width="48" height="34" rx="7" class="tag"/>
+<text x="1348" y="1563" class="tag-text" text-anchor="middle">E3</text>
+<rect x="1382" y="1539" width="48" height="34" rx="7" class="tag"/>
+<text x="1406" y="1563" class="tag-text" text-anchor="middle">E4</text>
+<text x="1450" y="1563" class="caps">BARRIER + REAR RACK</text>
+<text x="1320" y="1605" class="label">Continuous partition and rear-rising canopy.</text>
+<text x="1320" y="1636" class="label">Open rack: 290 × 72 × 205  (W × D × H).</text>
+<text x="88" y="1681" class="label">Water protection relies on the purchased boxes, continuous partition / canopy and sealed cable glands.</text>
+<rect x="56" y="1740" width="1888" height="302" rx="18" class="panel"/>
+<text x="84" y="1783" class="view">KEY DIMENSIONS &amp; BUILD NOTES</text>
+<text x="88" y="1831" class="caps">PULSATOR</text>
+<text x="88" y="1862" class="label">Ø195; six rounded blades, height 11.</text>
+<text x="88" y="1893" class="label">Nominal radial clearance to the tub wall: 27.5 per side.</text>
+<text x="88" y="1945" class="caps">PRINTED STRUCTURE</text>
+<text x="88" y="1976" class="label">Shell walls and structural ribs: 4. Panels sized for a</text>
+<text x="88" y="2007" class="label">220 × 220 print bed; M3 / M4 heat-set brass inserts.</text>
+<text x="1032" y="1831" class="caps">SHAFT SYSTEM</text>
+<text x="1032" y="1862" class="label">Ø12 metal shaft; 2 × 6001-2RS bearings; 2 × FKM seals.</text>
+<text x="1032" y="1893" class="label">Do not print the shaft, bearing seats or coupling.</text>
+<text x="1032" y="1945" class="caps">LEVEL &amp; LEAK SENSING</text>
+<text x="1032" y="1976" class="label">2 × RSF46 mounted through the actual tub wall.</text>
+<text x="1032" y="2007" class="label">Six-point sloped drainage to two recessed RSF54 wells.</text>
+<rect x="56" y="2070" width="1888" height="132" rx="18" class="panel"/>
+<text x="84" y="2113" class="view">DRAIN ROUTE</text>
+<text x="88" y="2150" class="label">ID20 → coarse filter / gravity branch → 88 × 112 × 56 isolated side chamber + LLF59 → 24 V pump → anti-siphon high loop.</text>
+<rect x="56" y="2230" width="1888" height="180" rx="18" fill="#172245"/>
+<text x="88" y="2274" class="view" style="fill:#ffffff">PROTOTYPE BOUNDARY</text>
+<g fill="#ffffff">
+<text x="88" y="2310" class="label" style="fill:#ffffff">Structural envelope only — not a procurement or fabrication drawing.</text>
+<text x="88" y="2342" class="label" style="fill:#e6edff">The control box sits below the maximum water level: a known V1 deviation. Measure the actual tub, seals, motor, pump and sensors,</text>
+<text x="88" y="2374" class="label" style="fill:#e6edff">then verify the complete assembly for water protection. Low-speed wash prototype; high-speed spin is prohibited.</text>
+</g>
+<line x1="56" y1="2435" x2="1944" y2="2435" stroke="#c8d4e8"/>
+<text x="56" y="2465" class="small">0.5 kg functional prototype  /  Reference envelope  /  V0.1</text>
+<text x="1944" y="2465" class="small" text-anchor="end">Source: docs/reference_dimensions.svg  +  DESIGN.md</text>
+</svg>

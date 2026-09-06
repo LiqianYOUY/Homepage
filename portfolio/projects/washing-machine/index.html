@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Washing Machine: an in-progress compact appliance design exploring offline Chinese voice interaction, physical controls, and a clear wash-state flow. Design and software simulation; physical validation is next.">
+    <meta property="og:title" content="Washing Machine | Liqian You">
+    <meta property="og:description"
+        content="An everyday appliance, explored through voice interaction, parametric design, and software simulation.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://liqianyouy.github.io/Homepage/portfolio/projects/washing-machine/">
+    <link rel="icon" href="../../assets/images/favicon-yl.svg" type="image/svg+xml">
+    <title>Washing Machine | Liqian You</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&amp;family=Manrope:wght@400;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/site.css">
+    <link rel="stylesheet" href="../../assets/css/home-intro.css?v=20260906-3">
+    <link rel="stylesheet" href="../../assets/css/page-navigation.css?v=20260906-1">
+    <link rel="stylesheet" href="../../assets/css/washing-machine.css?v=20260906-1">
+</head>
+
+<body class="project-body washer-page">
+    <a class="skip-link" href="#case-content">Skip to case study</a>
+
+    <header class="global-header intro-nav subpage-nav"><div class="global-header-inner"><a class="global-brand" href="../../" aria-label="YL home"><svg class="global-yl" viewBox="0 0 56 42" fill="none" aria-hidden="true"><path d="M5 5 16 20 27 5M16 20v17M34 5v32h17" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"/></svg></a><nav class="global-nav" aria-label="Main navigation"><a class="site-action" href="../../#work">Work</a><a class="site-action" href="../../#interactive-title">Playground</a><a class="site-action" href="../../#profile">About</a></nav><a class="site-action global-contact" href="../../#contact">Let’s talk</a></div></header>
+
+    <header class="case-hero washer-hero" aria-labelledby="project-title">
+        <div class="shell washer-hero-inner">
+            <div class="washer-hero-copy">
+                <p class="case-kicker">Physical computing / An everyday experiment</p>
+                <h1 class="case-title" id="project-title">Washing<br>Machine</h1>
+                <p class="washer-question">Could a washer listen<br>and know when to wait?</p>
+                <p class="case-lede">A compact washer design connecting offline Chinese voice commands, physical
+                    controls, and an understandable wash sequence. An exploration of what happens when an interface
+                    becomes an object.</p>
+                <p class="washer-stage">In progress · Design + software simulation</p>
+            </div>
+            <figure class="washer-hero-drawing">
+                <span class="washer-drawing-label">WM—01 / Front section</span>
+                <img src="../../assets/images/washing-machine/front-section.svg"
+                    alt="Washing Machine front-section design drawing; not a built prototype" width="620" height="700">
+                <figcaption>Design reference · Not a built prototype</figcaption>
+            </figure>
+            <dl class="case-meta washer-facts">
+                <div><dt>Target capacity</dt><dd>0.5 kg dry clothes</dd></div>
+                <div><dt>Interaction</dt><dd>Voice · Buttons · Local web</dd></div>
+                <div><dt>Design scope</dt><dd>Mechanical · Control · Interface</dd></div>
+                <div><dt>Current stage</dt><dd>Design &amp; simulation</dd></div>
+            </dl>
+        </div>
+    </header>
+
+    <nav class="case-toc" aria-label="In this project">
+        <div class="shell case-toc-inner">
+            <a href="#concept">Concept</a>
+            <a href="#interaction">Interaction</a>
+            <a href="#design">Design</a>
+            <a href="#progress">Progress</a>
+        </div>
+    </nav>
+
+    <main id="case-content">
+        <section class="case-section case-section--paper" id="concept">
+            <div class="shell washer-split">
+                <div class="washer-section-heading">
+                    <p class="section-index">01 / The question</p>
+                    <h2>Less mystery.<br>More understanding.</h2>
+                </div>
+                <div class="washer-prose">
+                    <p>Starting a wash sounds like one action. Inside the machine, it is a sequence of decisions:
+                        choose a programme, check the lid, wait for enough water, begin moving, and respond when
+                        something changes.</p>
+                    <p>This project explores a small, manually filled washer with low-speed pulsator washing. The
+                        design brings those hidden states into the interaction, so a request can lead to a clear next
+                        step.</p>
+                    <p>The first version focuses on washing and draining. High-speed spinning and heating are outside
+                        its scope.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-section case-section--white" id="interaction">
+            <div class="shell">
+                <div class="washer-section-heading washer-heading-row">
+                    <div>
+                        <p class="section-index">02 / Three ways in</p>
+                        <h2>Speak, press,<br>or check.</h2>
+                    </div>
+                    <p>Different inputs.<br>One consistent control sequence.</p>
+                </div>
+                <div class="washer-input-grid">
+                    <article>
+                        <span class="washer-input-number">01 / Voice interaction</span>
+                        <h3>Say it.</h3>
+                        <blockquote lang="zh-CN">“小洗衣机，暂停。”</blockquote>
+                        <p>Offline Chinese speech-recognition and spoken-feedback adapters. Recognised requests pass
+                            through a defined command vocabulary before reaching the controller.</p>
+                    </article>
+                    <article>
+                        <span class="washer-input-number">02 / Physical controls</span>
+                        <h3>Press it.</h3>
+                        <p class="washer-input-example">Start. Pause. Choose.<br>Stop.</p>
+                        <p>Physical-button inputs provide a direct way to control the same sequence. Hardware
+                            emergency stopping is designed as an independent path.</p>
+                    </article>
+                    <article>
+                        <span class="washer-input-number">03 / Local web interface</span>
+                        <h3>See it.</h3>
+                        <p class="washer-input-example">What’s happening?<br>What comes next?</p>
+                        <p>A local web interface shows the current state and accepts commands. Its simulated flow
+                            includes waiting for water, pausing, continuing, and stopping.</p>
+                    </article>
+                </div>
+
+                <div class="washer-logic washer-split">
+                    <div class="washer-section-heading">
+                        <p class="section-index">The interaction logic</p>
+                        <h2>A request is<br>only the beginning.</h2>
+                    </div>
+                    <div class="washer-prose">
+                        <p>Voice, buttons, and the web interface feed the same controlled sequence. A start request
+                            leads to checks and a prompt to add water. Movement depends on water level, a closed lid,
+                            and the required safety permissions.</p>
+                        <p>The design separates interaction from real-time control: a Raspberry Pi handles voice and
+                            the programme flow; an ESP32 handles sensors, motor commands, and local protective logic.
+                            Fault recovery requires new checks rather than automatically repeating an old action.</p>
+                    </div>
+                </div>
+                <ol class="washer-flow" aria-label="Simplified intended wash sequence">
+                    <li><span>01</span><h3>Choose</h3><p>Request a wash programme.</p></li>
+                    <li><span>02</span><h3>Check &amp; fill</h3><p>Check conditions and add water.</p></li>
+                    <li><span>03</span><h3>Wash</h3><p>Low-speed forward–stop–reverse.</p></li>
+                    <li><span>04</span><h3>Drain</h3><p>Drain, or refill for rinsing.</p></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="case-section case-section--paper" id="design">
+            <div class="shell">
+                <div class="washer-section-heading washer-heading-row">
+                    <div>
+                        <p class="section-index">03 / From interface to object</p>
+                        <h2>Making room<br>for the real parts.</h2>
+                    </div>
+                    <p>Parametric CAD and a mechanical design package.<br>Dimensions remain subject to physical
+                        verification.</p>
+                </div>
+                <figure class="washer-reference">
+                    <a href="../../assets/images/washing-machine/reference-dimensions-en.svg" target="_blank"
+                        rel="noopener" aria-label="Open the complete engineering design reference at full size">
+                        <img src="../../assets/images/washing-machine/reference-dimensions-en.svg"
+                            alt="English engineering reference with separate front, side, top, and shaft-seal views and external component annotations"
+                            width="2000" height="2480" loading="lazy" decoding="async">
+                    </a>
+                    <figcaption>English design reference · Separate views and component callouts. Dimensions remain
+                        subject to physical verification.
+                        <a href="../../assets/images/washing-machine/reference-dimensions-en.svg" target="_blank"
+                            rel="noopener">Open full-size drawing &nearr;</a>
+                    </figcaption>
+                </figure>
+                <p class="washer-design-note">The enclosure and locating parts are designed in OpenSCAD. The tub,
+                    shaft, bearings, and seals rely on purchased or machined components. Actual part measurements must
+                    be checked before the assembly is finalised.</p>
+            </div>
+        </section>
+
+        <section class="case-section case-section--dark washer-progress" id="progress">
+            <div class="shell">
+                <div class="washer-section-heading">
+                    <p class="section-index">04 / Work in progress</p>
+                    <h2>Designed. Simulated.<br><span>Next: the physical tests.</span></h2>
+                </div>
+                <div class="washer-progress-grid">
+                    <div>
+                        <h3>In the current project package</h3>
+                        <ul>
+                            <li>Parametric mechanical models and component specifications.</li>
+                            <li>Python controller, voice adapters, and local web interface.</li>
+                            <li>ESP32 firmware source and independent safety architecture.</li>
+                            <li>A staged build and physical validation plan.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>What still needs physical validation</h3>
+                        <ul>
+                            <li>Purchased component dimensions, fit, and assembly.</li>
+                            <li>Complete ESP32 build, deployment, and bench testing.</li>
+                            <li>Microphone performance in the appliance environment.</li>
+                            <li>Water-tightness, load behaviour, and wet-cycle testing.</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="washer-validation-note">The project review dated 6 September 2026 records a browser
+                    demonstration of the simulated controls. Hardware validation remains incomplete; the review does
+                    not report an assembled or tested washing machine.</p>
+            </div>
+        </section>
+    </main>
+
+    <a class="next-project" href="../moodball/">
+        <div class="shell next-project-inner">
+            <div><p>Keep exploring / Physical interaction</p><h2>MoodBall</h2></div>
+            <span aria-hidden="true">&rarr;</span>
+        </div>
+    </a>
+
+    <footer class="site-footer">
+        <div class="shell footer-inner">
+            <p>Copyright 2026 Liqian You.</p>
+            <a href="../../#work">Back to selected work</a>
+        </div>
+    </footer>
+</body>
+
+</html>

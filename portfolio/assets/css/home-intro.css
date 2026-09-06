@@ -379,3 +379,48 @@
     .studio-hero .intro-layout .site-action { transition: none; }
     .studio-hero .intro-layout .orb-stage { transform: none; }
 }
+
+/* The washer is a design reference, so preserve the complete drawing. */
+.featured-project--washer .project-media--washer {
+    position: relative;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    place-items: center;
+    min-width: 0;
+    padding: 24px 24px 42px;
+    background: #e8ece8;
+    text-decoration: none;
+}
+
+.featured-project--washer .project-media--washer img {
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 410px;
+    object-fit: contain;
+}
+
+.featured-project--washer .washer-media-caption {
+    position: absolute;
+    right: 12px;
+    bottom: 15px;
+    left: 12px;
+    color: #46564d;
+    font: 500 9px/1.5 "IBM Plex Mono", monospace;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.featured-project--washer .project-media--washer:focus-visible {
+    outline: 3px solid #17776e;
+    outline-offset: -5px;
+}
+
+@media (max-width: 1080px) {
+    .featured-project.featured-project--washer { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 760px) {
+    .featured-project--washer .project-media--washer { height: 300px; aspect-ratio: auto; }
+}
