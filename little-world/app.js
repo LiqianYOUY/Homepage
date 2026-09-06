@@ -57,7 +57,8 @@ const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStand
 const nightLights=[];for(const [x,z] of [[620,420],[777,421],[873,407],[1040,365],[529,669],[1380,380],[1380,533]]){const l=new THREE.PointLight('#ffc97e',0,8,1.5);l.position.copy(P(x,z,2.4));scene.add(l);nightLights.push(l);}
 
 function isVisible(o){for(let n=o;n;n=n.parent)if(!n.visible)return false;return true;}
-function register(record){if(!record?.object||!record.id)return;record.object.traverse(o=>{if(o.isMesh)o.userData.interactionId=record.id;});records.set(record.id,record);record.initialPosition=record.object.position.clone();record.initialAnchor=(record.anchor||new THREE.Box3().setFromObject(record.object).getCenter(new THREE.Vector3())).clone();if(record.hotspot!==false&&record.kind!=='chair'){const b=document.createElement('button');b.className='hotspot';b.type='button';b.textContent=record.label;b.setAttribute('aria-label',record.label);b.addEventListener('click',e=>{e.stopPropagation();record.click?.();});$('#hotspots').append(b);hotspotEntries.push({record,button:b});}diagnostics.interactionCount=records.size;}
+const hotspotLineLayer=document.createElementNS('http://www.w3.org/2000/svg','svg');hotspotLineLayer.classList.add('hotspot-lines');hotspotLineLayer.setAttribute('aria-hidden','true');$('#hotspots').append(hotspotLineLayer);
+function register(record){if(!record?.object||!record.id)return;record.object.traverse(o=>{if(o.isMesh)o.userData.interactionId=record.id;});records.set(record.id,record);record.initialPosition=record.object.position.clone();record.initialAnchor=(record.anchor||new THREE.Box3().setFromObject(record.object).getCenter(new THREE.Vector3())).clone();if(record.hotspot!==false&&record.kind!=='chair'){const b=document.createElement('button');b.className='hotspot';b.type='button';b.textContent=record.label;b.setAttribute('aria-label',record.label);b.addEventListener('click',e=>{e.stopPropagation();record.click?.();});$('#hotspots').append(b);const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.style.display='none';hotspotLineLayer.append(line);const size=b.getBoundingClientRect();hotspotEntries.push({record,button:b,line,width:size.width,height:size.height});}diagnostics.interactionCount=records.size;}
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2(),floorPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
 function setRay(event){const r=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-r.left)/r.width)*2-1,-((event.clientY-r.top)/r.height)*2+1);ray.setFromCamera(pointer,camera);}
 function pick(event){setRay(event);const hits=ray.intersectObjects(scene.children,true);for(const hit of hits){if(!isVisible(hit.object)||hit.object===ground)continue;const id=hit.object.userData.interactionId;if(id&&records.has(id))return records.get(id);const material=hit.object.material;if((Array.isArray(material)?material.every(m=>m.transparent):material?.transparent)||hit.object.userData.category==='rug')continue;return null;}return null;}
@@ -120,7 +121,26 @@ function walkUpdate(dt){if(!walk)return;let f=0,r=0;if(keys.has('w')||keys.has('
 const sydneyTime=new Intl.DateTimeFormat('en-GB',{timeZone:'Australia/Sydney',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}),sydneyDate=new Intl.DateTimeFormat('zh-CN',{timeZone:'Australia/Sydney',month:'long',day:'numeric',weekday:'short'});
 function updateClock(){const now=new Date();const time=sydneyTime.format(now);$('#clock').replaceChildren();const t=document.createElement('strong');t.textContent=time;const d=document.createElement('small');d.textContent='悉尼 · '+sydneyDate.format(now);$('#clock').append(t,d);const hour=Number(time.slice(0,2));$('#greeting').textContent=(hour<12?'早上好':hour<18?'下午好':'晚上好')+'，可爱的朋友';}updateClock();setInterval(updateClock,1000);
 
-function updateHotspots(){const primary=new Set(['desk-notes','book-0','speaker','portfolio','cat','tap-kitchen','door-entry','television','smart-controls','garden-planter','terrace-garden','terrace-living']);for(const {record,button} of hotspotEntries){if(button.textContent!==record.label){button.textContent=record.label;button.setAttribute('aria-label',record.label);}const p=(record.anchor||record.initialAnchor).clone();if(record.kind==='cat'&&cat)p.copy(cat.root.position).add(new THREE.Vector3(0,.77,0));const v=p.clone().project(camera);let show=showHotspots&&loadDone&&!walk&&v.z<1&&v.z>-1&&Math.abs(v.x)<.95&&Math.abs(v.y)<.91;if(currentRoom==='overview')show=show&&primary.has(record.id);else show=show&&p.distanceTo(controls.target)<(currentRoom==='study'?2.4:6);button.hidden=!show;if(show){button.style.left=((v.x*.5+.5)*innerWidth)+'px';button.style.top=((-v.y*.5+.5)*innerHeight)+'px';}}}
+function updateHotspots(){
+ const primary=new Set(['desk-notes','book-0','speaker','portfolio','cat','tap-kitchen','door-entry','television','smart-controls','garden-planter','terrace-garden','terrace-living']);
+ const occupied=[],blocked=['.welcome','.cat-card','.topbar','.room-nav','.interaction-help'].map(selector=>document.querySelector(selector)?.getBoundingClientRect()).filter(r=>r&&r.width>0&&r.height>0);
+ const overlaps=(a,b,gap=7)=>a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
+ const offsets=[[0,0]];for(let r=1;r<=5;r++)for(const [x,y] of [[0,-1],[0,1],[-1,0],[1,0],[-1,-1],[1,-1],[-1,1],[1,1]])offsets.push([x*r*47,y*r*31]);
+ for(const entry of hotspotEntries){const {record,button,line}=entry;if(button.textContent!==record.label){button.textContent=record.label;button.setAttribute('aria-label',record.label);entry.width=0;}
+  const p=(record.anchor||record.initialAnchor).clone();if(record.kind==='cat'&&cat)p.copy(cat.root.position).add(new THREE.Vector3(0,.77,0));const v=p.clone().project(camera);
+  let show=showHotspots&&loadDone&&!walk&&v.z<1&&v.z>-1&&Math.abs(v.x)<.95&&Math.abs(v.y)<.91;
+  if(currentRoom==='overview')show=show&&primary.has(record.id);else show=show&&p.distanceTo(controls.target)<(currentRoom==='study'?2.4:6);
+  line.style.display='none';if(!show){button.hidden=true;continue;}button.hidden=false;
+  if(!entry.width){const r=button.getBoundingClientRect();entry.width=r.width;entry.height=r.height;}
+  const sx=(v.x*.5+.5)*innerWidth,sy=(-v.y*.5+.5)*innerHeight;let placed=null;
+  for(const [dx,dy] of offsets){const x=sx+dx,y=sy+dy,b={left:x-entry.width/2,right:x+entry.width/2,top:y-entry.height,bottom:y};
+   if(b.left<10||b.right>innerWidth-10||b.top<78||b.bottom>innerHeight-60||blocked.some(r=>overlaps(b,r,6))||occupied.some(r=>overlaps(b,r)))continue;
+   placed={x,y,b,dx,dy};break;
+  }
+  if(!placed){button.hidden=true;continue;}occupied.push(placed.b);button.style.left=placed.x+'px';button.style.top=placed.y+'px';
+  if(Math.abs(placed.dx)+Math.abs(placed.dy)>8){line.setAttribute('x1',sx);line.setAttribute('y1',sy);line.setAttribute('x2',placed.x);line.setAttribute('y2',placed.y-entry.height/2);line.style.display='';}
+ }
+}
 
 try{
  const loaded=await new GLTFLoader().loadAsync('./apartment.glb',e=>{if(e.total)$('#load-detail').textContent='恢复的模型 '+Math.round(e.loaded/e.total*100)+'%';});model=loaded.scene;scene.add(model);model.updateMatrixWorld(true);
