@@ -11,3 +11,91 @@
 .planter-choices{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0 20px}.planter-choices button{font-size:10px;padding:10px 6px}.planter-choices [aria-pressed=true]{background:#7f966f;color:#fff9ee;border-color:#7f966f}.planter-detail{background:#edf1e4;border-radius:17px;padding:21px}.planter-detail h3{font-size:22px;margin:8px 0}.planter-detail p{font-size:12px;line-height:1.8;color:#7b8e6c}.planter-detail small{font-size:10px;color:#7b8e6c}.plant-growth{height:6px;border-radius:8px;background:#dce4ce;margin:15px 0;overflow:hidden}.plant-growth i{display:block;height:100%;background:#9eb18b;border-radius:8px;transition:width .5s}.garden-seed-title{font-size:12px;margin:24px 0 8px}.seed-options select{border:1px solid #dbe1cb;border-radius:10px;padding:8px 12px;background:#fffaf0;color:#758569;font:inherit;font-size:11px}.profile-button{background:#f9e2e8}.host-portrait{filter:drop-shadow(0 5px 12px #d99caf20)}@media(max-width:440px){.planter-choices{grid-template-columns:repeat(2,1fr)}}
 
 .hotspot-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}.hotspot-lines line{stroke:#8b9a79;stroke-width:1;stroke-opacity:.52;stroke-linecap:round}
+
+/* The two cards share the same disclosure pattern in every room. */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:root{--cards-top:104px;--cards-bottom-gap:118px}
+.welcome.friend-card,.cat-card.compactible-card,.close-view .welcome.friend-card,.walk-mode .welcome.friend-card{display:flex;flex-direction:column;top:var(--cards-top);bottom:auto;padding:0;max-height:calc(100vh - var(--cards-top) - var(--cards-bottom-gap));max-height:calc(100dvh - var(--cards-top) - var(--cards-bottom-gap));overflow:hidden}
+.welcome.friend-card,.close-view .welcome.friend-card{width:248px;left:28px}
+.cat-card.compactible-card{width:236px;right:28px}
+.compactible-card .card-header{flex:none;min-height:60px;padding:8px;display:flex;align-items:center;gap:6px}
+.compactible-card .card-disclosure{display:flex;align-items:center;gap:7px;min-height:44px;min-width:44px;padding:0 5px;border:0;border-radius:12px;background:transparent;flex:1;text-align:left;overflow:hidden}
+.compactible-card .card-disclosure:hover{background:#e9eddc99}
+.compactible-card .card-disclosure:focus-visible{outline-offset:-3px}
+.compactible-card .card-caret{width:18px;height:18px;flex:none;margin-left:auto;color:#78846a;transition:transform .18s}
+.compactible-card.is-expanded .card-caret{transform:rotate(180deg)}
+.welcome.friend-card .visitor-chip,.close-view .welcome.friend-card .visitor-chip{display:flex;align-items:center;gap:9px;min-width:0;margin:0;font-size:12px;line-height:1.4;color:#667356}
+.welcome.friend-card .visitor-chip>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.welcome.friend-card .tiny-avatar,.close-view .welcome.friend-card .tiny-avatar{width:36px;height:36px;flex:none;border-radius:13px;overflow:hidden}
+.compactible-card .card-body{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c5cfb9 transparent;padding:0 20px 20px}
+.compactible-card .card-body[hidden]{display:none!important}
+.welcome.friend-card .card-body .eyebrow,.close-view .welcome.friend-card .card-body .eyebrow{display:block;margin:2px 0 0;font-size:8px;letter-spacing:1.4px}
+.welcome.friend-card .card-body h1,.close-view .welcome.friend-card .card-body h1{display:block;font-size:21px;line-height:1.4;margin:11px 0}
+.welcome.friend-card .card-body p,.close-view .welcome.friend-card .card-body p{display:block;font-size:11px;line-height:1.9}
+.welcome.friend-card .card-body .divider,.close-view .welcome.friend-card .card-body .divider{display:block;margin:16px 0}
+.welcome.friend-card .card-body .mini-label,.close-view .welcome.friend-card .card-body .mini-label{display:block;font-size:10px}
+.welcome.friend-card .card-body .home-status,.close-view .welcome.friend-card .card-body .home-status{display:flex;font-size:9px;padding-top:12px}
+.welcome.friend-card .text-action,.close-view .welcome.friend-card .text-action{min-height:44px;font-size:11px;padding:7px 0;gap:8px;line-height:1.5}
+.shortcut-icon{display:inline-flex;align-items:center;justify-content:center;flex:none}
+.text-action .shortcut-icon,.shortcut-icon svg{width:18px;height:18px}
+.cat-card.compactible-card .cat-avatar{width:44px;height:44px;min-width:44px;min-height:44px;flex:none;border-radius:15px}
+.cat-card .cat-heading{display:block;min-width:0;flex:1}
+.cat-card .cat-heading .mini-label{display:block;font-size:8px;line-height:1.5;white-space:nowrap}
+.cat-card .cat-title{display:block;font-size:16px;font-weight:600;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-card.is-collapsed .cat-heading .mini-label{display:none}
+.cat-card.compactible-card .card-body{padding:0 16px 16px}
+.cat-card.compactible-card p{font-size:11px;line-height:1.6;margin:8px 0 11px}
+.cat-card.compactible-card .cat-care{display:flex;flex-wrap:wrap;gap:5px 8px;line-height:1.5;font-size:9px}
+.cat-card.compactible-card .cat-actions{gap:7px;margin-top:12px}
+.cat-card.compactible-card .cat-actions button{min-height:44px;padding:9px 8px;font-size:11px}
+.cat-card.compactible-card .follow{min-height:44px;margin:7px 0 0;gap:8px;font-size:11px}
+.cat-card.compactible-card .follow input{width:17px;height:17px;flex:none}
+.cat-tools{display:flex;align-items:center;gap:8px}
+.cat-tools .muted-toggle,.cat-tools .cat-focus{display:block;min-height:44px;min-width:44px;margin:0;padding:8px 12px;background:#eef1e4;border:1px solid #dfe5d5;border-radius:10px;font-size:13px}
+.cat-tools .cat-focus{flex:1;font-size:11px;text-align:center}
+.cat-card.compactible-card .cat-caption{margin:10px 0 0;font-size:9px;line-height:1.6;color:#8d977f}
+.compactible-card.is-collapsed{border-radius:19px}
+@media(max-width:1100px) and (min-width:761px){.welcome.friend-card,.close-view .welcome.friend-card{width:216px;left:20px}.cat-card.compactible-card{width:216px;right:20px}.compactible-card .card-body{padding-left:16px;padding-right:16px}.welcome.friend-card .visitor-chip{font-size:11px}.welcome.friend-card .card-body h1{font-size:19px}}
+@media(max-width:760px){
+ :root{--cards-top:calc(76px + env(safe-area-inset-top,0px));--cards-bottom-gap:calc(116px + env(safe-area-inset-bottom,0px))}
+ .topbar{top:calc(12px + env(safe-area-inset-top,0px))}
+ .top-actions{gap:4px}
+ .top-actions .icon-button,.top-actions .profile-button{min-height:44px;min-width:44px;height:44px;padding:0 10px}
+ .top-actions .profile-button{width:44px;padding:0}
+ .welcome.friend-card,.close-view .welcome.friend-card,.walk-mode .welcome.friend-card,.cat-card.compactible-card,.walk-mode .cat-card.compactible-card{position:absolute;top:var(--cards-top);bottom:auto;width:calc((100% - 36px)/2);padding:0;border-radius:18px;z-index:7}
+ .welcome.friend-card,.close-view .welcome.friend-card{left:12px;right:auto}
+ .cat-card.compactible-card{left:auto;right:12px}
+ .compactible-card .card-header{min-height:56px;padding:5px;gap:3px}
+ .compactible-card .card-disclosure{min-height:44px;padding:0 3px;gap:4px}
+ .compactible-card .card-caret{width:16px;height:16px}
+ .welcome.friend-card .visitor-chip,.close-view .welcome.friend-card .visitor-chip{display:flex;font-size:11px;gap:6px}
+ .welcome.friend-card .tiny-avatar,.close-view .welcome.friend-card .tiny-avatar{width:32px;height:32px;border-radius:12px}
+ .cat-card.compactible-card .cat-avatar{width:44px;height:44px;min-width:44px;border-radius:13px;padding:5px;background:transparent}
+ .cat-card .cat-avatar svg{width:34px;height:34px;border-radius:12px}
+ .cat-card .cat-title{font-size:12px;line-height:1.5}
+ .cat-card .cat-heading .mini-label{display:none}
+ .compactible-card:not(.cards-ready) .card-body{display:none}
+ .compactible-card.is-collapsed{z-index:8}
+ .welcome.friend-card.is-expanded,.close-view .welcome.friend-card.is-expanded,.cat-card.compactible-card.is-expanded{left:12px;right:12px;width:auto}
+ .compactible-card.is-expanded>.card-header{width:calc((100% - 12px)/2)}
+ .cat-card.compactible-card.is-expanded>.card-header{margin-left:auto}
+ .compactible-card .card-body,.cat-card.compactible-card .card-body{padding:9px 18px 16px;border-top:1px solid #dce2d3;margin-top:1px}
+ .welcome.friend-card .card-body h1,.close-view .welcome.friend-card .card-body h1{font-size:21px}
+ .welcome.friend-card .card-body p,.close-view .welcome.friend-card .card-body p{font-size:12px}
+ .welcome.friend-card .text-action,.close-view .welcome.friend-card .text-action{min-height:46px;font-size:12px;gap:10px}
+ .welcome.friend-card .card-body .home-status,.close-view .welcome.friend-card .card-body .home-status{font-size:10px}
+ .cat-card.compactible-card .cat-care{font-size:11px}
+ .cat-card.compactible-card .cat-actions button{min-height:46px;font-size:12px}
+ .cat-card.compactible-card .cat-caption{display:block}
+ .room-nav{bottom:calc(40px + env(safe-area-inset-bottom,0px));min-height:56px;z-index:9}
+ .room-nav button{min-height:44px;min-width:44px}
+ .interaction-help{bottom:calc(3px + env(safe-area-inset-bottom,0px));min-height:34px;gap:5px}
+ .interaction-help button{min-height:44px;min-width:44px;padding:0 4px}
+ .world-ui .world-button,.world-ui .dialog-close{min-height:44px;min-width:44px}
+ .world-ui .dialog-close{width:44px;height:44px}
+ .world-ui .planter-choices .world-button,.world-ui .seed-options select{min-height:44px}
+ .world-ui .dialog-header{gap:12px}
+ .world-ui .home-dialog{max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));top:calc(16px + env(safe-area-inset-top,0px))}
+}
+@media(max-width:360px){.topbar .brand{gap:6px}.topbar .brand strong{font-size:17px}.topbar .home-mark{width:34px;height:34px}.top-actions{gap:3px}.welcome.friend-card .visitor-chip{font-size:10px;gap:4px}.compactible-card .card-caret{width:14px;height:14px}}
+@media(max-height:480px) and (max-width:760px){:root{--cards-top:64px;--cards-bottom-gap:102px}.compactible-card .card-header{min-height:52px;padding-top:3px;padding-bottom:3px}.room-nav{bottom:calc(32px + env(safe-area-inset-bottom,0px))}.interaction-help{bottom:0}.topbar{top:6px}}

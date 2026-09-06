@@ -1,5 +1,6 @@
 /** Community transport: local Python API, configured HTTPS API, or honest browser-only records. */
 const BROWSER_KEY='little-world-browser-community-v1';
+const DEVICE_KEY='little-world-device-v1';
 const OLD_GUEST_KEY='little-world-local-guest';
 const ADJECTIVES=['晒太阳的','软乎乎的','爱发呆的','慢慢走的','捧着花的','带星星的','会做梦的','听海的','暖烘烘的','刚睡醒的'];
 const ANIMALS=['小海獭','小兔子','小橘子','小团子','小熊猫','小松鼠','小云朵','小布丁','小狐狸','小奶猫'];
@@ -36,22 +37,29 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
  const config=resolveCommunityConfig({apiBase,pageURL});
  let mode='browser',visitor=null,community=null,startupError=null,stateEnabled=false,disposed=false;
  let memory=null,persisted=true;
+ const previous=readJSON(storage,BROWSER_KEY);
+ let device=visitorValid(previous?.visitor)?previous.visitor.storageKey:null;
+ try{device=device||storage?.getItem(DEVICE_KEY);}catch{}
+ const legacyDevice=readJSON(storage,OLD_GUEST_KEY);
+ if(!device&&visitorValid(legacyDevice))device=legacyDevice.storageKey;
+ if(!device||!/^[a-zA-Z0-9_-]{8,128}$/.test(device))device=id();
+ try{storage?.setItem(DEVICE_KEY,device);}catch{}
  async function request(name,{method='GET',body}={}){
   if(!config.apiBase||!fetchImpl)throw Error('当前没有连接共享社区服务。');
-  const response=await fetchImpl(new URL(name,config.apiBase).href,{method,credentials:'include',cache:'no-store',signal:AbortSignal.timeout(5000),...(body===undefined?{}:{headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})});
+  const response=await fetchImpl(new URL(name,config.apiBase).href,{method,credentials:config.isLocalServer?'include':'omit',cache:'no-store',signal:AbortSignal.timeout(5000),headers:{...(!config.isLocalServer?{'X-Little-World-Device':device}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})});
   let value=null;try{value=await response.json();}catch{throw Error('社区服务返回了无法识别的内容。');}
   if(!response.ok)throw Error(value?.error||'社区服务暂时没有连上，请稍后再试。');
   return value;
  }
  function sharedSummary(value){
   if(!isObject(value)||!Number.isFinite(value.today)||!Number.isFinite(value.total)||!Array.isArray(value.history)||!Array.isArray(value.postcards))throw Error('社区记录格式不正确。');
-  return {...value,scope:'same-server',timezone:'Australia/Sydney'};
+  return {...value,scope:config.isLocalServer?'same-server':'site',timezone:'Australia/Sydney'};
  }
  if(config.apiBase){
   try{
    const result=await request('visitor');
    if(!visitorValid(result?.visitor))throw Error('匿名身份没有正确载入。');
-   community=sharedSummary(result.community);visitor={...result.visitor,isOwner:config.isLocalServer&&result.visitor.isOwner===true};mode='server';stateEnabled=true;
+   community=sharedSummary(result.community);visitor={...result.visitor,isOwner:config.isLocalServer&&result.visitor.isOwner===true};mode='server';stateEnabled=result.stateEnabled!==false;
   }catch(error){startupError=error.message;}
  }
  function freshRecord(){
@@ -59,7 +67,7 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
   if(isObject(saved)&&visitorValid(saved.visitor))return saved;
   const old=readJSON(storage,OLD_GUEST_KEY),seed=Math.floor(Math.random()*10000);
   const v=visitorValid(old)?old:{name:ADJECTIVES[seed%10]+ANIMALS[Math.floor(seed/10)%10],avatar:seed,storageKey:id()};
-  return {version:1,visitor:{name:v.name,avatar:v.avatar,storageKey:v.storageKey,isOwner:false},visits:[],postcards:[]};
+  return {version:1,visitor:{name:v.name,avatar:v.avatar,storageKey:device,isOwner:false},visits:[],postcards:[]};
  }
  function readRecord(){
   const disk=readJSON(storage,BROWSER_KEY);
@@ -95,11 +103,11 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
  };
  const client={
   get visitor(){return visitor;},get community(){return community;},get mode(){return mode;},get apiBase(){return config.apiBase;},stateTransport,
-  getStatus(){return {mode,scope:mode==='browser'?'browser':'same-server',apiBase:config.apiBase,isLocalServer:config.isLocalServer&&mode==='server',startupError,persisted:mode==='browser'?persisted:true};},
+  getStatus(){return {mode,scope:mode==='browser'?'browser':config.isLocalServer?'same-server':'site',apiBase:config.apiBase,isLocalServer:config.isLocalServer&&mode==='server',startupError,persisted:mode==='browser'?persisted:true};},
   async refresh(){if(disposed)throw Error('窗口已关闭。');if(mode==='browser')return browserVisit();community=sharedSummary(await request('community'));return community;},
   async postcard(kind,text=''){
    if(disposed)throw Error('窗口已关闭。');const clean=message(kind,text);
-   if(mode==='server'){community=sharedSummary(await request('community',{method:'POST',body:{kind,text:clean}}));return community;}
+   if(mode==='server'){community=sharedSummary(await request('community',{method:'POST',body:{kind,text:clean,...(!config.isLocalServer?{id:id()}: {})}}));return community;}
    const save=()=>{
     const record=readRecord(),time=now();
     const latest=Math.max(0,...record.postcards.map(c=>Date.parse(c.created)));
