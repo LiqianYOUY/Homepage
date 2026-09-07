@@ -25,6 +25,8 @@
 
 2026-09-07 本地修改：住宅工作室的 MoodBall、药盒和 FoodCare 封面改用 `assets/moodball-linework.svg`、`assets/smart-medication-linework.svg`、`assets/foodcare-linework.svg`。线稿根据已有产品形态以 SVG 绘制，与 `washer.svg` 保持一致的展示风格；上述照片保留为原始素材。
 
+`portfolio-room.html` 的四个「查看项目」入口分别指向用户原站的 [MoodBall](https://liqianyouy.github.io/Homepage/portfolio/projects/moodball/)、[智能药盒](https://liqianyouy.github.io/Homepage/portfolio/projects/smart-medication/)、[FoodCare + SeniorCare](https://liqianyouy.github.io/Homepage/portfolio/projects/foodcare/) 和 [Compact washer](https://liqianyouy.github.io/Homepage/portfolio/projects/washing-machine/) 项目页。链接在新标签页打开，使用 `noopener noreferrer`；没有把外部项目页改成住宅中的游戏或本地原型。
+
 ## 音乐与电视
 
 Flower Dance — DJ Okawari 使用原平台提供的播放器或入口：
@@ -72,6 +74,25 @@ v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审
 
 钢琴声音由 Web Audio 合成，没有新增外部音频。升降桌、人体工学椅、沙袋沙发、儿童床、洗漱用品和窗帘均由 Three.js 几何生成。全身镜使用实际房间的平面反射，算法参考 [Three.js Reflector](https://github.com/mrdoob/three.js/blob/r170/examples/jsm/objects/Reflector.js)，并限制分辨率和更新频率以控制移动端开销。
 
+儿童房两套床桌柜按用户的北侧横向、东侧纵向布局设计。结构参考 [IKEA SMÅSTAD 高架床、书桌与收纳官方产品页](https://www.ikea.com/au/en/p/smastad-loft-bed-frame-w-desk-and-storage-white-70454040/)及 [IKEA SMÅSTAD 选购指南](https://www.ikea.com/au/en/files/pdf/37/43/37438516/smastad_fy22_oct21.pdf)：端部收纳与床架整合、床下布置书桌、梯子可按空间选择左右侧。本项目重新绘制木色几何，按小屋空间调整尺寸、护栏、梯子和推拉柜门；没有下载厂商图片、模型或材质，也不是该产品的施工模型。
+
+钢琴左右移动按钮、键盘焦点箭头及冰箱数字均由本项目代码生成。冰箱屏幕以几何笔画显示温度示意，已修正面朝房间时的水平镜像；无新增图片、字库或温度数据接口。
+
 植物使用真实经过的天数和品种差异；其发芽、开花、水肥与凋谢规则、园艺来源及模拟边界见 [PLANT-LIFECYCLE.md](PLANT-LIFECYCLE.md)。
 
 洗衣机衣物、键帽、卫浴内腔及柜板开孔由本项目生成。45 分钟洗涤与 60 分钟烘干是小屋选定的交互程序时长，不对应具体产品参数；衣物每 14 天生成一次，使用浏览器保存的真实时间戳。
+
+## 棋牌规则与图形
+
+棋牌桌的规则、电脑启发式策略和界面由本项目编写；棋盘、棋子、扑克牌和麻将牌使用本地几何、CSS 与文字，没有引入外部游戏引擎、牌面图片或在线对局服务。当前六种玩法和与比赛规则的差异见 [GAMES.md](GAMES.md)。维护时以 `board-games.js` 的 `BOARD_GAME_RULES` 与 `cards-games.js` 的 `CARD_GAME_RULES` 为准。
+
+| 玩法 | 参考来源 | 本项目采用范围 |
+|---|---|---|
+| 五子棋 | [Renju International Federation / RenjuNet 入门规则](https://gomoku.renju.net/rules/) | 交叉点落子及五连基础；小屋使用无禁手自由五子棋，长连也胜 |
+| 围棋 | British Go Association [行棋介绍](https://www.britgo.org/intro/intro2.html)、[规则比较](https://www.britgo.org/rules/compare.html) | 气、提子、禁自杀、劫与数子；小屋采用简单劫、白加 6.5 分，先继续行棋处理死子 |
+| 象棋 | [World Xiangqi Federation《世界象棋规则》2018 英文版](https://www.wxf-xiangqi.org/images/wxf-rules/2018_World_XiangQi_Rules_English2018.pdf) | 棋子走法、将军与无合法着判负；重复局面采用休闲自动和局 |
+| 国际象棋 | [FIDE Laws of Chess，2023 生效版](https://handbook.fide.com/chapter/e012023) | 合法着法、易位、吃过路兵、升变、将死与逼和；三次重复及 50 回合改为自动判和 |
+| 斗地主 | [JJ 官方帮助中心《斗地主规则》](https://www.jj.cn/news/320/20110920103700018196.shtml) | 发牌、常见牌型与比较、地主和农民组队；叫地主及全员不叫处理采用本桌简化规则，不计分 |
+| 麻将 | [Mahjong International League 网站提供的《A Guide to Mahjong》](https://mahjong-mil.org/wp-content/uploads/2024/08/A_GUIDE_TO_MAHJONG.pdf) | 牌张组成、吃碰杠胡及基础和牌结构；小屋使用无花、无起胡番数、不计分的家常规则 |
+
+以上资料作为规则参考，不表示本项目完整实现对应组织或平台的比赛规程。未打包规则原文或插图。

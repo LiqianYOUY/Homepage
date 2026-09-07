@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLaundryLifecycle,LAUNDRY_PERIOD,WASH_DURATION,DRY_DURATION} from '../laundry-lifecycle.js?v=13';
+import {createLaundryLifecycle,LAUNDRY_PERIOD,WASH_DURATION,DRY_DURATION} from '../laundry-lifecycle.js?v=14';
 
 function fixture(initial={}){let at=Date.UTC(2026,8,7),state=structuredClone(initial),writes=0,calls=0;const options={getState:()=>state,setState:patch=>{state={...state,...patch};writes++;},now:()=>at,random:()=>{calls++;return .5;}};return {life:createLaundryLifecycle(options),reload:()=>createLaundryLifecycle(options),advance:ms=>at+=ms,get state(){return state;},get writes(){return writes;},get calls(){return calls;},get now(){return at;}};}
 function finish(f){assert.ok(f.life.startWash().ok);f.advance(WASH_DURATION);assert.ok(f.life.transferToDryer().ok);assert.ok(f.life.startDry().ok);f.advance(DRY_DURATION);assert.ok(f.life.collect().ok);}

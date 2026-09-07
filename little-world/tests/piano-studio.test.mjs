@@ -5,9 +5,9 @@ import * as THREE from '../vendor/three.module.js';
 import {registerHooks} from 'node:module';
 registerHooks({resolve(specifier,context,nextResolve){return nextResolve(specifier==='three'?new URL('../vendor/three.module.js',import.meta.url).href:specifier,context);}});
 const {GLTFLoader}=await import('../vendor/GLTFLoader.js');
-import {createPianoAudio,frequencyForMidi,PIANO_KEYS} from '../piano.js?v=13';
-import {setupStudio} from '../studio.js?v=13';
-import {createWalkCollision} from '../walk-collision.js?v=13';
+import {createPianoAudio,frequencyForMidi,PIANO_KEYS} from '../piano.js?v=14';
+import {setupStudio} from '../studio.js?v=14';
+import {createWalkCollision} from '../walk-collision.js?v=14';
 
 class AudioParameter {
  constructor(){this.value=0;this.calls=[];}

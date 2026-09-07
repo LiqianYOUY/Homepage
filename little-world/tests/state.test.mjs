@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createStore} from '../state.js?v=13';
+import {createStore} from '../state.js?v=14';
 
 test('laundry, garden and curtains survive browser reload and exported-backup import with personal notes intact',async()=>{
  const values=new Map();

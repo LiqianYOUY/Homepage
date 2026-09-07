@@ -19,7 +19,7 @@
 .piano-key-note{display:block;position:absolute;bottom:34px;left:0;right:0;font-size:10px}.piano-key kbd{position:absolute;left:0;right:0;bottom:14px;font-family:inherit;font-size:10px;opacity:.65}.piano-key-black .piano-key-note{bottom:30px;font-size:9px}.piano-key-black kbd{bottom:13px;font-size:9px}
 .piano-key-white.is-playing{background:#d5e2bf;transform:translateY(3px);box-shadow:inset 0 -3px #b0bd9e}.piano-key-black.is-playing{background:#637d52;transform:translateY(2px);box-shadow:inset 0 -4px #394d2e}.piano-key:focus-visible{outline:3px solid #afca89;outline-offset:-4px}
 .piano-instrument-edge{height:12px;background:#273531}
-.piano-key-travel{display:none;align-items:center;justify-content:center;gap:18px;margin-top:12px;color:#87927f;font:10px ui-monospace,monospace;letter-spacing:.12em}.piano-key-travel button{border:1px solid #d9dfd1;border-radius:9px;background:#edf0e5;color:#53624d;min-height:36px;width:48px;font-family:inherit;font-size:18px;cursor:pointer}
+.piano-key-travel{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px;color:#87927f;font:10px ui-monospace,monospace;letter-spacing:.12em}.piano-key-travel button{border:1px solid #d9dfd1;border-radius:9px;background:#edf0e5;color:#53624d;min-height:36px;width:48px;font-family:inherit;font-size:18px;cursor:pointer}
 .piano-controls{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:24px}
 .piano-sustain{border:1px solid #d7ddcc;background:#eef0e5;color:#56674b;padding:10px 16px;border-radius:12px;font-family:inherit;font-size:13px;cursor:pointer;min-height:42px}.piano-sustain[aria-pressed=true]{background:#687e55;color:#fff;border-color:#687e55}
 .piano-volume{display:flex;align-items:center;gap:12px;color:#7b8678;font-size:12px}.piano-volume input{width:110px;accent-color:#778c64;cursor:pointer}
@@ -27,3 +27,5 @@
 @media(max-width:600px){.piano-overlay{padding:12px}.piano-dialog{padding:22px 16px;max-height:calc(100dvh - 24px);border-radius:22px}.piano-heading{gap:12px;margin-bottom:24px}.piano-heading h2{font-size:24px}.piano-heading p{font-size:12px}.piano-eyebrow{font-size:9px}.piano-close{width:36px;height:36px}.piano-keys{height:225px;min-width:540px}.piano-console{height:55px;padding:0 10px}.piano-instrument{margin:0 -5px}.piano-controls{gap:10px}.piano-sustain{padding:10px 11px;font-size:12px}.piano-volume{gap:6px}.piano-volume input{width:90px}.piano-instructions{font-size:12px}.piano-help{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.piano-key{transition:none}}
 @media(max-width:700px){.piano-key-travel{display:flex}}
+
+.piano-key-travel[hidden]{display:none}.piano-key-travel button:disabled{opacity:.35;cursor:default}

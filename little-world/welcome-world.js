@@ -1,5 +1,5 @@
-import {createPlantUI} from './plant-ui.js?v=13';
-import {getLanguage} from './i18n.js?v=13';
+import {createPlantUI} from './plant-ui.js?v=14';
+import {getLanguage} from './i18n.js?v=14';
 import {raiseDialog, topDialog, consumeDialogEscape, flattenDialogRoot} from './dialog-stack.js';
 import {hostAvatar,visitorAvatar,postcardIcon} from './little-icons.js?v=9';
 const $=(s,r=document)=>r.querySelector(s);

@@ -1,36 +1,37 @@
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
-import {createStore,localDay} from './state.js?v=13';
-import {createPersonalSpace} from './personal-space.js?v=13';
+import {createStore,localDay} from './state.js?v=14';
+import {createPersonalSpace} from './personal-space.js?v=14';
 import {createCat} from './cat.js';
 import {setupHouseInteractions} from './home-interactions.js';
-import {setupStudio} from './studio.js?v=13';
-import {createWalkCollision} from './walk-collision.js?v=13';
+import {setupStudio} from './studio.js?v=14';
+import {createWalkCollision} from './walk-collision.js?v=14';
 import {optimizeScene} from './optimize-scene.js';
-import {setupSmartHome} from './smart-home.js?v=13';
-import {setupTerrace} from './terrace-v7.js?v=13';
-import {setupCabinetryV7} from './cabinetry-v7.js?v=13';
+import {setupSmartHome} from './smart-home.js?v=14';
+import {setupTerrace} from './terrace-v7.js?v=14';
+import {setupCabinetryV7} from './cabinetry-v7.js?v=14';
 import {setupLivingRoom} from './living-room.js?v=10';
 import {createCommunityClient} from './community-client.js?v=9';
 import {communityAPI} from './community-config.js?v=9';
-import {createWelcomeWorld} from './welcome-world.js?v=13';
+import {createWelcomeWorld} from './welcome-world.js?v=14';
 import {setupTelevision} from './television.js?v=9';
 import {houseIcon,visitorAvatar,fryingPanIcon,footprintsIcon,roomIcons} from './little-icons.js?v=10';
 import {raiseDialog,consumeDialogEscape,topDialog} from './dialog-stack.js';
 import {createGroundNavigation} from './ground-navigation.js?v=9';
-import {createDaylight,HOME_LOCATION} from './daylight.js?v=13';
-import {initI18n,translate,getLanguage} from './i18n.js?v=13';
-import {createPlantLifecycle} from './plant-lifecycle.js?v=13';
-import {setupRoomRenovation} from './room-renovation.js?v=13';
-import {createPiano} from './piano.js?v=13';
-import {setupBathroomRefinement} from './bathroom-refinement.js?v=13';
-import {setupLaundry} from './laundry.js?v=13';
+import {createDaylight,HOME_LOCATION} from './daylight.js?v=14';
+import {initI18n,translate,getLanguage} from './i18n.js?v=14';
+import {createPlantLifecycle} from './plant-lifecycle.js?v=14';
+import {setupRoomRenovation} from './room-renovation.js?v=14';
+import {createPiano} from './piano.js?v=14';
+import {setupBathroomRefinement} from './bathroom-refinement.js?v=14';
+import {setupLaundry} from './laundry.js?v=14';
+import {createTableGames} from './table-games.js?v=14';
 
 const $=s=>document.querySelector(s);const S=.022381665533985514;
 const P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S);
 let terrace=null,cabinetry=null,smart=null,worldUI=null,tv=null,visitor=null,community=null,lightingReady=false,pointerFloor=null,pointerUpdated=0;
-let renovation=null,livingRoom=null,piano=null,bathroom=null,laundry=null;
+let renovation=null,livingRoom=null,piano=null,bathroom=null,laundry=null,tableGames=null;
 let studio=null,cat=null,house=null,model=null,personal=null,walk=false,currentRoom='overview',showHotspots=true;
 let walkCollision=null,watchingCat=false;
 let stateStore,moveTween=null,toastTimer=null;const records=new Map(),hotspotEntries=[],wallBoxes=[];let loadDone=false;
@@ -114,7 +115,7 @@ function go(room,instant=false){if(!model)return;watchingCat=false;if(walk)exitW
 document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>go(b.dataset.room));
 $('#desk-shortcut').onclick=()=>{go('study');personal.openNotes();};$('#book-shortcut').onclick=()=>{go('study');personal.openLibrary();};$('#music-shortcut').onclick=()=>personal.openMusic();
 const PORTFOLIO='https://liqianyouy.github.io/Homepage/portfolio/';
-function openPortfolio(url=PORTFOLIO){$('#portfolio-window').hidden=false;$('#portfolio-frame').src='./portfolio-room.html?v=13';$('#portfolio-external').href=url;raiseDialog($('#portfolio-window'));$('#portfolio-close').focus();}
+function openPortfolio(url=PORTFOLIO){$('#portfolio-window').hidden=false;$('#portfolio-frame').src='./portfolio-room.html?v=14';$('#portfolio-external').href=url;raiseDialog($('#portfolio-window'));$('#portfolio-close').focus();}
 function closePortfolio(){$('#portfolio-window').hidden=true;$('#portfolio-frame').src='about:blank';}
 $('#portfolio-shortcut').onclick=()=>{go('study');openPortfolio();};$('#portfolio-close').onclick=closePortfolio;
 let floatingDrag=null;$('#portfolio-drag').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const r=$('#portfolio-window').getBoundingClientRect();floatingDrag={id:e.pointerId,x:e.clientX,y:e.clientY,left:r.left,top:r.top};e.currentTarget.setPointerCapture(e.pointerId);});$('#portfolio-drag').addEventListener('pointermove',e=>{if(!floatingDrag||e.pointerId!==floatingDrag.id)return;const panel=$('#portfolio-window');panel.style.left=THREE.MathUtils.clamp(floatingDrag.left+e.clientX-floatingDrag.x,0,innerWidth-180)+'px';panel.style.top=THREE.MathUtils.clamp(floatingDrag.top+e.clientY-floatingDrag.y,0,innerHeight-70)+'px';});$('#portfolio-drag').addEventListener('pointerup',()=>floatingDrag=null);
@@ -157,7 +158,7 @@ const sydneyDates={zh:new Intl.DateTimeFormat('zh-CN',{timeZone:HOME_LOCATION.ti
 function updateClock(){const now=new Date();const time=sydneyTime.format(now);$('#clock').replaceChildren();const t=document.createElement('strong');t.textContent=time;const d=document.createElement('small');d.textContent=(getLanguage()==='en'?'Sydney':HOME_LOCATION.label)+' · '+sydneyDates[getLanguage()].format(now);$('#clock').append(t,d);const hour=Number(time.slice(0,2));$('#greeting').textContent=(hour<12?'早上好':hour<18?'下午好':'晚上好')+'，可爱的朋友';}updateClock();setInterval(updateClock,1000);window.addEventListener('little-world:languagechange',()=>{updateClock();updateHotspots();});
 
 function updateHotspots(){
- const primary=new Set(['desk-notes','book-0','speaker','portfolio','cat','tap-kitchen','door-entry','television','smart-controls','garden-planter','terrace-garden','terrace-living','piano','laundry-washer','laundry-dryer']);
+ const primary=new Set(['desk-notes','book-0','speaker','portfolio','cat','tap-kitchen','door-entry','television','smart-controls','garden-planter','terrace-garden','terrace-living','piano','laundry-washer','laundry-dryer','table-games']);
  const occupied=[],blocked=['.welcome','.cat-card','.topbar','.room-nav','.interaction-help'].map(selector=>document.querySelector(selector)?.getBoundingClientRect()).filter(r=>r&&r.width>0&&r.height>0);
  const overlaps=(a,b,gap=7)=>a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
  const offsets=[[0,0]];for(let r=1;r<=5;r++)for(const [x,y] of [[0,-1],[0,1],[-1,0],[1,0],[-1,-1],[1,-1],[-1,1],[1,1]])offsets.push([x*r*47,y*r*31]);
@@ -194,13 +195,14 @@ try{
  walkCollision=createWalkCollision({THREE,model,house});diagnostics.walk=walkCollision.audit;
  smart.setGardenTerrace(terrace);
  piano=createPiano({THREE,piano:livingRoom.piano,register});
+ tableGames=createTableGames({THREE,table:livingRoom.table,register});
  tv=setupTelevision({THREE,scene,model,camera,register,go,toast});diagnostics.optimization=optimizeScene({THREE,model});
  cat=createCat({THREE,scene,initialPosition:navigation?.initialPosition||[-6,.03,-.8],navigation,getPlayerPosition:()=>walk?camera.position:controls.target,getRobotPosition:()=>smart?.vacuum?.position,getPointerPosition:()=>!gesture&&performance.now()-pointerUpdated<4000?pointerFloor:null,onMess:p=>smart.addMess(p),onWelcome:()=>toast('小橘来迎接你啦，靠近后摸摸她的头。'),reducedMotion:()=>state().settings.reducedMotion,getMuted:()=>state().cat.muted,store:{getCatState:()=>state().cat,setCatState:c=>setState({cat:c})}});
  register({id:'cat',label:'小橘 · 摸摸头',kind:'cat',object:cat.root,anchor:cat.root.position.clone().add(new THREE.Vector3(0,.7,0)),click:petCat});
  register({id:'cat-food',label:'给小橘添猫粮',kind:'cat-bowl',object:cat.bowls.food,anchor:new THREE.Box3().setFromObject(cat.bowls.food).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:feedCat});
  register({id:'cat-water',label:'给小橘添清水',kind:'cat-bowl',object:cat.bowls.water,anchor:new THREE.Box3().setFromObject(cat.bowls.water).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:()=>cat.water()});smart.setObstacles([cat.root,cat.bowls.food,cat.bowls.water]);
  cat.setFollowing(state().cat.following!==false);diagnostics.loaded=true;loadDone=true;$('#loading').hidden=true;go('overview',true);refreshCare();applyLighting();
- window.homeApp={bathroom,laundry,renovation,livingRoom,piano,plantLife,studio,scene,model,camera,controls,daylight,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
+ window.homeApp={tableGames,bathroom,laundry,renovation,livingRoom,piano,plantLife,studio,scene,model,camera,controls,daylight,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
 }catch(e){console.error(e);diagnostics.errors.push(String(e));$('#load-detail').textContent='Please check your connection and try refreshing.';$('#loading h2').textContent='小屋暂时没打开';}
 let last=performance.now(),elapsed=0,lastCatAction='';
 function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);renovation?.update(dt);laundry?.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);daylight.update();tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}

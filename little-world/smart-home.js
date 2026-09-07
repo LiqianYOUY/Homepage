@@ -1,5 +1,5 @@
-import {addTranslations} from './i18n.js?v=13';
-import {createPlantLifecycle,PLANTS,VASES,PLANT_TRANSLATIONS} from './plant-lifecycle.js?v=13';
+import {addTranslations} from './i18n.js?v=14';
+import {createPlantLifecycle,PLANTS,VASES,PLANT_TRANSLATIONS} from './plant-lifecycle.js?v=14';
 addTranslations(PLANT_TRANSLATIONS);
 // Runtime additions anchored to the recovered GLB; call before static batching.
 export function setupSmartHome({THREE,scene,model,register=()=>{},getState=()=>({}),setState=()=>{},toast=()=>{},openControls=()=>{},openGarden=()=>{},openVases=openGarden,navigation={},plantLife=createPlantLifecycle({getState,setState})}){
@@ -102,10 +102,11 @@ export function setupSmartHome({THREE,scene,model,register=()=>{},getState=()=>(
     for(let i=0;i<3;i++){const tile=box(g,label+' touchscreen care tile',.107,.122,.003,i===1?green:ivory);tile.position.set(screenX+(i-1)*.135,1.235,pixelZ);}
     const line=box(g,label+' touchscreen divider',.357,.003,.003,lightMat);line.position.set(screenX,1.374,pixelZ);
     const segments={0:[0,1,2,3,4,5],1:[1,2],4:[1,2,5,6],8:[0,1,2,3,4,5,6]};
-    function digit(n,x,y,scale=.075){for(const s of segments[n]){const horizontal=[0,3,6].includes(s),dy=({0:1,1:.5,2:-.5,3:-1,4:-.5,5:.5,6:0})[s]*scale,dx=horizontal?0:([1,2].includes(s)?1:-1)*scale*.51;const part=box(g,label+' temperature digit',horizontal?scale*.91:.009,horizontal?.009:scale*.80,.003,lightMat);part.position.set(x+dx,y+dy,pixelZ);}}
+    // The display faces local -Z: its viewer-right is local -X. Mirror both glyph positions and segments.
+    function digit(n,x,y,scale=.075){for(const s of segments[n]){const horizontal=[0,3,6].includes(s),dy=({0:1,1:.5,2:-.5,3:-1,4:-.5,5:.5,6:0})[s]*scale,dx=horizontal?0:([1,2].includes(s)?1:-1)*scale*.51;const part=box(g,label+' temperature digit',horizontal?scale*.91:.009,horizontal?.009:scale*.80,.003,lightMat);part.position.set(2*screenX-x-dx,y+dy,pixelZ);part.userData.digit=n;part.userData.segment=s;}}
     digit(0,screenX-.067,1.677,.062);digit(4,screenX+.029,1.677,.062);
-    const degree=mesh(new THREE.TorusGeometry(.012,.003,6,12),lightMat,g,label+' temperature degree');degree.position.set(screenX+.111,1.722,pixelZ);
-    const freezerMinus=box(g,label+' freezer minus sign',.025,.006,.003,lightMat);freezerMinus.position.set(screenX-.105,1.482,pixelZ);digit(1,screenX-.05,1.482,.035);digit(8,screenX+.011,1.482,.035);
+    const degree=mesh(new THREE.TorusGeometry(.012,.003,6,12),lightMat,g,label+' temperature degree');degree.position.set(screenX-.111,1.722,pixelZ);
+    const freezerMinus=box(g,label+' freezer minus sign',.025,.006,.003,lightMat);freezerMinus.position.set(screenX+.105,1.482,pixelZ);digit(1,screenX-.05,1.482,.035);digit(8,screenX+.011,1.482,.035);
     const badge=box(g,label+' small metal badge',.09,.012,.003,metal);badge.position.set(w*.265,2.23,-d/2-.055);
     const vent=box(g,label+' recessed ventilation grille',w-.12,.043,.016,dark);vent.position.set(0,.058,-d/2+.01);
     refrigerators.push({object:g,label,planBounds:[x1,x2],sideGapM:.02,heightM:height,doors:2,screenDiagonalInches:23.7});colliderRoots.push(g);

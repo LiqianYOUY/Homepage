@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {translate,addTranslations} from '../i18n.js?v=13';
-import {PLANT_TRANSLATIONS} from '../plant-lifecycle.js?v=13';
+import {translate,addTranslations} from '../i18n.js?v=14';
+import {PLANT_TRANSLATIONS} from '../plant-lifecycle.js?v=14';
 addTranslations(PLANT_TRANSLATIONS);
 
 test('interface copy and dynamic care, wardrobe and clock labels translate without changing Chinese source',()=>{

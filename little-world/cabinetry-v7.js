@@ -274,8 +274,7 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   const wardrobeSpecs=[
     {name:'主卧长衣柜',id:'wardrobe-master-north',prefix:'Master wardrobe north',x1:630,z1:553.00,x2:738,z2:578.00,height:2.45,front:'south',count:4},
     {name:'主卧联排衣柜',id:'wardrobe-master-south',prefix:'Master wardrobe south',x1:632,z1:710,x2:786,z2:738.05,height:2.45,front:'north',count:3,mirrorBay:1,doorBottom:.065},
-    {name:'次卧二衣柜',id:'wardrobe-bedroom2',prefix:'Bedroom2 wardrobe',x1:1281,z1:320.30,x2:1311,z2:389,height:2.40,front:'east',count:3},
-    {name:'次卧三衣柜',id:'wardrobe-bedroom3',prefix:'Bedroom3 wardrobe',x1:1288,z1:495,x2:1317,z2:583,height:2.40,front:'east',count:4,doorHinges:['right','right','left','right']}
+    {name:'次卧二衣柜',id:'wardrobe-bedroom2',prefix:'Bedroom2 wardrobe',x1:1281,z1:320.30,x2:1311,z2:389,height:2.40,front:'east',count:3}
   ];
   for(const s of wardrobeSpecs){starts(s.prefix+' ').forEach(remove);cabinet({...s,wardrobe:true});}
 

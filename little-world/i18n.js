@@ -1,4 +1,4 @@
-import {ENGLISH} from './i18n-dictionary.js?v=13';
+import {ENGLISH} from './i18n-dictionary.js?v=14';
 
 const KEY='little-world.language';
 let language='zh',started=false,observer=null,originalTitle=null;

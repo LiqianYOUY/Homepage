@@ -5,8 +5,8 @@ import {register} from 'node:module';
 register('./three-test-loader.mjs',import.meta.url);
 const THREE=await import('../vendor/three.module.js');
 const {GLTFLoader}=await import('../vendor/GLTFLoader.js');
-const {setupLaundry}=await import('../laundry.js?v=13');
-const {createLaundryLifecycle,WASH_DURATION,DRY_DURATION}=await import('../laundry-lifecycle.js?v=13');
+const {setupLaundry}=await import('../laundry.js?v=14');
+const {createLaundryLifecycle,WASH_DURATION,DRY_DURATION}=await import('../laundry-lifecycle.js?v=14');
 
 test('actual GLB washer and dryer show the same clothes moving between their drums',async()=>{
  const data=fs.readFileSync(new URL('../apartment.glb',import.meta.url));const loader=new GLTFLoader().register(()=>({name:'HeadlessTextures',loadTexture:()=>Promise.resolve(new THREE.Texture())}));const {scene:model}=await loader.parseAsync(data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength),'');

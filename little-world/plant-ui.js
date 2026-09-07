@@ -1,5 +1,5 @@
-import {getLanguage,translate} from './i18n.js?v=13';
-import {PLANTS,DAY} from './plant-lifecycle.js?v=13';
+import {getLanguage,translate} from './i18n.js?v=14';
+import {PLANTS,DAY} from './plant-lifecycle.js?v=14';
 
 export function createPlantUI({getSmart,getTerrace,panel,node,button,toast}){
  const copy=(zh,en)=>getLanguage()==='en'?en:zh;

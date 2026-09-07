@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import * as THREE from '../vendor/three.module.js';
-import {HOME_LOCATION, solarTimes, solarPosition, daylightState, createDaylight} from '../daylight.js?v=13';
+import {HOME_LOCATION, solarTimes, solarPosition, daylightState, createDaylight} from '../daylight.js?v=14';
 
 const minute=60_000;
 const dateParts=(date,timeZone=HOME_LOCATION.timeZone)=>{
@@ -65,7 +65,7 @@ test('Sydney DST transitions shift wall-clock sunrise while UTC progression rema
 });
 
 test('solar results are independent of the browser or process default time zone',()=>{
-  const moduleUrl=new URL('../daylight.js?v=13',import.meta.url).href;
+  const moduleUrl=new URL('../daylight.js?v=14',import.meta.url).href;
   const script=`import {solarTimes,solarPosition,daylightState} from ${JSON.stringify(moduleUrl)};
     const dates=['2026-04-04T16:30:00Z','2026-10-03T16:30:00Z','2026-12-31T14:00:00Z'];
     console.log(JSON.stringify(dates.map(value=>{const date=new Date(value);return [solarTimes(date),solarPosition(date),daylightState(date)];})));`;

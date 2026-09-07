@@ -5,11 +5,11 @@ import {register} from 'node:module';
 register('./three-test-loader.mjs',import.meta.url);
 const THREE=await import('../vendor/three.module.js');
 const {GLTFLoader}=await import('../vendor/GLTFLoader.js');
-const {setupRoomRenovation}=await import('../room-renovation.js?v=13');
+const {setupRoomRenovation}=await import('../room-renovation.js?v=14');
 const {setupHouseInteractions}=await import('../home-interactions.js');
-const {setupBathroomRefinement}=await import('../bathroom-refinement.js?v=13');
-const {setupCabinetryV7}=await import('../cabinetry-v7.js?v=13');
-const {createWalkCollision}=await import('../walk-collision.js?v=13');
+const {setupBathroomRefinement}=await import('../bathroom-refinement.js?v=14');
+const {setupCabinetryV7}=await import('../cabinetry-v7.js?v=14');
+const {createWalkCollision}=await import('../walk-collision.js?v=14');
 
 async function fixture(){
  const bytes=fs.readFileSync(new URL('../apartment.glb',import.meta.url));

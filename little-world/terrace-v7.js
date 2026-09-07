@@ -1,6 +1,6 @@
-import {addTranslations} from './i18n.js?v=13';
+import {addTranslations} from './i18n.js?v=14';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-import {createPlantLifecycle,PLANT_TRANSLATIONS} from './plant-lifecycle.js?v=13';
+import {createPlantLifecycle,PLANT_TRANSLATIONS} from './plant-lifecycle.js?v=14';
 addTranslations(PLANT_TRANSLATIONS);
 // A roofless, walkable terrace along the living / dining / study facade.
 export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setState=()=>{},toast=()=>{},openGarden=()=>{},onDoorOpen=()=>{},plantLife=createPlantLifecycle({getState,setState})}){

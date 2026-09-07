@@ -1,5 +1,5 @@
 import {consumeDialogEscape,isTopDialog,raiseDialog} from './dialog-stack.js';
-import {addTranslations,translate} from './i18n.js?v=13';
+import {addTranslations,translate} from './i18n.js?v=14';
 
 addTranslations({
  '钢琴 · 弹一会儿':'Piano · Play a little',
@@ -7,7 +7,7 @@ addTranslations({
  '留一小段时间，弹给自己听。':'Take a little time to play, just for yourself.',
  '关闭钢琴':'Close piano',
  '轻触琴键，或用电脑键盘弹奏。':'Touch the keys, or play with your computer keyboard.',
- '按住空格延音 · 用左右箭头切换琴键':'Hold Space to sustain · Use the arrows to see more keys',
+ '左右箭头选琴键 · 回车弹奏 · 按住空格延音':'Left / Right to select · Enter to play · Hold Space to sustain',
  '左移琴键':'Scroll keys left','右移琴键':'Scroll keys right',
  '延音踏板':'Sustain pedal',
  '音量':'Volume',
@@ -65,15 +65,18 @@ export function createPianoAudio({AudioContextClass=globalThis.AudioContext||glo
 }
 
 export function createPiano({THREE,piano,register}={}){
- if(!document.querySelector('link[data-piano-style]')){const link=document.createElement('link');link.rel='stylesheet';link.href=new URL('./piano.css?v=13',import.meta.url).href;link.dataset.pianoStyle='';document.head.append(link);}
+ if(!document.querySelector('link[data-piano-style]')){const link=document.createElement('link');link.rel='stylesheet';link.href=new URL('./piano.css?v=14',import.meta.url).href;link.dataset.pianoStyle='';document.head.append(link);}
  const overlay=document.createElement('div');overlay.className='piano-overlay';overlay.hidden=true;overlay.dataset.homeUi='';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','piano-title');overlay.tabIndex=-1;
- overlay.innerHTML=`<section class="piano-dialog"><header class="piano-heading"><div><span class="piano-eyebrow">A LITTLE MUSIC AT HOME</span><h2 id="piano-title" data-copy="窗边的钢琴"></h2><p data-copy="留一小段时间，弹给自己听。"></p></div><button class="piano-close" type="button" data-label="关闭钢琴">×</button></header><div class="piano-instrument"><div class="piano-console"><span class="piano-brand">LITTLE HOME <i>88</i></span><span class="piano-indicator" aria-hidden="true"></span><output class="piano-note">—</output></div><div class="piano-key-scroll"><div class="piano-keys" role="group" data-label="两组八度琴键"></div></div><div class="piano-instrument-edge"></div></div><div class="piano-key-travel"><button type="button" data-scroll="-1" data-label="左移琴键">←</button><span>C4 — C6</span><button type="button" data-scroll="1" data-label="右移琴键">→</button></div><div class="piano-controls"><button type="button" class="piano-sustain" aria-pressed="false"><span aria-hidden="true">♩</span> <span data-copy="延音踏板"></span></button><label class="piano-volume"><span data-copy="音量"></span><input type="range" min="0" max="100" value="65" data-label="音量"></label></div><p class="piano-instructions" data-copy="轻触琴键，或用电脑键盘弹奏。"></p><p class="piano-help" data-copy="按住空格延音 · 用左右箭头切换琴键"></p><p class="piano-status" role="status" data-copy="准备好，奏出第一颗音符。"></p></section>`;
+ overlay.innerHTML=`<section class="piano-dialog"><header class="piano-heading"><div><span class="piano-eyebrow">A LITTLE MUSIC AT HOME</span><h2 id="piano-title" data-copy="窗边的钢琴"></h2><p data-copy="留一小段时间，弹给自己听。"></p></div><button class="piano-close" type="button" data-label="关闭钢琴">×</button></header><div class="piano-instrument"><div class="piano-console"><span class="piano-brand">LITTLE HOME <i>88</i></span><span class="piano-indicator" aria-hidden="true"></span><output class="piano-note">—</output></div><div class="piano-key-scroll"><div class="piano-keys" role="group" data-label="两组八度琴键"></div></div><div class="piano-instrument-edge"></div></div><div class="piano-key-travel"><button type="button" data-scroll="-1" data-label="左移琴键">←</button><span>C4 — C6</span><button type="button" data-scroll="1" data-label="右移琴键">→</button></div><div class="piano-controls"><button type="button" class="piano-sustain" aria-pressed="false"><span aria-hidden="true">♩</span> <span data-copy="延音踏板"></span></button><label class="piano-volume"><span data-copy="音量"></span><input type="range" min="0" max="100" value="65" data-label="音量"></label></div><p class="piano-instructions" data-copy="轻触琴键，或用电脑键盘弹奏。"></p><p class="piano-help" data-copy="左右箭头选琴键 · 回车弹奏 · 按住空格延音"></p><p class="piano-status" role="status" data-copy="准备好，奏出第一颗音符。"></p></section>`;
  document.body.append(overlay);
  const panel=overlay,keybed=overlay.querySelector('.piano-keys'),status=overlay.querySelector('.piano-status'),noteDisplay=overlay.querySelector('.piano-note'),sustainButton=overlay.querySelector('.piano-sustain');
- const sourceNotes=new Map(),keyButtons=new Map();let previousFocus=null,sustainLatched=false,spaceHeld=false;
+ const scroll=overlay.querySelector('.piano-key-scroll'),travel=overlay.querySelector('.piano-key-travel'),travelButtons=[...travel.querySelectorAll('button')];
+ const sourceNotes=new Map(),keyButtons=new Map();let previousFocus=null,sustainLatched=false,spaceHeld=false,focusedMidi=60;
  let whiteIndex=0;
  for(const key of PIANO_KEYS){
   const button=document.createElement('button');button.type='button';button.className='piano-key '+(key.black?'piano-key-black':'piano-key-white');button.dataset.midi=key.midi;button.setAttribute('aria-label',key.name);button.setAttribute('aria-pressed','false');
+  button.tabIndex=key.midi===focusedMidi?0:-1;
+  button.addEventListener('focus',()=>{focusedMidi=key.midi;for(const [midi,node] of keyButtons)node.tabIndex=midi===focusedMidi?0:-1;});
   const binding=Object.entries(COMPUTER_KEYS).find(([,midi])=>midi===key.midi)?.[0],hint=binding?(KEY_HINTS[binding]||binding.replace('Key','')):'';
   button.innerHTML=`<span class="piano-key-note">${key.name}</span><kbd>${hint}</kbd>`;
   if(key.black)button.style.left=`calc(${whiteIndex} * (100% / 15) - (100% / 15) * .31)`;else whiteIndex++;
@@ -89,27 +92,31 @@ export function createPiano({THREE,piano,register}={}){
  function release(source){const midi=sourceNotes.get(source);if(midi===undefined)return;sourceNotes.delete(source);if(![...sourceNotes.values()].includes(midi))audio.release(midi);paintKey(midi);}
  function setSustain(){const active=sustainLatched||spaceHeld;audio.setSustain(active);sustainButton.setAttribute('aria-pressed',String(active));}
  function releaseAll(){sourceNotes.clear();for(const midi of keyButtons.keys())paintKey(midi);spaceHeld=false;sustainLatched=false;setSustain();audio.stopAll();noteDisplay.textContent='—';}
- function refreshLanguage(){overlay.querySelectorAll('[data-copy]').forEach(node=>{node.textContent=translate(node.dataset.copy);});overlay.querySelectorAll('[data-label]').forEach(node=>node.setAttribute('aria-label',translate(node.dataset.label)));if(record)record.label=translate('钢琴 · 弹一会儿');}
- function open(){previousFocus=document.activeElement;overlay.hidden=false;refreshLanguage();raiseDialog(panel);panel.focus({preventScroll:true});}
+ function refreshLanguage(){overlay.querySelectorAll('[data-copy]').forEach(node=>{node.textContent=translate(node.dataset.copy);});overlay.querySelectorAll('[data-label]').forEach(node=>node.setAttribute('aria-label',translate(node.dataset.label)));if(record)record.label='钢琴 · 弹一会儿';}
+ function focusKey(midi){focusedMidi=Math.max(PIANO_KEYS[0].midi,Math.min(PIANO_KEYS.at(-1).midi,midi));for(const [note,node] of keyButtons)node.tabIndex=note===focusedMidi?0:-1;const key=keyButtons.get(focusedMidi);key.focus({preventScroll:true});key.scrollIntoView?.({block:'nearest',inline:'nearest',behavior:'auto'});}
+ function open(){previousFocus=document.activeElement;overlay.hidden=false;refreshLanguage();raiseDialog(panel);focusKey(focusedMidi);updateTravel();}
  function close(){if(overlay.hidden)return;releaseAll();overlay.hidden=true;previousFocus?.focus?.({preventScroll:true});}
  overlay.querySelector('.piano-close').addEventListener('click',close);overlay.addEventListener('click',event=>{if(event.target===overlay)close();});
- keybed.addEventListener('pointerdown',event=>{const key=event.target.closest('[data-midi]');if(!key||event.button>0)return;event.preventDefault();key.setPointerCapture?.(event.pointerId);press('pointer:'+event.pointerId,Number(key.dataset.midi));});
+ keybed.addEventListener('pointerdown',event=>{const key=event.target.closest('[data-midi]');if(!key||event.button>0)return;event.preventDefault();focusKey(Number(key.dataset.midi));key.setPointerCapture?.(event.pointerId);press('pointer:'+event.pointerId,Number(key.dataset.midi));});
  const releasePointer=event=>release('pointer:'+event.pointerId);keybed.addEventListener('pointerup',releasePointer);keybed.addEventListener('pointercancel',releasePointer);keybed.addEventListener('lostpointercapture',releasePointer);
  // Clicks generated by assistive technology do not have a preceding pointerdown.
  keybed.addEventListener('click',event=>{if(event.detail!==0)return;const key=event.target.closest('[data-midi]');if(!key)return;const source='accessible:'+key.dataset.midi;press(source,Number(key.dataset.midi));setTimeout(()=>release(source),300);});
- overlay.querySelectorAll('[data-scroll]').forEach(button=>button.addEventListener('click',()=>overlay.querySelector('.piano-key-scroll').scrollBy({left:Number(button.dataset.scroll)*260,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})));
+ function updateTravel(){const maximum=scroll.scrollWidth-scroll.clientWidth;travel.hidden=maximum<=1;travelButtons[0].disabled=scroll.scrollLeft<=1;travelButtons[1].disabled=scroll.scrollLeft>=maximum-1;const bounds=scroll.getBoundingClientRect(),visible=PIANO_KEYS.filter(key=>{if(key.black)return false;const r=keyButtons.get(key.midi).getBoundingClientRect();return r.left+r.width/2>=bounds.left&&r.left+r.width/2<=bounds.right;});if(visible.length)travel.querySelector('span').textContent=visible[0].name+' — '+visible.at(-1).name;}
+ travelButtons.forEach(button=>button.addEventListener('click',()=>scroll.scrollBy({left:Number(button.dataset.scroll)*Math.max(110,scroll.clientWidth*.8),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})));
+ scroll.addEventListener('scroll',updateTravel,{passive:true});window.addEventListener('resize',updateTravel);const resizeObserver=typeof ResizeObserver==='function'?new ResizeObserver(updateTravel):null;resizeObserver?.observe(scroll);
  sustainButton.addEventListener('click',()=>{sustainLatched=!sustainLatched;setSustain();});
  overlay.querySelector('input[type="range"]').addEventListener('input',event=>audio.setVolume(Number(event.target.value)/100));
  function keydown(event){
   if(overlay.hidden||!isTopDialog(panel))return;
   if(consumeDialogEscape(event,panel)){close();return;}
   if(event.key==='Tab'){
-   const focusable=[...panel.querySelectorAll('button,input,[tabindex="0"]')],first=focusable[0],last=focusable.at(-1);
+   const focusable=[...panel.querySelectorAll('button,input,[tabindex="0"]')].filter(node=>node.tabIndex>=0&&node.getClientRects().length),first=focusable[0],last=focusable.at(-1);
    if(event.shiftKey&&(document.activeElement===first||document.activeElement===panel)){event.preventDefault();last.focus();}
    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}return;
   }
   if(event.ctrlKey||event.metaKey||event.altKey||event.target.matches('input'))return;
-  if(event.code==='Space'){if(event.target.closest('button'))return;event.preventDefault();event.stopImmediatePropagation();spaceHeld=true;setSustain();return;}
+  if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();event.stopImmediatePropagation();focusKey(focusedMidi+(event.key==='ArrowRight'?1:-1));return;}
+  if(event.code==='Space'){if(event.target.closest('button')&&!event.target.closest('.piano-key'))return;event.preventDefault();event.stopImmediatePropagation();spaceHeld=true;setSustain();return;}
   const midi=COMPUTER_KEYS[event.code];if(midi===undefined)return;event.preventDefault();event.stopImmediatePropagation();if(!event.repeat)press('keyboard:'+event.code,midi);
  }
  function keyup(event){if(overlay.hidden)return;if(event.code==='Space'){spaceHeld=false;setSustain();event.preventDefault();}release('keyboard:'+event.code);}
@@ -117,5 +124,5 @@ export function createPiano({THREE,piano,register}={}){
  document.addEventListener('keydown',keydown,true);document.addEventListener('keyup',keyup,true);window.addEventListener('blur',blur);document.addEventListener('visibilitychange',visibility);window.addEventListener('little-world:languagechange',refreshLanguage);
  const record=piano&&register?{id:'piano',label:translate('钢琴 · 弹一会儿'),kind:'music',object:piano,anchor:new THREE.Box3().setFromObject(piano).getCenter(new THREE.Vector3()).setY(1.3),click:open}:null;
  if(record)register(record);refreshLanguage();
- return {open,close,refreshLanguage,panel,audio,dispose(){close();audio.dispose();overlay.remove();document.removeEventListener('keydown',keydown,true);document.removeEventListener('keyup',keyup,true);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('little-world:languagechange',refreshLanguage);}};
+ return {open,close,refreshLanguage,panel,audio,dispose(){close();audio.dispose();resizeObserver?.disconnect();window.removeEventListener('resize',updateTravel);overlay.remove();document.removeEventListener('keydown',keydown,true);document.removeEventListener('keyup',keyup,true);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('little-world:languagechange',refreshLanguage);}};
 }

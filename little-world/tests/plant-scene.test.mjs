@@ -6,11 +6,11 @@ register('./three-test-loader.mjs',import.meta.url);
 const THREE=await import('../vendor/three.module.js');
 const {GLTFLoader}=await import('../vendor/GLTFLoader.js');
 const {setupLivingRoom}=await import('../living-room.js');
-const {setupRoomRenovation}=await import('../room-renovation.js?v=13');
-const {setupSmartHome}=await import('../smart-home.js?v=13');
-const {setupTerrace}=await import('../terrace-v7.js?v=13');
-const {createPlantLifecycle,DAY}=await import('../plant-lifecycle.js?v=13');
-const {createWalkCollision}=await import('../walk-collision.js?v=13');
+const {setupRoomRenovation}=await import('../room-renovation.js?v=14');
+const {setupSmartHome}=await import('../smart-home.js?v=14');
+const {setupTerrace}=await import('../terrace-v7.js?v=14');
+const {createPlantLifecycle,DAY}=await import('../plant-lifecycle.js?v=14');
+const {createWalkCollision}=await import('../walk-collision.js?v=14');
 
 async function fixture(){
  const bytes=fs.readFileSync(new URL('../apartment.glb',import.meta.url));

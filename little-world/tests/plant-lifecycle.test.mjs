@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPlantLifecycle,getPlantSnapshot,PLANTS,DAY} from '../plant-lifecycle.js?v=13';
+import {createPlantLifecycle,getPlantSnapshot,PLANTS,DAY} from '../plant-lifecycle.js?v=14';
 
 function fixture(){let date=Date.UTC(2026,8,7),state={gardenWorld:{}};const life=createPlantLifecycle({getState:()=>state,setState:patch=>state={...state,...patch},now:()=>date});return {life,get state(){return state;},advance:days=>date+=days*DAY,get now(){return date;}};}
 function tend(f,days){for(let i=0;i<days;i++){f.advance(1);f.life.water('test');f.life.fertilize('test');}}
