@@ -93,6 +93,34 @@ export function setupStudio({THREE,scene,model,register,openNotes,openLibrary,op
  const keyTransform=new THREE.Object3D();keyLayout.forEach((key,i)=>{keyTransform.position.set(key.x,.024,key.z);keyTransform.scale.set(key.width,.011,.024);keyTransform.updateMatrix();keycaps.setMatrixAt(i,keyTransform.matrix);keycaps.setColorAt(i,new THREE.Color(key.legend==='Esc'?'#99b9a3':key.units>1?'#bbcbb9':'#e4ecdf'));});keycaps.instanceMatrix.needsUpdate=true;keycaps.instanceColor.needsUpdate=true;keyboard.add(keycaps);
  const legends=canvasTexture((c,w,h)=>{c.clearRect(0,0,w,h);c.fillStyle='#42554b';c.textAlign='center';c.textBaseline='middle';for(const key of keyLayout){c.font=(key.legend.length>2?'23':'32')+'px sans-serif';c.fillText(key.legend,(key.x/.39+.5)*w,(key.z/.145+.5)*h,key.width/.39*w*.8);}},1536,640);
  const legendMaterial=new THREE.MeshBasicMaterial({map:legends.texture,transparent:true,depthWrite:false,toneMapped:false});const legendPlane=new THREE.Mesh(new THREE.PlaneGeometry(.39,.145),legendMaterial);legendPlane.name='Study keyboard key legends';legendPlane.rotation.x=-Math.PI/2;legendPlane.position.y=.0298;keyboard.add(legendPlane);
+ // A compact over-ear ANC headset on its stand, in the gap between the monitor and lamp.
+ // The complete set belongs to the moving desktop so it stays grounded at either height.
+ const headphones=new THREE.Group();headphones.name='Study noise cancelling headphones and stand';headphones.position.set(1.38,.7925,-2.875);headphones.rotation.y=Math.PI/2;workstation.add(headphones);
+ const earCushion=mat('#48504d',.98),headphoneShell=mat('#e3e6df',.38);
+ rounded(headphones,'Headphone stand weighted oval base',.17,.135,.012,.055,[0,.006,0],graphite);
+ cylinder(headphones,'Headphone stand brushed metal upright',.009,.269,[0,.151,-.012],aluminum);
+ rounded(headphones,'Headphone stand soft saddle',.076,.046,.014,.018,[0,.283,-.003],softBlack);
+ function headphoneArc(name,radius,tube,material){const o=new THREE.Mesh(new THREE.TorusGeometry(radius,tube,6,28,Math.PI),material);o.name=name;o.position.y=.186;o.castShadow=true;o.userData={name,category:'decor'};headphones.add(o);return o;}
+ headphoneArc('Headphones continuous padded headband',.112,.009,headphoneShell);
+ headphoneArc('Headphones inner headband cushion',.102,.010,earCushion);
+ for(const side of [-1,1]){
+  beam(headphones,'Headphones adjustable metal slider',[side*.111,.178,0],[side*.11,.142,0],.006,aluminum);
+  const cup=new THREE.Group();cup.name=side===1?'Headphones right swivel earcup':'Headphones left swivel earcup';cup.position.set(side*.109,.118,0);cup.rotation.z=side*.10;headphones.add(cup);
+  const pivot=cylinder(cup,'Headphones earcup swivel hinge',.009,.026,[0,.039,0],aluminum);pivot.rotation.z=Math.PI/2;
+  function oval(name,scale,position,material){const o=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),material);o.name=name;o.scale.set(...scale);o.position.set(...position);o.castShadow=true;o.userData={name,category:'decor'};cup.add(o);return o;}
+  oval('Headphones soft over ear cushion',[.017,.053,.038],[-side*.012,0,0],earCushion);
+  oval('Headphones sculpted matte earcup shell',[.024,.054,.040],[side*.008,0,0],headphoneShell);
+  const seam=new THREE.Mesh(new THREE.TorusGeometry(1,.034,4,24),softBlack);seam.name='Headphones earcup cushion seam';seam.rotation.y=Math.PI/2;seam.scale.set(.037,.05,.012);seam.position.x=-side*.021;cup.add(seam);
+  const face=oval('Headphones outer acoustic panel',[.003,.042,.03],[side*.031,0,0],graphite);
+  face.userData.category='decor';
+  for(let i=0;i<3;i++)solidBox(cup,'Headphones microphone vent',[.002,.0015,.009],[side*.034,-.017+i*.004,.009],softBlack);
+  if(side===1){
+   solidBox(cup,'Headphones ANC mode button',[.009,.006,.019],[.004,-.044,-.031],graphite);
+   solidBox(cup,'Headphones volume rocker',[.009,.016,.005],[.004,-.015,-.039],graphite);
+   solidBox(cup,'Headphones small status indicator',[.0015,.002,.006],[.035,-.023,-.008],sage);
+   solidBox(cup,'Headphones charging socket',[.01,.002,.006],[.002,-.052,0],softBlack);
+  }
+ }
  const portfolioRecord={id:'portfolio',label:'作品集',kind:'portfolio',object:workstation,anchor:new THREE.Vector3(1.55,1.55,-3.33),click:()=>openPortfolio()};register(portfolioRecord);register(liftRecord);
  const bookRecords=[];let bookSignature='';
  const bookAt=i=>{const catalog=getState().papers||[];return catalog[i%Math.max(1,catalog.length)];};
@@ -133,6 +161,6 @@ export function setupStudio({THREE,scene,model,register,openNotes,openLibrary,op
  setDeskHeight();
  function refreshLanguage(){portfolioRecord.label='作品集';liftRecord.label='升降桌 · 坐 / 站';lampRecord.label='台灯 · 开关';bookSignature='';refreshBooks();drawPortfolio();drawBoard(boardTex.canvas.getContext('2d'),boardTex.canvas.width,boardTex.canvas.height);boardTex.texture.needsUpdate=true;}
  window.addEventListener('little-world:languagechange',refreshLanguage);
- const audit={desk:'Electric three-stage sit/stand desk',seatedSurfaceHeight:.7925,standingSurfaceHeight:1.1325,chair:'Ergonomic mesh chair with lumbar support, headrest, adjustable arms and five casters',removedMeshes:removed,movingDesktopObjects:['main portfolio monitor','61-key keyboard','MoodBall','desk lamp'],portfolioMonitorCount:1,portfolioEntry:'Main monitor',removedSecondaryDisplay:true,keyboardKeys:keyLayout.length,notesEntry:'Inspiration board and existing app shortcuts'};
- return {updateNotes,refreshBooks,refreshLanguage,colliderRoots:[deskBase,middleColumns,workstation,chair],audit,workstation,chair,screen,keyboard,portfolioTexture,update(dt,elapsed){const target=getState().settings.deskRaised ? .34 : 0;deskRaised=target>0;const next=getState().settings.reducedMotion?target:THREE.MathUtils.damp(lift,target,5,dt);if(Math.abs(next-lift)>.00001){lift=Math.abs(next-target)<.0001?target:next;setDeskHeight();}if(!getState().settings.reducedMotion)moodMat.emissiveIntensity=.22+Math.sin(elapsed*1.5)*.07;},lampLight};
+ const audit={desk:'Electric three-stage sit/stand desk',seatedSurfaceHeight:.7925,standingSurfaceHeight:1.1325,chair:'Ergonomic mesh chair with lumbar support, headrest, adjustable arms and five casters',removedMeshes:removed,movingDesktopObjects:['main portfolio monitor','61-key keyboard','MoodBall','desk lamp','noise cancelling headphones and stand'],headphones:'Over-ear headset with padded headband, swivel cups, cushions, controls and desktop stand',portfolioMonitorCount:1,portfolioEntry:'Main monitor',removedSecondaryDisplay:true,keyboardKeys:keyLayout.length,notesEntry:'Inspiration board and existing app shortcuts'};
+ return {updateNotes,refreshBooks,refreshLanguage,colliderRoots:[deskBase,middleColumns,workstation,chair],audit,workstation,chair,screen,keyboard,headphones,portfolioTexture,update(dt,elapsed){const target=getState().settings.deskRaised ? .34 : 0;deskRaised=target>0;const next=getState().settings.reducedMotion?target:THREE.MathUtils.damp(lift,target,5,dt);if(Math.abs(next-lift)>.00001){lift=Math.abs(next-target)<.0001?target:next;setDeskHeight();}if(!getState().settings.reducedMotion)moodMat.emissiveIntensity=.22+Math.sin(elapsed*1.5)*.07;},lampLight};
 }

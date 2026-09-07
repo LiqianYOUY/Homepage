@@ -38,5 +38,21 @@
     "url": "books/short-history-of-astronomy.html",
     "source": "https://www.gutenberg.org/ebooks/59212",
     "language": "英文原版"
+  },
+  {
+    "id": "pg1661",
+    "title": "The Adventures of Sherlock Holmes",
+    "author": "Arthur Conan Doyle",
+    "url": "https://www.gutenberg.org/cache/epub/1661/pg1661-images.html",
+    "source": "https://www.gutenberg.org/ebooks/1661",
+    "language": "English"
+  },
+  {
+    "id": "pg1342",
+    "title": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "url": "https://www.gutenberg.org/cache/epub/1342/pg1342-images.html",
+    "source": "https://www.gutenberg.org/ebooks/1342",
+    "language": "English"
   }
 ]

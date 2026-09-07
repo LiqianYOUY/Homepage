@@ -1,18 +1,18 @@
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
-import {createStore,localDay} from './state.js?v=14';
-import {createPersonalSpace} from './personal-space.js?v=14';
+import {createStore,localDay} from './state.js?v=20';
+import {createPersonalSpace} from './personal-space.js?v=20';
 import {createCat} from './cat.js';
-import {setupHouseInteractions} from './home-interactions.js';
-import {setupStudio} from './studio.js?v=14';
+import {setupHouseInteractions} from './home-interactions.js?v=15';
+import {setupStudio} from './studio.js?v=20';
 import {createWalkCollision} from './walk-collision.js?v=14';
 import {optimizeScene} from './optimize-scene.js';
 import {setupSmartHome} from './smart-home.js?v=14';
 import {setupTerrace} from './terrace-v7.js?v=14';
 import {setupCabinetryV7} from './cabinetry-v7.js?v=14';
 import {setupLivingRoom} from './living-room.js?v=10';
-import {createCommunityClient} from './community-client.js?v=9';
+import {createCommunityClient} from './community-client.js?v=20';
 import {communityAPI} from './community-config.js?v=9';
 import {createWelcomeWorld} from './welcome-world.js?v=14';
 import {setupTelevision} from './television.js?v=9';
@@ -22,16 +22,20 @@ import {createGroundNavigation} from './ground-navigation.js?v=9';
 import {createDaylight,HOME_LOCATION} from './daylight.js?v=14';
 import {initI18n,translate,getLanguage} from './i18n.js?v=14';
 import {createPlantLifecycle} from './plant-lifecycle.js?v=14';
-import {setupRoomRenovation} from './room-renovation.js?v=14';
+import {setupRoomRenovation} from './room-renovation.js?v=19';
 import {createPiano} from './piano.js?v=14';
 import {setupBathroomRefinement} from './bathroom-refinement.js?v=14';
 import {setupLaundry} from './laundry.js?v=14';
-import {createTableGames} from './table-games.js?v=14';
+import {createTableGames} from './table-games.js?v=20';
+import {setupChildrenRoomDetails} from './children-room-details.js?v=20';
+import {setupEntryDetails} from './entry-details.js?v=15';
+import {setupBedroomDetails} from './bedroom-details.js?v=20';
+import {setupHousePropDetails} from './house-prop-details.js?v=20';
 
 const $=s=>document.querySelector(s);const S=.022381665533985514;
 const P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S);
 let terrace=null,cabinetry=null,smart=null,worldUI=null,tv=null,visitor=null,community=null,lightingReady=false,pointerFloor=null,pointerUpdated=0;
-let renovation=null,livingRoom=null,piano=null,bathroom=null,laundry=null,tableGames=null;
+let renovation=null,livingRoom=null,piano=null,bathroom=null,laundry=null,tableGames=null,childrenDetails=null,entryDetails=null,bedroomDetails=null,housePropDetails=null;
 let studio=null,cat=null,house=null,model=null,personal=null,walk=false,currentRoom='overview',showHotspots=true;
 let walkCollision=null,watchingCat=false;
 let stateStore,moveTween=null,toastTimer=null;const records=new Map(),hotspotEntries=[],wallBoxes=[];let loadDone=false;
@@ -50,7 +54,7 @@ initI18n();
 stateStore=await createStore(()=>{refreshCare();studio?.updateNotes();studio?.refreshBooks?.();if(lightingReady)applyLighting();},message=>$('#save-status').textContent='生活记录 · '+message,{visitor,communityClient});
 const state=()=>stateStore.get(),setState=patch=>stateStore.set(patch);
 const plantLife=createPlantLifecycle({getState:state,setState});
-personal=createPersonalSpace({getState:state,setState,getSaveStatus:()=>stateStore.getStatus(),onNotesChange:notes=>studio?.updateNotes(notes),onMusicState:info=>{document.body.dataset.musicPlaying=String(info.playing===true);},toast});
+personal=createPersonalSpace({sharedLibrary:communityClient.library,getState:state,setState,getSaveStatus:()=>stateStore.getStatus(),onNotesChange:notes=>studio?.updateNotes(notes),onMusicState:info=>{document.body.dataset.musicPlaying=String(info.playing===true);},toast});
 refreshCare();
 worldUI=createWelcomeWorld({getVisitor:()=>visitor,getCommunity:()=>community,refreshCommunity,postcard,getSmart:()=>smart,getTerrace:()=>terrace,toast,onStateChange:()=>applyLighting(),onTV:()=>tv?.open(),onMusic:()=>personal.openMusic(),onBooks:()=>{go('study');personal.openLibrary();},onCat:()=>{petCat();$('#focus-cat').click();},onWave:()=>cat?.greet()});
 $('#my-world').onclick=()=>worldUI.openProfile();$('#garden-shortcut').onclick=()=>{go('terrace');worldUI.openTerrace();};$('#postcard-shortcut').onclick=()=>worldUI.openPostcards();
@@ -106,8 +110,9 @@ function setReduced(on){setState({settings:{reducedMotion:on}});document.body.da
 document.body.dataset.reducedMotion=String(!!state().settings.reducedMotion);$('#reduce-motion').checked=!!state().settings.reducedMotion;
 $('#reduce-motion').onchange=e=>setReduced(e.target.checked);for(const id of ['full-walls','show-glass','show-ceiling'])$('#'+id).onchange=applyVisibility;
 
-const views={terrace:{eye:[-10,7.3,-12.5],target:[-5.8,.4,-5.7]},overview:{eye:[15,22,27],target:[-1,.6,0]},television:{eye:[-7.117,1.65,-3.9],target:[-7.117,1.42,.683]},living:{eye:[-7.05,6.0,-4.0],target:[-7.0,.55,-1.8]},study:{eye:[4.2,2.35,-4.4],target:[1.65,1.14,-3.18]},kitchen:{eye:[-4.8,3.7,-4.6],target:[-1.0,.8,-1.6]},master:{eye:[-9.0,4.5,.1],target:[-6.7,.55,3.43]},garden:{eye:[-6.7,4.8,1.8],target:[-10.8,.6,-1.6]}};
+const views={terrace:{eye:[-10,7.3,-12.5],target:[-5.8,.4,-5.7]},overview:{eye:[15,22,27],target:[-1,.6,0]},television:{eye:[-7.117,1.65,-3.9],target:[-7.117,1.42,.683]},living:{eye:[-7.05,6.0,-4.0],target:[-7.0,.55,-1.8]},study:{eye:[4.2,2.35,-4.4],target:[1.65,1.14,-3.18]},kitchen:{eye:[-4.8,3.7,-4.6],target:[-1.0,.8,-1.6]},master:{eye:[-8.2,6.5,9.4],target:[-7.0,.75,2.8]},garden:{eye:[-6.7,4.8,1.8],target:[-10.8,.6,-1.6]}};
 function go(room,instant=false){if(!model)return;watchingCat=false;if(walk)exitWalk(false);currentRoom=room==='television'?'living':room;const v=views[room]||views.overview;let eye=new THREE.Vector3(...v.eye),target=new THREE.Vector3(...v.target);if(room==='overview'){const bounds=new THREE.Box3().setFromObject(model),center=bounds.getCenter(new THREE.Vector3());center.y=.5;const direction=eye.clone().sub(target).normalize();const right=new THREE.Vector3().crossVectors(camera.up,direction).normalize(),up=new THREE.Vector3().crossVectors(direction,right).normalize();const tanV=Math.tan(THREE.MathUtils.degToRad(camera.fov/2)),tanH=tanV*camera.aspect;const safeX=innerWidth>1000?.76:.9;let distance=0;for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){const d=new THREE.Vector3(x,y,z).sub(center);distance=Math.max(distance,d.dot(direction)+Math.abs(d.dot(right))/(tanH*safeX),d.dot(direction)+Math.abs(d.dot(up))/(tanV*.78));}target=center;eye=center.clone().addScaledVector(direction,distance);}
+ if(innerWidth<760&&room==='master'){eye.x-=2.3;target.x-=2.3;}
  if(innerWidth<760&&room!=='overview')eye=target.clone().add(eye.sub(target).multiplyScalar(1.18));
  document.body.classList.toggle('close-view',room!=='overview');document.querySelectorAll('[data-room]').forEach(b=>b.classList.toggle('active',b.dataset.room===currentRoom));
  if(instant||state().settings.reducedMotion){camera.position.copy(eye);controls.target.copy(target);camera.lookAt(target);controls.update();moveTween=null;}else moveTween={start:performance.now(),from:camera.position.clone(),to:eye,lookFrom:controls.target.clone(),lookTo:target};
@@ -183,10 +188,14 @@ try{
  model.traverse(o=>{if(!o.isMesh)return;o.castShadow=!o.material?.transparent;o.receiveShadow=true;if(o.material?.transparent){o.material.depthWrite=false;o.renderOrder=2;}const c=o.userData.category;if(['wall','upperWall'].includes(c)){const b=new THREE.Box3().setFromObject(o);if(b.max.y>.2)wallBoxes.push(b);}});
  livingRoom=setupLivingRoom({THREE,model});diagnostics.livingRoom=livingRoom.audit;
  renovation=setupRoomRenovation({THREE,model,register,getState:state,setState,toast});diagnostics.renovation=renovation.audit;
+ childrenDetails=setupChildrenRoomDetails({THREE,model,renovation});diagnostics.childrenDetails=childrenDetails.audit;
  applyVisibility();house=setupHouseInteractions({THREE,scene,model,register,toast,getState:state,setState});
  bathroom=setupBathroomRefinement({THREE,model,house});diagnostics.bathroom=bathroom.audit;
  let navigation=null;try{const r=await fetch('./cat-navigation.json?v=10');if(r.ok)navigation=await r.json();}catch{}
  smart=setupSmartHome({THREE,scene,model,register,plantLife,openVases:()=>worldUI.openFlowerVases(),getState:state,setState,toast,openControls:()=>worldUI.openControls(),openGarden:()=>{go('garden');worldUI.openGarden();},navigation:navigation||{}});cabinetry=setupCabinetryV7({THREE,scene,model,register,getState:state,setState,toast,house});diagnostics.cabinetry=cabinetry.audit;bathroom.finalizeCabinetry();terrace=setupTerrace({THREE,model,register,plantLife,getState:state,setState,toast,openGarden:id=>worldUI.openTerrace(id),onDoorOpen:()=>smart.setCurtains(true)});house.colliderRoots=[...smart.colliderRoots,...cabinetry.colliderRoots,...terrace.colliderRoots];diagnostics.terrace=terrace.audit;applyVisibility();
+ entryDetails=setupEntryDetails({THREE,model,house,register,getState:state,setState});diagnostics.entryDetails=entryDetails.audit;house.colliderRoots.push(...entryDetails.colliderRoots);
+ bedroomDetails=setupBedroomDetails({THREE,model,renovation,cabinetry,register,getState:state,setState,turnLightsOn:()=>smart.setLights(true)});diagnostics.bedroomDetails=bedroomDetails.audit;
+ housePropDetails=setupHousePropDetails({THREE,model});diagnostics.housePropDetails=housePropDetails.audit;
  studio=setupStudio({THREE,scene,model,register,openNotes:()=>personal.openNotes(),openLibrary:id=>personal.openLibrary(id),openMusic:()=>personal.openMusic(),openPortfolio,getState:state,setState,toast,turnLightsOn:()=>smart.setLights(true)});
  laundry=setupLaundry({THREE,model,scene,register,getState:state,setState,toast});diagnostics.laundry=laundry.audit;
  house.colliderRoots.push(...laundry.colliderRoots);
@@ -196,15 +205,15 @@ try{
  smart.setGardenTerrace(terrace);
  piano=createPiano({THREE,piano:livingRoom.piano,register});
  tableGames=createTableGames({THREE,table:livingRoom.table,register});
- tv=setupTelevision({THREE,scene,model,camera,register,go,toast});diagnostics.optimization=optimizeScene({THREE,model});
+ tv=setupTelevision({THREE,scene,model,camera,register,go,toast});childrenDetails.finalize();entryDetails.finalize();housePropDetails.finalize();diagnostics.optimization=optimizeScene({THREE,model});
  cat=createCat({THREE,scene,initialPosition:navigation?.initialPosition||[-6,.03,-.8],navigation,getPlayerPosition:()=>walk?camera.position:controls.target,getRobotPosition:()=>smart?.vacuum?.position,getPointerPosition:()=>!gesture&&performance.now()-pointerUpdated<4000?pointerFloor:null,onMess:p=>smart.addMess(p),onWelcome:()=>toast('小橘来迎接你啦，靠近后摸摸她的头。'),reducedMotion:()=>state().settings.reducedMotion,getMuted:()=>state().cat.muted,store:{getCatState:()=>state().cat,setCatState:c=>setState({cat:c})}});
  register({id:'cat',label:'小橘 · 摸摸头',kind:'cat',object:cat.root,anchor:cat.root.position.clone().add(new THREE.Vector3(0,.7,0)),click:petCat});
  register({id:'cat-food',label:'给小橘添猫粮',kind:'cat-bowl',object:cat.bowls.food,anchor:new THREE.Box3().setFromObject(cat.bowls.food).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:feedCat});
  register({id:'cat-water',label:'给小橘添清水',kind:'cat-bowl',object:cat.bowls.water,anchor:new THREE.Box3().setFromObject(cat.bowls.water).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:()=>cat.water()});smart.setObstacles([cat.root,cat.bowls.food,cat.bowls.water]);
  cat.setFollowing(state().cat.following!==false);diagnostics.loaded=true;loadDone=true;$('#loading').hidden=true;go('overview',true);refreshCare();applyLighting();
- window.homeApp={tableGames,bathroom,laundry,renovation,livingRoom,piano,plantLife,studio,scene,model,camera,controls,daylight,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
+ window.homeApp={housePropDetails,bedroomDetails,entryDetails,childrenDetails,tableGames,bathroom,laundry,renovation,livingRoom,piano,plantLife,studio,scene,model,camera,controls,daylight,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
 }catch(e){console.error(e);diagnostics.errors.push(String(e));$('#load-detail').textContent='Please check your connection and try refreshing.';$('#loading h2').textContent='小屋暂时没打开';}
 let last=performance.now(),elapsed=0,lastCatAction='';
-function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);renovation?.update(dt);laundry?.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);daylight.update();tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}
+function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);renovation?.update(dt);entryDetails?.update(dt);bedroomDetails?.update(dt);laundry?.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);daylight.update();tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}
 requestAnimationFrame(tick);
 window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);if(currentRoom==='overview'&&!walk)go('overview',true);});

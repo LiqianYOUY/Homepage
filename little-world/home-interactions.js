@@ -52,10 +52,21 @@ export function setupHouseInteractions({THREE,scene,model,register,toast=()=>{},
   }
   // Move the original leaf, both sides of its lock and all hinge barrels together.
   if(entry){
-    const moving=[entry,find('Smart lock at entry'),find('Entry interior lock plate'),find('Entry interior door handle'),...starts('Entry door hinge')].filter(Boolean);
-    // A 22 mm inward hinge rebate keeps the swing clear of the simplified full-depth wall.
-    for(const o of moving){remember(o);o.position.x-=.022;}
-    addDoor({id:'door-entry',label:'入户门',x:1160.95-.022/S,z:579,width:46,direction:-1,sign:-1,angle:84,existing:moving});
+    const hinges=starts('Entry door hinge'),moving=[entry,find('Smart lock at entry'),find('Entry interior lock plate'),find('Entry interior door handle'),...hinges].filter(Boolean);
+    const leafBox=new THREE.Box3().setFromObject(entry),jambs=starts('Entry door jamb').map(o=>new THREE.Box3().setFromObject(o)).sort((a,b)=>a.min.x-b.min.x);
+    // The source interior handle is on -z; +z is outside. A +y swing of this
+    // right-hinged leaf therefore opens outwards. Keep the original closed
+    // position: shifting the whole door left would bury its latch in the jamb.
+    const hingeX=(jambs.at(-1)?.min.x??leafBox.max.x+.009)-.014,hingeZ=leafBox.max.z+.015;
+    remember(entry);entry.scale.x*=(leafBox.max.x-leafBox.min.x-.008)/(leafBox.max.x-leafBox.min.x);
+    for(const hinge of hinges){
+      remember(hinge);const b=new THREE.Box3().setFromObject(hinge),at=hinge.getWorldPosition(new THREE.Vector3());
+      hinge.scale.x*=.014/(b.max.x-b.min.x);hinge.scale.z*=.014/(b.max.z-b.min.z);
+      hinge.position.copy(hinge.parent.worldToLocal(new THREE.Vector3(hingeX,at.y,hingeZ)));
+    }
+    const door=addDoor({id:'door-entry',label:'入户门',x:hingeX/S+935,z:hingeZ/S+512,width:46-.008/S,direction:-1,sign:1,angle:84,existing:moving});
+    door.swing='outward';door.outwardDirection=new THREE.Vector3(0,0,1);door.closedPlaneZ=(leafBox.min.z+leafBox.max.z)/2;
+    door.sourceWidthMetres=leafBox.max.x-leafBox.min.x;door.leafTrimMetres=.008;door.hingeJambClearanceMetres=.014;
   }
   addDoor({id:'door-master',label:'主卧门',x:786.3,z:553.5,width:40.5,direction:-1,sign:1,angle:84});
   addDoor({id:'door-master-bath',label:'主卫门',x:791,z:612,width:40,direction:1,axis:'z',sign:1,angle:84});

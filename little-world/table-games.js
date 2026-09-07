@@ -5,8 +5,23 @@ import {raiseDialog,consumeDialogEscape,isTopDialog} from './dialog-stack.js';
 
 addTranslations({'棋牌桌 · 一起玩一局':'Game table · Play together','棋牌桌':'The game table','关闭棋牌桌':'Close game table'});
 export const GAME_NAMES={gomoku:['五子棋','Gomoku'],go:['围棋','Go'],xiangqi:['象棋','Xiangqi'],chess:['国际象棋','Chess'],doudizhu:['斗地主','Dou Dizhu'],mahjong:['麻将','Mahjong']};
-const SYMBOLS={wK:'♔',wQ:'♕',wR:'♖',wB:'♗',wN:'♘',wP:'♙',bK:'♚',bQ:'♛',bR:'♜',bB:'♝',bN:'♞',bP:'♟',rK:'帅',rA:'仕',rE:'相',rH:'马',rR:'车',rC:'炮',rP:'兵'};
+const SYMBOLS={rK:'帅',rA:'仕',rE:'相',rH:'马',rR:'车',rC:'炮',rP:'兵'};
 const BLACK_XIANGQI={bK:'将',bA:'士',bE:'象',bH:'马',bR:'车',bC:'炮',bP:'卒'};
+// Both sides share filled silhouettes; Unicode's white chess glyphs are hollow on many devices.
+const CHESS_ART={
+ K:{body:'M22 4H26V9H31V13H26V18H22V13H17V9H22Z M14 18C8 16 7 23 11 27L18 31L16 36H32L30 31L37 27C41 23 40 16 34 18C29 21 19 21 14 18Z M14 36H34L37 42H11Z',detail:'M16 31H32'},
+ Q:{body:'M9 14L16 21L19 11L24 21L29 11L32 21L39 14L34 31H14Z M16 31H32L31 36H17Z M14 36H34L37 42H11Z M6 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M16 8a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M26 8a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M36 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0',detail:'M16 31H32'},
+ R:{body:'M11 7H18V13H21V7H27V13H30V7H37V21H33L31 36H34L37 42H11L14 36H17L15 21H11Z',detail:'M15 21H33M17 36H31'},
+ B:{body:'M24 7C34 15 35 22 27 27L29 35H19L21 27C13 22 14 15 24 7Z M15 35H33L37 42H11Z M21 5a3 3 0 1 0 6 0a3 3 0 1 0-6 0',detail:'M23 13L28 18M20 28H28'},
+ N:{body:'M16 7L24 11C34 13 38 23 33 35H34L37 42H11L14 35H18C18 29 21 25 25 22L22 20L16 24L9 22L10 17L16 11Z',detail:'M28 17C32 23 28 28 23 32M16 16H17'},
+ P:{body:'M17 12a7 7 0 1 0 14 0a7 7 0 1 0-14 0 M20 19H28L27 26L32 32L31 35H17L16 32L21 26Z M14 35H34L37 42H11Z',detail:'M18 32H30'}
+};
+function chessArtwork(type){
+ const art=CHESS_ART[type],svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('viewBox','0 0 48 48');svg.setAttribute('width','48');svg.setAttribute('height','48');svg.setAttribute('class','chess-piece-art');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
+ for(const [name,d] of Object.entries(art)){const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',d);path.setAttribute('class','chess-piece-'+name);svg.append(path);}
+ return svg;
+}
 const RULES={
  gomoku:['你执黑先行，横、竖或斜线连成五子获胜。本桌不设禁手。','You play black first. Connect five horizontally, vertically or diagonally. No forbidden moves.'],
  go:['你执黑，电脑执白。提走无气的棋子，禁止自杀与立即打劫回提。先提净有争议的死子再停一手，剩余棋子计为活棋。双方连续停一手后数子，白加 6.5 分（贴目）。','You play black. Capture stones without liberties; suicide and immediate ko recapture are prohibited. Play out disputed dead groups before passing; remaining stones count as alive. Two passes end the game. Area scoring; white gets 6.5 points.'],
@@ -91,7 +106,7 @@ export function createTableGames({THREE,table,register=()=>{}}={}){
    const pieceNames=kind==='xiangqi'?{K:['将帅','General'],A:['士','Advisor'],E:['象','Elephant'],H:['马','Horse'],R:['车','Chariot'],C:['炮','Cannon'],P:['兵卒','Soldier']}:{K:['王','King'],Q:['后','Queen'],R:['车','Rook'],B:['象','Bishop'],N:['马','Knight'],P:['兵','Pawn']};
    const label=!piece?copy('空位','Empty'):piece.length===1?(piece==='b'?copy('黑子','Black stone'):copy('白子','White stone')):(piece[0]==='r'?copy('红','Red '):piece[0]==='w'?copy('白','White '):copy('黑','Black '))+copy(...pieceNames[piece[1]]);cell.setAttribute('aria-label',`${label} · ${String.fromCharCode(65+x)}${rows-y}`);cell.setAttribute('aria-selected',String(xy(selected,{x,y})));cell.tabIndex=(selected?xy(selected,{x,y}):x===Math.floor(cols/2)&&y===Math.floor(rows/2))?0:-1;
    cell.onkeydown=e=>{const offsets={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]},d=offsets[e.key];if(d){e.preventDefault();const next=grid.querySelector(`[data-x="${Math.max(0,Math.min(cols-1,x+d[0]))}"][data-y="${Math.max(0,Math.min(rows-1,y+d[1]))}"]`);cell.tabIndex=-1;next.tabIndex=0;next.focus();}};
-   if(piece){const span=element('span',`game-piece color-${piece[0]}`,symbol||'');span.setAttribute('aria-hidden','true');cell.append(span);}row.append(cell);
+   if(piece){const span=element('span',`game-piece color-${piece[0]}`,kind==='chess'?'':symbol||'');span.setAttribute('aria-hidden','true');if(kind==='chess')span.append(chessArtwork(piece[1]));cell.append(span);}row.append(cell);
   }grid.append(row);}
   if(kind==='xiangqi'){const river=element('div','game-river');river.append(element('span','','楚 河'),element('span','','汉 界'));river.setAttribute('aria-hidden','true');grid.append(river);}
   area.append(grid);return area;
@@ -165,7 +180,7 @@ export function createTableGames({THREE,table,register=()=>{}}={}){
   const focusable=[...overlay.querySelectorAll('button:not(:disabled),select,summary,[tabindex="0"]')].filter(n=>n.tabIndex>=0),first=focusable[0],last=focusable.at(-1);if(!overlay.contains(document.activeElement)){event.preventDefault();(event.shiftKey?last:first)?.focus();}else if(event.shiftKey&&(document.activeElement===first||document.activeElement===overlay)){event.preventDefault();last?.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
  }}
  function open(next){
-  previousFocus=document.activeElement;if(!overlay){const link=element('link');link.rel='stylesheet';link.href=new URL('./table-games.css?v=14',import.meta.url).href;document.head.append(link);
+  previousFocus=document.activeElement;if(!overlay){const link=element('link');link.rel='stylesheet';link.href=new URL('./table-games.css?v=20',import.meta.url).href;document.head.append(link);
    overlay=element('div','table-games-overlay');overlay.hidden=true;overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label',translate('棋牌桌'));overlay.tabIndex=-1;const panel=element('section','table-games-dialog');header=element('header','game-header');content=element('div','game-content');panel.append(header,content);overlay.append(panel);overlay.onclick=e=>{if(e.target===overlay)close();};document.body.append(overlay);document.addEventListener('keydown',onKey,true);
   }overlay.hidden=false;if(next&&GAME_NAMES[next])selectGame(next);else{render();queueComputer();}raiseDialog(overlay);overlay.focus({preventScroll:true});
  }

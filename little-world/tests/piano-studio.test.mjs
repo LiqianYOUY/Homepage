@@ -65,7 +65,7 @@ test('the main monitor opens the portfolio, a 61-key keyboard replaces the slab,
   let openedPortfolio=0,openedNotes=0;const records=new Map(),state={settings:{},notes:[],papers:[],smart:{lightsOn:true}};
   const studio=setupStudio({THREE,scene,model,register:record=>{records.set(record.id,record);record.object.traverse(object=>{if(object.isMesh)object.userData.interactionId=record.id;});},openNotes(){openedNotes++;},openLibrary(){},openMusic(){},openPortfolio(){openedPortfolio++;},getState:()=>state,setState:patch=>Object.assign(state.settings,patch.settings),toast(){}});
   const position=name=>scene.getObjectByName(name).getWorldPosition(new THREE.Vector3()).y;
-  const names=['Study_monitor','Main monitor portfolio screen','Study compact keyboard with individual keys','MoodBall studio companion','Study reading lamp'],before=names.map(position);
+  const names=['Study_monitor','Main monitor portfolio screen','Study compact keyboard with individual keys','MoodBall studio companion','Study reading lamp','Study noise cancelling headphones and stand'],before=names.map(position);
   const feet=position('Study electric desk fixed feet'),chair=position('Study ergonomic mesh task chair'),anchor=records.get('portfolio').anchor.y;
   assert.ok(studio.audit.removedMeshes.length>=9);assert.equal(model.getObjectByName('Study_chair_seat'),undefined);
   assert.equal(scene.getObjectByName('Portfolio desktop display'),undefined);assert.equal(scene.getObjectByName('Portfolio tablet frame'),undefined);assert.equal(scene.getObjectByName('Study_keyboard'),undefined);assert.equal(records.has('desk-notes'),false);
@@ -74,6 +74,10 @@ test('the main monitor opens the portfolio, a 61-key keyboard replaces the slab,
   const keycaps=scene.getObjectByName('Study keyboard individual keycaps');assert.equal(keycaps.count,61);assert.equal(keycaps.userData.interactionId,'portfolio');assert.equal(studio.audit.portfolioMonitorCount,1);
   const keyBoxes=[];for(let i=0;i<keycaps.count;i++){const matrix=new THREE.Matrix4();keycaps.getMatrixAt(i,matrix);keyBoxes.push(new THREE.Box3(new THREE.Vector3(-.5,-.5,-.5),new THREE.Vector3(.5,.5,.5)).applyMatrix4(matrix));}
   for(let i=0;i<keyBoxes.length;i++){const box=keyBoxes[i];assert.ok(box.min.x>=-.195&&box.max.x<=.195);assert.ok(box.min.z>=-.075&&box.max.z<=.075);for(let j=0;j<i;j++)assert.equal(box.intersectsBox(keyBoxes[j]),false,'every key is separated from its neighbours');}
+  const headsetBounds=new THREE.Box3().setFromObject(studio.headphones),desktopBounds=new THREE.Box3().setFromObject(scene.getObjectByName('Study graphite sit stand desktop'));
+  assert.ok(Math.abs(headsetBounds.min.y-desktopBounds.max.y)<.0001,'the headphone stand rests on the desktop');
+  for(const axis of ['x','z'])assert.ok(headsetBounds.min[axis]>desktopBounds.min[axis]&&headsetBounds.max[axis]<desktopBounds.max[axis],'the full headset stays inside the desktop');
+  for(const name of names.slice(0,-1))assert.equal(headsetBounds.intersectsBox(new THREE.Box3().setFromObject(scene.getObjectByName(name))),false,'the headphones stay clear of '+name);
 
   const walker=createWalkCollision({THREE,model,house:{colliderRoots:studio.colliderRoots}});
   // This aisle is clear of the real desk and chair. A raw 1m instancing cube would incorrectly block it.

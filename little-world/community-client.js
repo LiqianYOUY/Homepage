@@ -6,6 +6,16 @@ const ADJECTIVES=['晒太阳的','软乎乎的','爱发呆的','慢慢走的','�
 const ANIMALS=['小海獭','小兔子','小橘子','小团子','小熊猫','小松鼠','小云朵','小布丁','小狐狸','小奶猫'];
 const isObject=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const loopback=hostname=>['localhost','127.0.0.1','[::1]'].includes(hostname.toLowerCase());
+/** Public library links must be reachable on the public web, never local files or network hosts. */
+export function validateSharedBookURL(raw){
+ if(typeof raw!=='string'||raw.length>2048||/[\u0000-\u0020]/.test(raw)||!/^https:\/\//i.test(raw))return null;
+ try{
+  const url=new URL(raw),host=url.hostname.toLowerCase().replace(/\.$/,'');
+  if(url.protocol!=='https:'||url.username||url.password||!host.includes('.')||host.includes(':')||/^\d+(?:\.\d+){3}$/.test(host)||/(^|\.)(localhost|local|internal|lan|home|invalid)$/.test(host))return null;
+  url.hash='';
+  return url.href.length<=2048?url.href:null;
+ }catch{return null;}
+}
 const id=()=>globalThis.crypto?.randomUUID?.()||`local-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const dayAt=date=>new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Sydney',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
 function defaultStorage(){try{return globalThis.localStorage;}catch{return null;}}
@@ -105,8 +115,34 @@ export async function createCommunityClient({apiBase,pageURL=globalThis.location
   async read(){if(!this.enabled)return null;try{const value=await request('state');if(!isObject(value))throw Error('个人记录格式不正确。');return value;}catch(error){stateEnabled=false;throw error;}},
   async write(value){if(!this.enabled)return false;try{await request('state',{method:'POST',body:value});return true;}catch(error){stateEnabled=false;throw error;}}
  };
+ const libraryConfigured=config.configured&&!config.isLocalServer&&!!validateSharedBookURL(config.apiBase);
+ function librarySummary(value){
+  if(!isObject(value)||value.scope!=='site'||!Array.isArray(value.books)||value.books.length>200)throw Error('公共书架返回了无法识别的内容。');
+  const books=value.books.map(book=>{
+   if(!isObject(book)||typeof book.id!=='string'||!/^[a-zA-Z0-9_-]{8,128}$/.test(book.id)||typeof book.title!=='string'||[...book.title.trim()].length<1||[...book.title].length>400||/[\u0000-\u001f\u007f]/.test(book.title)||!validateSharedBookURL(book.url)||!Number.isFinite(Date.parse(book.created)))throw Error('公共书架返回了无法识别的内容。');
+   return {id:book.id,title:book.title,url:book.url,created:book.created};
+  });
+  return {books,scope:'site'};
+ }
+ const library={
+  get configured(){return libraryConfigured;},
+  get enabled(){return !disposed&&libraryConfigured&&mode==='server';},
+  validateURL:validateSharedBookURL,
+  async read(){
+   if(disposed)throw Error('窗口已关闭。');
+   if(!libraryConfigured)return null;
+   if(mode!=='server')await connect();
+   return librarySummary(await request('library'));
+  },
+  async publish(book){
+   if(!this.enabled)throw Error('公共书架未连接，这本书还没有分享。');
+   const title=typeof book?.title==='string'?book.title.trim():'',url=validateSharedBookURL(book?.url);
+   if(!title||[...title].length>400||/[\u0000-\u001f\u007f]/.test(title)||!url||typeof book.id!=='string'||!/^[a-zA-Z0-9_-]{8,128}$/.test(book.id))throw Error('分享时请填写书名和公开的 HTTPS 链接。');
+   return librarySummary(await request('library',{method:'POST',body:{id:book.id,title,url}}));
+  }
+ };
  const client={
-  get visitor(){return visitor;},get community(){return community;},get mode(){return mode;},get apiBase(){return config.apiBase;},stateTransport,
+  get visitor(){return visitor;},get community(){return community;},get mode(){return mode;},get apiBase(){return config.apiBase;},stateTransport,library,
   getStatus(){return {mode,scope:mode==='browser'?'browser':config.isLocalServer?'same-server':'site',apiBase:config.apiBase,isLocalServer:config.isLocalServer&&mode==='server',startupError,persisted:mode==='browser'?persisted:true};},
   async refresh(){if(disposed)throw Error('窗口已关闭。');if(mode==='browser'){if(config.configured&&!config.isLocalServer){try{return await connect();}catch(error){startupError=error.message;throw Error('共享信箱连接得慢了一点，请稍后再打开。');}}return browserVisit();}community=sharedSummary(await request('community'));return community;},
   async postcard(kind,text=''){

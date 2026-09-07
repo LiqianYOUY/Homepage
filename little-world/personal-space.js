@@ -1,4 +1,23 @@
 import {raiseDialog, topDialog, isTopDialog, consumeDialogEscape, flattenDialogRoot} from './dialog-stack.js';
+import {addTranslations} from './i18n.js?v=14';
+addTranslations({'屋主的新书会出现在这里；你添加或移除的书只影响自己的书架。':'New books from the host appear here. Books you add or remove only change your own shelf.'});
+addTranslations({
+ '公共书架的书，来玩的朋友都能看到；只有点击分享的书才会公开。':'Books on the shared shelf are visible to visiting friends. Only books you choose to share are published.',
+ '当前没有连接公共书架，你添加的书只保存在自己的书架。':'The shared shelf is not connected. Books you add stay on your own shelf.',
+ '正在查看朋友们分享的新书…':'Checking the new books shared by friends…',
+ '公共书架已更新，朋友们分享的书都在这里。':'The shared shelf is up to date. Books shared by friends appear here.',
+ '公共书架暂时未连接。现在只能保存到自己的书架，请稍后重试。':'The shared shelf could not be reached. You can still save to your own shelf; please try again later.',
+ '公共书架未连接，这本书还没有分享。':'The shared shelf is not connected. This book has not been shared.',
+ '刷新公共书架':'Refresh shared shelf','发布到公共书架':'Publish to shared shelf','只保存到我的书架':'Save only to my shelf',
+ '分享给朋友':'Share with friends','已分享':'Shared','正在分享…':'Sharing…','正在分享这本书…':'Sharing this book…',
+ '已分享到公共书架，朋友现在也能看到。':'Shared with the public shelf. Friends can now see this book too.',
+ '分享尚未确认，请刷新公共书架后重试。自己的书架已保留这本书。':'Sharing is not yet confirmed. Refresh the shared shelf before trying again. This book is saved on your own shelf.',
+ '已保存到我的书架；这次保存不会发布到公共书架。':'Saved to your own shelf. This action does not publish to the shared shelf.',
+ '编辑本地副本':'Edit my copy','移除本地副本':'Remove my copy',
+ '编辑只修改自己的书架，不会修改公共书架。':'Edits change your own copy and do not change the shared shelf.',
+ '请填写 1～400 字的书名和有效的书籍链接。':'Enter a title of 1–400 characters and a valid book link.',
+ '分享时请填写书名和公开的 HTTPS 链接。':'To share, enter a title and a public HTTPS link.'
+});
 /** Personal space windows. Import personal-space.css once in the host page.
  * State patches: {notes}, {papers}, {musicFavorites}. Audio blobs stay in IDB.
  * onMusicState({playing, source, title, status}) only reports local playback as
@@ -74,7 +93,7 @@ export function validatePersonalURL(raw, {paper = false} = {}) {
   return null;
 }
 
-export function createPersonalSpace({getState = () => ({}), setState = () => {}, getSaveStatus = () => null, onNotesChange = () => {}, onMusicState = () => {}, toast = () => {}} = {}) {
+export function createPersonalSpace({getState = () => ({}), setState = () => {}, getSaveStatus = () => null, onNotesChange = () => {}, sharedLibrary = null, onMusicState = () => {}, toast = () => {}} = {}) {
   const root = el('div', {class: 'ps-root', 'data-personal-space': '', 'aria-label': '我的个人空间'});
   flattenDialogRoot(root);
   document.body.append(root);
@@ -82,6 +101,8 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
   const cleanups = new Set();
   let disposed = false, noteTimer = 0, saveNotes = null, dbPromise = null;
   const sessionTracks = new Map();
+  let publicBooks = [];
+  const libraryURLKey = value => { try { const url = new URL(value, document.baseURI);url.hash = "";return url.href; } catch { return String(value || ""); } };
   const state = () => getState() || {};
   const notify = message => toast(message);
   function patch(value) {
@@ -302,47 +323,118 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
   function openLibrary(paperId) {
     const papersNow = libraryPapers();
     if (paperId != null) {
-      const paper = papersNow.find(p => String(p.id) === String(paperId));
+      const paper = [...papersNow, ...publicBooks].find(p => String(p.id) === String(paperId));
       if (paper) { openReader(paper); return; }
     }
     if (windows.has('library')) { const existing = windows.get('library'); existing.refresh?.(); focusWindow(existing); existing.panel.focus(); return; }
     const win = makeWindow('library', '我的书架', '把想继续读的书籍，放在这里', 'ps-library-window');
     if (!win) return;
-    let papers = papersNow, editing = null;
+    let papers = papersNow, editing = null, ready = false, loading = false, publishing = false, requestVersion = 0;
+    const configured = sharedLibrary?.configured === true;
     const titleId = `paper-title-${uid()}`, urlId = `paper-url-${uid()}`;
-    const title = el('input', {id: titleId, type: 'text', required: true, placeholder: '书籍标题', maxLength: 400});
-    const url = el('input', {id: urlId, type: 'text', required: true, inputMode: 'url', placeholder: 'https://… 或 books/文件.html'});
+    const title = el('input', {id: titleId, type: 'text', required: true, placeholder: '书籍标题', maxLength: 800});
+    const url = el('input', {id: urlId, type: 'text', required: true, inputMode: 'url', placeholder: 'https://… 或 books/文件.html', maxLength: 2048});
     const message = el('p', {class: 'ps-form-message', 'aria-live': 'polite'});
-    const submit = el('button', {type: 'submit', class: 'ps-button ps-primary', text: '放入书架'});
-    const cancel = button('取消编辑', reset); cancel.hidden = true;
-    const form = el('form', {class: 'ps-form'}, el('label', {htmlFor: titleId, text: '标题'}), title, el('label', {htmlFor: urlId, text: '书籍链接'}), url, el('div', {class: 'ps-actions'}, submit, cancel), message);
+    const status = el('p', {class: 'ps-library-status', role: 'status', 'aria-live': 'polite'});
+    const refresh = button('刷新公共书架', () => refreshPublic(), 'ps-quiet');refresh.hidden = !configured;
+    const publish = button('发布到公共书架', () => {
+      const draft = readDraft();
+      if (draft) sharePaper(draft, true);
+    }, 'ps-primary');publish.hidden = !configured;
+    const submit = el('button', {type: 'submit', class: 'ps-button', text: '只保存到我的书架'});
+    const cancel = button('取消编辑', reset);cancel.hidden = true;
+    const form = el('form', {class: 'ps-form'}, el('label', {htmlFor: titleId, text: '标题'}), title, el('label', {htmlFor: urlId, text: '书籍链接'}), url, el('div', {class: 'ps-actions'}, publish, submit, cancel), message);
     const list = el('div', {class: 'ps-paper-list'});
+    const canShare = () => configured && ready && sharedLibrary?.enabled === true && !publishing;
+    function updateActions() {
+      publish.hidden = !configured || editing != null;publish.disabled = !canShare();
+      submit.disabled = publishing;cancel.disabled = publishing;title.disabled = publishing;url.disabled = publishing;refresh.disabled = loading || publishing;
+    }
+    function readDraft() {
+      const safe = validatePersonalURL(url.value, {paper: true}), name = title.value.trim();
+      if (!name || [...name].length > 400 || !safe || /[\u0000-\u001f\u007f]/.test(name)) { message.textContent = '请填写 1～400 字的书名和有效的书籍链接。';return null; }
+      papers = libraryPapers();
+      if (editing && !papers.some(p => p.id === editing)) { message.textContent = '这本书已被移除，请取消编辑后重新添加。';return null; }
+      return {...papers.find(p => p.id === editing), id: editing || uid(), title: name, url: safe};
+    }
     form.addEventListener('submit', event => {
-      event.preventDefault(); const safe = validatePersonalURL(url.value, {paper: true});
-      if (!title.value.trim() || !safe) { message.textContent = '请填写书名和有效的书籍链接。'; return; }
-      papers = libraryPapers();
-      if (editing && !papers.some(p => p.id === editing)) { message.textContent = '这本书已被移除，请取消编辑后重新添加。'; return; }
-      const paper = {...papers.find(p => p.id === editing), id: editing || uid(), title: title.value.trim(), url: safe};
+      event.preventDefault();if (publishing) return;
+      const paper = readDraft();if (!paper) return;
       papers = editing ? papers.map(p => p.id === editing ? paper : p) : [...papers, paper];
+      if (!patch({papers})) { message.textContent = '保存未完成，请查看首页生活记录';return; }
       if (editing) windows.get(`reader:${editing}`)?.close();
-      patch({papers}); reset(); render();
+      reset();render();message.textContent = '已保存到我的书架；这次保存不会发布到公共书架。';
     });
-    function reset() { editing = null; title.value = ''; url.value = ''; submit.textContent = '放入书架'; cancel.hidden = true; message.textContent = ''; }
-    function render() {
+    function reset() { editing = null;title.value = '';url.value = '';submit.textContent = '只保存到我的书架';cancel.hidden = true;message.textContent = '';updateActions(); }
+    async function refreshPublic() {
+      render();
+      if (!configured) { status.textContent = '当前没有连接公共书架，你添加的书只保存在自己的书架。';return; }
+      if (publishing) return;
+      const version = ++requestVersion;loading = true;ready = false;
+      status.textContent = '正在查看朋友们分享的新书…';status.classList.remove('is-error');render();
+      try {
+        const result = await sharedLibrary.read();
+        if (disposed || !win.panel.isConnected || version !== requestVersion) return;
+        if (!result || result.scope !== 'site' || !Array.isArray(result.books)) throw Error('Invalid library response');
+        publicBooks = result.books;ready = true;status.textContent = '公共书架已更新，朋友们分享的书都在这里。';
+      } catch {
+        if (disposed || !win.panel.isConnected || version !== requestVersion) return;
+        ready = false;status.textContent = '公共书架暂时未连接。现在只能保存到自己的书架，请稍后重试。';status.classList.add('is-error');
+      } finally {
+        if (win.panel.isConnected && version === requestVersion) { loading = false;render();updateActions(); }
+      }
+    }
+    async function sharePaper(paper, fromForm = false) {
+      if (!canShare()) { message.textContent = '公共书架未连接，这本书还没有分享。';return; }
+      let safe = null;
+      try { safe = sharedLibrary.validateURL(new URL(paper.url, document.baseURI).href); } catch { /* Report beside the form. */ }
+      if (!safe || !paper.title.trim() || [...paper.title.trim()].length > 400 || /[\u0000-\u001f\u007f]/.test(paper.title)) { message.textContent = status.textContent = '分享时请填写书名和公开的 HTTPS 链接。';status.classList.add('is-error');return; }
       papers = libraryPapers();
-      list.replaceChildren();
-      if (!papers.length) list.append(el('div', {class: 'ps-empty'}, el('strong', {text: '书架等你放下第一本书'}), el('p', {text: '可以添加想读的书籍链接，留着下次慢慢读。'})));
-      papers.forEach(paper => {
-        const safe = validatePersonalURL(paper.url, {paper: true});
+      const original = papers.find(p => p.id === paper.id) || papers.find(p => libraryURLKey(p.url) === libraryURLKey(safe));
+      const local = original || paper;
+      const requestId = local.shareRequestURL === safe && local.shareRequestId || uid();
+      const pending = {...local,shareRequestId: requestId,shareRequestURL: safe};
+      if (!patch({papers: original ? papers.map(p => p.id === original.id ? pending : p) : [...papers, pending]})) { message.textContent = '保存未完成，请查看首页生活记录';return; }
+      publishing = true;++requestVersion;message.textContent = status.textContent = '正在分享这本书…';status.classList.remove('is-error');render();updateActions();
+      try {
+        const result = await sharedLibrary.publish({id: requestId,title: local.title.trim(),url: safe});
+        if (!result || result.scope !== 'site' || !Array.isArray(result.books) || !result.books.some(book => libraryURLKey(book.url) === libraryURLKey(safe))) throw Error('Book was not confirmed');
+        publicBooks = result.books;ready = true;
+        if (disposed || !win.panel.isConnected) return;
+        if (fromForm) reset();
+        message.textContent = '已分享到公共书架，朋友现在也能看到。';status.textContent = '公共书架已更新，朋友们分享的书都在这里。';status.classList.remove('is-error');
+      } catch {
+        if (disposed || !win.panel.isConnected) return;
+        message.textContent = status.textContent = '分享尚未确认，请刷新公共书架后重试。自己的书架已保留这本书。';status.classList.add('is-error');
+      } finally {
+        publishing = false;
+        if (win.panel.isConnected) { render();updateActions(); }
+      }
+    }
+    function render() {
+      papers = libraryPapers();list.replaceChildren();
+      const localURLs = new Set(papers.map(p => libraryURLKey(p.url))), sharedURLs = new Set(publicBooks.map(p => libraryURLKey(p.url)));
+      const entries = [...papers.map(paper => ({paper,local:true})), ...publicBooks.filter(p => !localURLs.has(libraryURLKey(p.url))).map(paper => ({paper,local:false}))];
+      if (!entries.length) list.append(el('div', {class: 'ps-empty'}, el('strong', {text: '书架等你放下第一本书'}), el('p', {text: '可以添加想读的书籍链接，留着下次慢慢读。'})));
+      entries.forEach(({paper,local}) => {
+        const safe = validatePersonalURL(paper.url, {paper: true}), shared = sharedURLs.has(libraryURLKey(paper.url));
         const actions = el('div', {class: 'ps-actions'}, button('小窗阅读', () => openReader(paper), 'ps-primary'));
         if (safe) actions.append(link('新标签页 ↗', safe));
-        actions.append(button('编辑', () => { const current = libraryPapers().find(p => p.id === paper.id); if (!current) { render(); return; } editing = current.id; title.value = current.title; url.value = current.url; submit.textContent = '保存修改'; cancel.hidden = false; form.closest('details').open = true; title.focus(); }), button('移除', () => { papers = libraryPapers().filter(p => p.id !== paper.id); patch({papers}); windows.get(`reader:${paper.id}`)?.close(); if (editing === paper.id) reset(); render(); }, 'ps-quiet'));
-        list.append(el('article', {class: 'ps-paper'}, el('span', {class: 'ps-book-mark', 'aria-hidden': 'true', text: '≡'}), el('div', {class: 'ps-paper-info'}, el('h3', {text: paper.title || '未命名书籍', 'data-i18n-skip': isBundledBook(paper.url) ? null : ''}), el('p', {text: isBundledBook(paper.url) ? '公版原著 · 英文全文' : paper.url}), actions)));
+        if (local) {
+          if (configured && !shared) { const share = button(publishing ? '正在分享…' : '分享给朋友', () => sharePaper(paper), 'ps-share-book');share.disabled = !canShare();actions.append(share); }
+          const edit = button(shared ? '编辑本地副本' : '编辑', () => { const current = libraryPapers().find(p => p.id === paper.id);if (!current) { render();return; }editing = current.id;title.value = current.title;url.value = current.url;submit.textContent = '保存修改';cancel.hidden = false;message.textContent = '编辑只修改自己的书架，不会修改公共书架。';form.closest('details').open = true;updateActions();title.focus(); });
+          const remove = button(shared ? '移除本地副本' : '移除', () => { papers = libraryPapers().filter(p => p.id !== paper.id);patch({papers});windows.get(`reader:${paper.id}`)?.close();if (editing === paper.id) reset();render(); }, 'ps-quiet');
+          edit.disabled = publishing;remove.disabled = publishing;actions.append(edit,remove);
+        }
+        const name = el('div', {class:'ps-book-heading'}, el('h3', {text: paper.title || '未命名书籍','data-i18n-skip': isBundledBook(paper.url) ? null : ''}));
+        if (shared) name.append(el('span', {class:'ps-shared-book-badge',text:'已分享'}));
+        list.append(el('article', {class:'ps-paper','data-book-id':paper.id,'data-shared':String(shared)}, el('span', {class:'ps-book-mark','aria-hidden':'true',text:'≡'}), el('div', {class:'ps-paper-info'}, name, el('p', {text:isBundledBook(paper.url) ? '公版原著 · 英文全文' : paper.url,'data-i18n-skip':isBundledBook(paper.url) ? null : ''}),actions)));
       });
+      updateActions();
     }
-    win.content.append(list, el('details', {class: 'ps-add-paper', open: !papers.length}, el('summary', {text: '添加 / 编辑书籍'}), form));
-    win.refresh = render;
-    render();
+    win.content.append(el('p', {class:'ps-hint',text:configured ? '公共书架的书，来玩的朋友都能看到；只有点击分享的书才会公开。' : '屋主的新书会出现在这里；你添加或移除的书只影响自己的书架。'}),el('div', {class:'ps-library-sync'},status,refresh),list,el('details', {class:'ps-add-paper',open:!papers.length},el('summary', {text:'添加 / 编辑书籍'}),form));
+    win.refresh = refreshPublic;win.cleanup.push(() => { ++requestVersion; });
+    refreshPublic();
   }
 
   function database() {

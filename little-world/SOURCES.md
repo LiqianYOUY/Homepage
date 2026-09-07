@@ -74,7 +74,7 @@ v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审
 
 钢琴声音由 Web Audio 合成，没有新增外部音频。升降桌、人体工学椅、沙袋沙发、儿童床、洗漱用品和窗帘均由 Three.js 几何生成。全身镜使用实际房间的平面反射，算法参考 [Three.js Reflector](https://github.com/mrdoob/three.js/blob/r170/examples/jsm/objects/Reflector.js)，并限制分辨率和更新频率以控制移动端开销。
 
-儿童房两套床桌柜按用户的北侧横向、东侧纵向布局设计。结构参考 [IKEA SMÅSTAD 高架床、书桌与收纳官方产品页](https://www.ikea.com/au/en/p/smastad-loft-bed-frame-w-desk-and-storage-white-70454040/)及 [IKEA SMÅSTAD 选购指南](https://www.ikea.com/au/en/files/pdf/37/43/37438516/smastad_fy22_oct21.pdf)：端部收纳与床架整合、床下布置书桌、梯子可按空间选择左右侧。本项目重新绘制木色几何，按小屋空间调整尺寸、护栏、梯子和推拉柜门；没有下载厂商图片、模型或材质，也不是该产品的施工模型。
+儿童房按用户指定的新布局重新绘制：卫生间一侧墙边为上窄下宽的子母上下铺，窗边两套独立学习桌椅，另一侧实墙设置收纳柜、推拉衣柜和书柜，玩具与书包放在近门低柜。床架、护栏、梯子、书桌与柜体均使用本地 Three.js 几何生成，没有下载外部模型、图片或材质；尺寸用于小屋的视觉与交互表现。
 
 钢琴左右移动按钮、键盘焦点箭头及冰箱数字均由本项目代码生成。冰箱屏幕以几何笔画显示温度示意，已修正面朝房间时的水平镜像；无新增图片、字库或温度数据接口。
 
@@ -96,3 +96,13 @@ v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审
 | 麻将 | [Mahjong International League 网站提供的《A Guide to Mahjong》](https://mahjong-mil.org/wp-content/uploads/2024/08/A_GUIDE_TO_MAHJONG.pdf) | 牌张组成、吃碰杠胡及基础和牌结构；小屋使用无花、无起胡番数、不计分的家常规则 |
 
 以上资料作为规则参考，不表示本项目完整实现对应组织或平台的比赛规程。未打包规则原文或插图。
+
+
+儿童房毛绒玩具、书包与学习用品，玄关薄鞋柜及钥匙门卡钱包，主卧太空舱造型休憩椅和衣帽架均由本地 Three.js 几何生成，没有新增外部图片、模型或音频。门卡和书包标签使用不含个人信息的装饰图形；休憩椅提供照明交互。新增家具按恢复模型的实际位置检查门扇扫掠与行走通路。
+
+
+## 器具、耳机与公共书架
+
+茶杯、餐具、锅碗、厨具、室内静态绿植、书房降噪耳机与衣帽间矮岛台均由本地 Three.js 几何生成。国际象棋的实心棋形由本项目 SVG 绘制，不依赖字符字体。
+
+用户添加的 [The Adventures of Sherlock Holmes](https://www.gutenberg.org/cache/epub/1661/pg1661-images.html) 与 [Pride and Prejudice](https://www.gutenberg.org/cache/epub/1342/pg1342-images.html) 保留 Project Gutenberg 原站阅读链接；本轮未复制书籍正文或图片。主动分享的书名和链接保存在已有共享后台的书架表中。

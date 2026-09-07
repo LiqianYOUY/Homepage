@@ -1,3 +1,7 @@
+import {addTranslations} from './i18n.js?v=14';
+
+addTranslations({'儿童房衣柜':'Children’s wardrobe','拉开儿童房衣柜。':'Opening the children’s wardrobe.','收好儿童房衣柜。':'Closing the children’s wardrobe.'});
+
 // Local, reversible furnishing updates. Install before interactions and collision capture.
 // Coordinates follow the source apartment; they are scene units, not construction drawings.
 export function setupRoomRenovation({THREE,model,register=()=>{},getState=()=>({}),setState=()=>{},toast=()=>{}}){
@@ -73,97 +77,119 @@ export function setupRoomRenovation({THREE,model,register=()=>{},getState=()=>({
   const guestDesk=desk(root,'Bedroom 2 window writing desk',9.39,-4.78,1.18);
   const guestChair=chair(root,'Bedroom 2 writing chair',9.39,-4.23,sage);
 
-  // Two joined bed/desk/wardrobe systems follow the user's north/east layout.
-  // Structural reference: IKEA SMÅSTAD, whose end wardrobe supports a single loft bed,
-  // with a parallel under-bed desk and a ladder configurable to either side.
-  // https://www.ikea.com/au/en/p/smastad-loft-bed-frame-w-desk-and-storage-white-70454040/
+  // The bunk follows the bathroom wall; low window desks preserve the full glazed outlook.
+  // Keep the door's swept north-west corner clear, and place the storage row on the north wall.
   source.filter(o=>raw(o).startsWith('Bedroom 3 queen bed ')||raw(o).startsWith('Bedroom3 wardrobe ')).forEach(remove);
-  const childrenRoom=group('Children room · integrated loft study wardrobes'),loftBeds=[],childrenWardrobes=[],childrenLadders=[],childrenChairs=[];
-  const childReferences=['https://www.ikea.com/au/en/p/smastad-loft-bed-frame-w-desk-and-storage-white-70454040/','https://www.ikea.com/au/en/files/pdf/37/43/37438516/smastad_fy22_oct21.pdf'];
-  function integratedLoft({name,x,z,angle=0,colour,ladderSide,id,label}){
-    const g=group(name,childrenRoom);g.position.set(x,0,z);g.rotation.y=angle;
-    const length=2.03,depth=1.01,left=-length/2,right=length/2,front=depth/2,back=-depth/2;
-    // Shared posts and one continuous deck visibly join storage, study and sleeping space.
-    for(const xx of [left+.025,right-.025])for(const zz of [back+.025,front-.025])box(g,name+' continuous floor-to-guard post',.05,2.20,.05,oak,[xx,1.10,zz]);
-    box(g,name+' continuous load-bearing loft deck',length,.105,depth,oak,[0,1.6225,0]);
-    for(const zz of [back+.02,front-.02])box(g,name+' bed frame side apron',length,.16,.035,cream,[0,1.61,zz]);
-    box(g,name+' single mattress',1.90,.15,.91,ceramic,[0,1.76,0],'decor');
-    box(g,name+' soft fitted duvet',1.47,.045,.89,colour,[.205,1.856,0],'decor');
-    const pillow=ellipsoid(g,name+' soft bed pillow',[.18,.072,.33],ceramic,[-.64,1.854,0]);
-    box(g,name+' folded foot blanket',.30,.025,.91,sand,[.77,1.89,0],'decor');
-    // Long rails, closed end rails, and a proper opening only at the assigned ladder.
-    for(const yy of [1.99,2.155]){
-      box(g,name+' wall-side guard rail',length,.06,.032,cream,[0,yy,back]);
-      if(ladderSide==='front')for(const [a,b] of [[left,.17],[.65,right]])box(g,name+' inner guard beside ladder',b-a,.06,.032,cream,[(a+b)/2,yy,front]);
-      else box(g,name+' room-side guard rail',length,.06,.032,cream,[0,yy,front]);
-      box(g,name+' east foot guard rail',.032,.06,depth,cream,[right,yy,0]);
-      if(ladderSide==='west')for(const [a,b] of [[back,-.025],[.425,front]])box(g,name+' west guard beside ladder',.032,.06,b-a,cream,[left,yy,(a+b)/2]);
-      else box(g,name+' wardrobe-end guard rail',.032,.06,depth,cream,[left,yy,0]);
-    }
-    const wardrobe=group(name+' integrated end wardrobe',g),wardrobeX=left+.28;
-    wardrobe.position.set(wardrobeX,0,0);
-    for(const xx of [-.27,.27])box(wardrobe,name+' wardrobe bearing side',.02,1.57,.98,oak,[xx,.785,0]);
-    box(wardrobe,name+' wardrobe rear panel',.52,1.53,.018,cream,[0,.805,back+.025]);
-    for(const yy of [.09,1.555])box(wardrobe,name+' wardrobe fixed shelf',.52,.025,.96,oak,[0,yy,0]);
-    box(wardrobe,name+' wardrobe inset plinth',.50,.075,.90,charcoal,[0,.0375,0]);
-    box(wardrobe,name+' wardrobe folded shelf',.50,.025,.88,cream,[0,.44,-.015]);
-    for(let i=0;i<3;i++)box(wardrobe,name+' wardrobe folded cotton',.32,.053,.29,[sage,sand,blue][i],[0,.48+i*.053,.06],'decor');
-    rod(wardrobe,name+' wardrobe hanging rail',[-.24,1.35,.05],[.24,1.35,.05],.008,metal);
-    for(const [i,m] of [colour,clay].entries()){
-      const xx=(i-.5)*.21;rod(wardrobe,name+' clothes hanger',[xx-.08,1.21,.05],[xx,1.30,.05],.005,oak);rod(wardrobe,name+' clothes hanger',[xx,1.30,.05],[xx+.08,1.21,.05],.005,oak);
-      box(wardrobe,name+' hanging child shirt',.16,.35,.032,m,[xx,1.055,.05],'decor');
-      for(const side of [-1,1]){const sleeve=box(wardrobe,name+' child shirt sleeve',.065,.16,.032,m,[xx+side*.096,1.17,.05],'decor');sleeve.rotation.z=side*.25;}
-    }
-    // Sliding fronts stay inside the wardrobe's footprint, keeping the compact aisle usable.
-    const moving=group(name+' sliding wardrobe fronts',wardrobe);moving.userData.noMerge=true;
-    const panels=[];for(const side of [-1,1]){
-      const p=group(name+' wardrobe sliding leaf '+side,moving);p.position.set(side*.129,0,front+(side<0?.023:.002));
-      box(p,name+' wardrobe sliding door panel',.253,1.423,.019,cream,[0,.817,0]);
-      box(p,name+' wardrobe recessed oak pull',.011,.20,.012,oak,[side<0?-.079:.079,.84,.018],'decor');panels.push(p);
-    }
-    let amount=Number(getState()?.doors?.[id]??0);if(!Number.isFinite(amount))amount=0;amount=Math.max(0,Math.min(1,amount));
-    const record={id,label,kind:'cabinet',object:moving,anchor:g.localToWorld(new THREE.Vector3(wardrobeX,1.05,front+.08)),amount,target:amount,panels,hotspot:true};
-    record.apply=()=>{panels[0].position.x=-.129+record.amount*.245;moving.updateWorldMatrix(true,true);};
-    record.setOpen=(open,instant=false)=>{record.target=open?1:0;setState({doors:{...(getState()?.doors||{}),[id]:record.target}});if(instant){record.amount=record.target;record.apply();}};
-    record.click=()=>{record.setOpen(record.target<.5);toast(record.target?'拉开一体衣柜。':'收好一体衣柜。');};record.apply();register(record);childrenWardrobes.push(record);
-    // The long desk is fixed to the end wardrobe and the far bed post, rather than a separate table.
-    const deskLeft=left+.57,deskRight=right-.035,deskWidth=deskRight-deskLeft,deskX=(deskLeft+deskRight)/2,deskZ=back+.292;
-    box(g,name+' integrated long writing surface',deskWidth,.038,.55,oak,[deskX,.741,deskZ]);
-    box(g,name+' under-desk rear crossrail',deskWidth,.055,.028,cream,[deskX,.64,back+.036]);
-    box(g,name+' desk end support panel',.025,.716,.53,cream,[deskRight-.008,.358,deskZ]);
-    box(g,name+' shallow desk drawer',.37,.10,.41,cream,[deskRight-.205,.666,deskZ+.025]);
-    box(g,name+' desk drawer front',.38,.093,.018,colour,[deskRight-.205,.666,deskZ+.282]);
-    box(g,name+' desk drawer oak pull',.11,.012,.018,oak,[deskRight-.205,.666,deskZ+.298],'decor');
-    box(g,name+' shared desk pinboard',deskWidth-.09,.35,.018,colour,[deskX,1.13,back+.026],'decor');
-    box(g,name+' desk drawing pinned up',.15,.22,.004,ceramic,[deskX-.26,1.15,back+.038],'decor');
-    box(g,name+' desk shelf fixed to bed frame',deskWidth-.10,.025,.14,cream,[deskX,1.455,back+.088]);
-    for(let i=0;i<5;i++)box(g,name+' desk shelf book',.031,.13+(i%2)*.025,.09,[sage,blue,clay][i%3],[deskX+.08+i*.037,1.54,back+.089],'decor');
-    cylinder(g,name+' study lamp foot',.052,.013,charcoal,[deskLeft+.12,.768,back+.15]);
-    rod(g,name+' study lamp neck',[deskLeft+.12,.77,back+.15],[deskLeft+.12,.98,back+.15],.007,metal);
-    const shade=cylinder(g,name+' study lamp shade',.048,.067,ceramic,[deskLeft+.12,.992,back+.18],'decor',.031);shade.rotation.x=-.30;
-    box(g,name+' open study notebook',.18,.010,.14,ceramic,[deskX-.02,.765,deskZ+.075],'decor');
-    box(g,name+' notebook binding',.006,.013,.14,colour,[deskX-.02,.766,deskZ+.075],'decor');
-    const seat=chair(g,name+' tucked study chair',deskX-.13,front-.15,colour);childrenChairs.push(seat);
-    const ladder=group(name+' attached access ladder',g);const steps=6;
-    if(ladderSide==='west'){
-      for(const zz of [0,.40])rod(ladder,name+' angled ladder stile',[left-.205,.026,zz],[left-.006,1.88,zz],.019,oak,'furniture');
-      for(let i=0;i<steps;i++)box(ladder,name+' broad ladder tread',.085,.036,.44,cream,[left-.185+i*.029,.22+i*.275,.20]);
-    }else{
-      for(const xx of [.20,.62])rod(ladder,name+' angled ladder stile',[xx,.026,front+.225],[xx,1.88,front+.005],.019,oak,'furniture');
-      for(let i=0;i<steps;i++)box(ladder,name+' broad ladder tread',.45,.036,.085,cream,[.41,.22+i*.275,front+.20-i*.032]);
-    }
-    childrenLadders.push(ladder);loftBeds.push(g);return g;
+  const childrenRoom=group('Children room · family bunk and sunny study desks'),childrenWardrobes=[],childrenLadders=[],childrenChairs=[],childrenDesks=[];
+  const childrenBunkBed=group('Children bathroom-wall family bunk bed',childrenRoom);
+  childrenBunkBed.position.set(8.64,0,.725);childrenBunkBed.rotation.y=Math.PI/2;
+  const bunkLength=2.05,lowerWidth=1.38,upperWidth=1.00,upperZ=-.19;
+  // Narrow upper berth and wider lower berth share an oak frame, with no desks underneath.
+  const lowerDeck=box(childrenBunkBed,'Children bunk lower continuous bed frame',bunkLength,.105,lowerWidth,oak,[0,.2825,0]);
+  const upperDeck=box(childrenBunkBed,'Children bunk upper continuous bed frame',bunkLength,.10,upperWidth,oak,[0,1.565,upperZ]);
+  childrenBunkBed.lowerDeck=lowerDeck;childrenBunkBed.upperDeck=upperDeck;
+  for(const xx of [-.9975,.9975]){
+    for(const zz of [-.6625,.2825])box(childrenBunkBed,'Children bunk tall corner post',.055,2.21,.055,oak,[xx,1.105,zz]);
+    box(childrenBunkBed,'Children bunk lower outer corner post',.055,.68,.055,oak,[xx,.34,.6625]);
+    box(childrenBunkBed,'Children bunk lower end board',.03,.235,1.28,cream,[xx,.6325,0]);
+    for(const yy of [1.98,2.15])box(childrenBunkBed,'Children bunk upper end guard',.032,.065,.985,cream,[xx,yy,upperZ]);
   }
-  // The entrance stays west of the northern unit; the east unit leaves a narrow curtain pocket.
-  integratedLoft({name:'Children north integrated loft',x:10.245,z:-.81,colour:sage,ladderSide:'west',id:'children-wardrobe-north',label:'儿童房北侧一体衣柜'});
-  integratedLoft({name:'Children east integrated loft',x:11.33,z:.795,angle:-Math.PI/2,colour:blue,ladderSide:'front',id:'children-wardrobe-east',label:'儿童房东侧一体衣柜'});
-  const relaxation=group('Children room · southwest quiet corner',childrenRoom);
-  box(relaxation,'Children quiet corner woven rug',1.56,.016,1.00,sand,[9.57,.009,1.17],'rug');
-  const seatPad=ellipsoid(relaxation,'Children quiet corner soft floor cushion',[.36,.13,.32],sage,[9.25,.135,1.15],'furniture');
-  const lean=ellipsoid(relaxation,'Children quiet corner reclining back cushion',[.37,.24,.10],cream,[9.25,.33,1.51],'furniture');lean.rotation.x=-.25;
-  ellipsoid(relaxation,'Children quiet corner round floor pouf',[.23,.13,.23],clay,[9.90,.135,1.34],'furniture');
-  box(relaxation,'Children quiet corner picture book',.21,.018,.18,ceramic,[9.63,.029,.88],'decor');
-  box(relaxation,'Children quiet corner book cover',.205,.004,.175,blue,[9.63,.041,.88],'decor');
+  for(const zz of [-.676,.676])box(childrenBunkBed,'Children bunk lower upholstered side apron',2.015,.17,.028,cream,[0,.30,zz]);
+  for(const zz of [upperZ-upperWidth/2+.014,upperZ+upperWidth/2-.014])box(childrenBunkBed,'Children bunk upper ivory side apron',2.015,.15,.028,cream,[0,1.555,zz]);
+  childrenBunkBed.lowerMattress=box(childrenBunkBed,'Children bunk lower wide mattress',1.92,.15,1.28,ceramic,[0,.412,0],'decor');
+  childrenBunkBed.upperMattress=box(childrenBunkBed,'Children bunk upper single mattress',1.92,.145,.90,ceramic,[0,1.696,upperZ],'decor');
+  box(childrenBunkBed,'Children bunk lower sage duvet',1.44,.045,1.255,sage,[.23,.505,0],'decor');
+  box(childrenBunkBed,'Children bunk upper blue duvet',1.44,.037,.885,blue,[.23,1.787,upperZ],'decor');
+  for(const zz of [-.30,.30])ellipsoid(childrenBunkBed,'Children bunk lower soft pillow',[.20,.067,.24],ceramic,[-.675,.522,zz]);
+  ellipsoid(childrenBunkBed,'Children bunk upper soft pillow',[.20,.064,.32],ceramic,[-.675,1.798,upperZ]);
+  box(childrenBunkBed,'Children bunk lower folded foot blanket',.30,.027,1.275,sand,[.78,.540,0],'decor');
+  box(childrenBunkBed,'Children bunk upper folded foot blanket',.28,.021,.90,clay,[.79,1.816,upperZ],'decor');
+  // A generous ladder opening is at the southern end, away from the entrance passage.
+  for(const yy of [1.98,2.15]){
+    box(childrenBunkBed,'Children bunk continuous wall guard',2.025,.065,.032,cream,[0,yy,-.69]);
+    box(childrenBunkBed,'Children bunk room-side guard rail',1.41,.065,.032,cream,[.315,yy,.31]);
+    box(childrenBunkBed,'Children bunk guard beside ladder end',.125,.065,.032,cream,[-.9575,yy,.31]);
+  }
+  for(const xx of [-.19,.20,.60])box(childrenBunkBed,'Children bunk guard vertical spindle',.025,.285,.025,oak,[xx,2.06,.31]);
+  const ladder=group('Children bunk south-side inclined ladder',childrenBunkBed);
+  for(const xx of [-.875,-.435])rod(ladder,'Children bunk rounded ladder stile',[xx,.02,.845],[xx,1.95,.33],.020,oak,'furniture');
+  for(let i=0;i<6;i++){const y=.21+i*.283,z=.845-(y-.02)/1.93*.515;box(ladder,'Children bunk broad ladder tread',.47,.038,.10,cream,[-.655,y,z]);}
+  childrenLadders.push(ladder);childrenBunkBed.ladder=ladder;
+  // Inset lower drawers provide extra bedding storage without protruding into the aisle.
+  for(const xx of [-.48,.48]){
+    box(childrenBunkBed,'Children bunk inset bedding drawer',.91,.17,.46,cream,[xx,.128,.40]);
+    box(childrenBunkBed,'Children bunk drawer oak pull',.13,.018,.015,oak,[xx,.15,.638],'decor');
+  }
+
+  // Two independent child-sized desks sit side by side along the east window.
+  for(const [i,z] of [-.21,1.02].entries()){
+    const name='Children window study desk '+(i+1),g=group(name,childrenRoom),colour=i===0?sage:blue;
+    g.position.set(11.59,0,z);g.rotation.y=-Math.PI/2;
+    g.desktop=box(g,name+' rounded-edge writing surface',1.10,.04,.50,oak,[0,.73,0]);
+    for(const xx of [-.465,.465])for(const zz of [-.183,.183])box(g,name+' slim oak leg',.035,.71,.035,cream,[xx,.355,zz]);
+    box(g,name+' low rear frame rail',.97,.045,.025,cream,[0,.625,-.20]);
+    box(g,name+' shallow stationery drawer',.29,.09,.33,cream,[.375,.664,-.01]);
+    box(g,name+' drawer colour front',.30,.083,.02,colour,[.375,.664,.16]);
+    box(g,name+' small drawer pull',.10,.012,.018,oak,[.375,.67,.178],'decor');
+    g.notebook=box(g,name+' open study notebook',.18,.010,.14,ceramic,[-.045,.756,.047],'decor');
+    box(g,name+' notebook binding',.006,.013,.14,colour,[-.045,.757,.047],'decor');
+    cylinder(g,name+' study lamp foot',.045,.012,charcoal,[-.15,.756,-.18]);
+    rod(g,name+' study lamp neck',[-.15,.762,-.18],[-.15,.983,-.18],.006,metal);
+    const lamp=cylinder(g,name+' study lamp shade',.042,.058,ceramic,[-.15,.994,-.153],'decor',.029);lamp.rotation.x=-.30;
+    childrenDesks.push(g);
+    const seat=chair(childrenRoom,'Children window study chair '+(i+1),10.99,z,colour);seat.rotation.y=-Math.PI/2;childrenChairs.push(seat);
+  }
+
+  // Continuous wall storage: a low belongings cubby, a full-height sliding wardrobe, and books.
+  const childrenStorage=group('Children entrance toy and schoolbag cubby',childrenRoom),childrenDropZone=childrenStorage;
+  childrenStorage.position.set(9.76,0,-1.165);
+  for(const xx of [-.251,.251])box(childrenStorage,'Children entrance storage oak side',.018,.51,.48,oak,[xx,.275,0]);
+  box(childrenStorage,'Children entrance storage back',.484,.482,.014,cream,[0,.274,-.233]);
+  box(childrenStorage,'Children entrance storage recessed plinth',.47,.032,.41,charcoal,[0,.016,0]);
+  box(childrenStorage,'Children entrance storage cubby floor',.484,.016,.455,oak,[0,.037,0]);
+  box(childrenStorage,'Children entrance storage toy display top',.52,.025,.48,oak,[0,.5275,0]);
+  // Open front lets the schoolbag remain visible and easy to reach from the door.
+  const childrenBelongingAnchors={rabbit:{position:[-.13,.54,0],rotationY:0},bear:{position:[.13,.54,0],rotationY:0},backpack:{position:[0,.045,.02],rotationY:0}};
+
+  const wardrobe=group('Children north-wall sliding wardrobe',childrenRoom);wardrobe.position.set(10.56,0,-1.165);
+  for(const xx of [-.53,.53])box(wardrobe,'Children wardrobe full-height side',.02,2.22,.48,oak,[xx,1.16,0]);
+  box(wardrobe,'Children wardrobe recessed plinth',1.025,.085,.43,charcoal,[0,.0425,0]);
+  box(wardrobe,'Children wardrobe back',1.04,2.16,.014,cream,[0,1.17,-.233]);
+  for(const yy of [.105,.52,1.78,2.26])box(wardrobe,'Children wardrobe fixed shelf',1.04,.022,.432,oak,[0,yy,-.011]);
+  box(wardrobe,'Children wardrobe interior division',.018,1.237,.43,cream,[.14,1.15,-.01]);
+  rod(wardrobe,'Children wardrobe hanging rail',[-.485,1.63,0],[.102,1.63,0],.009,metal);
+  for(const [i,m] of [sage,blue,clay].entries()){
+    const xx=-.365+i*.17;rod(wardrobe,'Children wardrobe oak hanger',[xx-.085,1.49,.02],[xx,1.58,.02],.005,oak);rod(wardrobe,'Children wardrobe oak hanger',[xx,1.58,.02],[xx+.085,1.49,.02],.005,oak);
+    box(wardrobe,'Children wardrobe hanging cotton shirt',.15,.41,.035,m,[xx,1.275,.02],'decor');
+    for(const side of [-1,1]){const sleeve=box(wardrobe,'Children wardrobe short shirt sleeve',.06,.145,.033,m,[xx+side*.087,1.423,.02],'decor');sleeve.rotation.z=side*.28;}
+  }
+  for(const yy of [.91,1.31])box(wardrobe,'Children wardrobe small folded shelf',.365,.020,.43,cream,[.3375,yy,0]);
+  for(const [j,y] of [.58,.97,1.37].entries())for(let i=0;i<2;i++)box(wardrobe,'Children wardrobe folded cotton stack',.29,.05,.29,[sage,cream,blue][j],[.335,y+i*.052,.04],'decor');
+  for(const x of [-.27,.27])box(wardrobe,'Children wardrobe upper storage box',.42,.26,.32,[sand,blue][x<0?0:1],[x,1.924,.012],'decor');
+  const moving=group('Children wardrobe sliding fronts',wardrobe);moving.userData.noMerge=true;const panels=[];
+  for(const side of [-1,1]){
+    const p=group('Children wardrobe sliding leaf '+side,moving);p.position.set(side*.255,0,side<0?.255:.228);
+    box(p,'Children wardrobe sliding ivory door',.525,2.095,.022,cream,[0,1.1775,0]);
+    box(p,'Children wardrobe recessed oak pull',.014,.24,.002,oak,[side<0?-.19:.19,1.16,.0116],'decor');panels.push(p);
+  }
+  const id='children-wall-wardrobe';let amount=Number(getState()?.doors?.[id]??0);if(!Number.isFinite(amount))amount=0;amount=Math.max(0,Math.min(1,amount));
+  const wardrobeRecord={id,label:'儿童房衣柜',kind:'cabinet',object:wardrobe,moving,anchor:wardrobe.localToWorld(new THREE.Vector3(0,1.23,.31)),amount,target:amount,panels,hotspot:true};
+  wardrobeRecord.apply=()=>{panels[0].position.x=-.255+wardrobeRecord.amount*.505;moving.updateWorldMatrix(true,true);};
+  wardrobeRecord.setOpen=(open,instant=false)=>{wardrobeRecord.target=open?1:0;setState({doors:{...(getState()?.doors||{}),[id]:wardrobeRecord.target}});if(instant){wardrobeRecord.amount=wardrobeRecord.target;wardrobeRecord.apply();}};
+  wardrobeRecord.click=()=>{wardrobeRecord.setOpen(wardrobeRecord.target<.5);toast(wardrobeRecord.target?'拉开儿童房衣柜。':'收好儿童房衣柜。');};wardrobeRecord.apply();register(wardrobeRecord);childrenWardrobes.push(wardrobeRecord);
+
+  const childrenBookcase=group('Children north-wall open bookcase',childrenRoom);childrenBookcase.position.set(11.32,0,-1.165);
+  for(const xx of [-.21,.21])box(childrenBookcase,'Children bookcase oak side',.02,2.22,.48,oak,[xx,1.16,0]);
+  box(childrenBookcase,'Children bookcase soft blue back',.40,2.16,.014,blue,[0,1.17,-.233]);
+  box(childrenBookcase,'Children bookcase recessed plinth',.39,.085,.43,charcoal,[0,.0425,0]);
+  for(const y of [.105,.55,1.00,1.45,1.90,2.26])box(childrenBookcase,'Children bookcase oak shelf',.40,.022,.455,oak,[0,y,-.004]);
+  for(let shelf=0;shelf<4;shelf++)for(let i=0;i<6;i++){
+    const h=.20+(i%3)*.035,w=.037,x=-.139+i*.052,y=.55+shelf*.45+.011;
+    box(childrenBookcase,'Children bookcase upright book',w,h,.145,[sage,ceramic,clay,blue][(i+shelf)%4],[x,y+h/2,.075],'decor');
+    for(const dy of [.032,h-.034])box(childrenBookcase,'Children bookcase book spine stripe',w*.68,.008,.002,sand,[x,y+dy,.1485],'decor');
+  }
+  box(childrenBookcase,'Children bookcase low woven storage basket',.31,.27,.34,sand,[0,.251,.025],'decor');
+  box(childrenBookcase,'Children bookcase basket fabric pull',.09,.025,.009,cream,[0,.30,.200],'decor');
 
   // Toiletries sit on the existing stone surfaces, away from the basin openings.
   const bathrooms=[];
@@ -225,6 +251,6 @@ export function setupRoomRenovation({THREE,model,register=()=>{},getState=()=>({
     record.apply();curtains.push(record);register(record);
   }
   model.updateWorldMatrix(true,true);
-  const audit={sourceGLBUnchanged:true,removedMeshes:removed.length,removedNames:removed,removedWintergardenChairs:4,recliningBeanbags:loungers.map(bounds),childrenRoom:'Bedroom 3, nearest the entrance',loftBeds:loftBeds.map(bounds),childrenLayout:{orientation:['north wall east-west','east wall north-south'],integratedWardrobes:childrenWardrobes.length,removedIndependentWardrobe:true,deskWidthsM:[1.425,1.425],ladders:childrenLadders.map(bounds),relaxation:bounds(relaxation),references:childReferences},guestDesk:bounds(guestDesk),guestChair:bounds(guestChair),toiletrySets:bathrooms.length,bedroomCurtainTracks:curtains.length,bedroomCurtainPanels:curtains.length*2,wallRepairs:['Bedroom 2 north facade joint','Bedroom 2 partition extended to east glazing','Bedroom 3 south boundary extended to east glazing'],removedGlassSideWall:'Bedroom3 east return',collision:{solidFurnitureCategory:'furniture',wallCategories:['wall','upperWall'],curtainsAreDecorative:true}};
-  return {root,curtains,loftBeds,childrenWardrobes,childrenLadders,childrenChairs,relaxation,loungers,audit,update(dt){for(const wardrobe of childrenWardrobes){if(Math.abs(wardrobe.amount-wardrobe.target)<.0001)continue;wardrobe.amount+=(wardrobe.target-wardrobe.amount)*(1-Math.exp(-dt*6));if(Math.abs(wardrobe.amount-wardrobe.target)<.0002)wardrobe.amount=wardrobe.target;wardrobe.apply();}for(const c of curtains){if(Math.abs(c.amount-c.target)<.0001)continue;c.amount+=(c.target-c.amount)*(1-Math.exp(-dt*4));if(Math.abs(c.amount-c.target)<.0002)c.amount=c.target;c.apply();}},dispose(){root.removeFromParent();for(const [o,s] of originals){s.parent.add(o);o.position.copy(s.position);o.scale.copy(s.scale);o.quaternion.copy(s.quaternion);}geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+  const audit={sourceGLBUnchanged:true,removedMeshes:removed.length,removedNames:removed,removedWintergardenChairs:4,recliningBeanbags:loungers.map(bounds),childrenRoom:'Bedroom 3, nearest the entrance',childrenBunkBed:bounds(childrenBunkBed),childrenLayout:{bedWall:'west · shared bathroom wall',bedOrientation:'north-south',lowerMattressWidthM:1.28,upperMattressWidthM:.90,windowDesks:childrenDesks.map(bounds),deskWidthsM:[1.10,1.10],storageWall:'north wall',wardrobes:childrenWardrobes.length,wardrobe:bounds(wardrobe),toyStorage:bounds(childrenStorage),bookcase:bounds(childrenBookcase),ladders:childrenLadders.map(bounds),removedIndependentWardrobe:true,removedIntegratedLofts:true,windowTallFurniture:false},guestDesk:bounds(guestDesk),guestChair:bounds(guestChair),toiletrySets:bathrooms.length,bedroomCurtainTracks:curtains.length,bedroomCurtainPanels:curtains.length*2,wallRepairs:['Bedroom 2 north facade joint','Bedroom 2 partition extended to east glazing','Bedroom 3 south boundary extended to east glazing'],removedGlassSideWall:'Bedroom3 east return',collision:{solidFurnitureCategory:'furniture',wallCategories:['wall','upperWall'],curtainsAreDecorative:true}};
+  return {root,curtains,childrenRoom,childrenBunkBed,childrenDesks,childrenWardrobes,childrenStorage,childrenBookcase,childrenChairs,childrenLadders,childrenDropZone,childrenBelongingAnchors,loungers,audit,update(dt){for(const wardrobe of childrenWardrobes){if(Math.abs(wardrobe.amount-wardrobe.target)<.0001)continue;wardrobe.amount+=(wardrobe.target-wardrobe.amount)*(1-Math.exp(-dt*6));if(Math.abs(wardrobe.amount-wardrobe.target)<.0002)wardrobe.amount=wardrobe.target;wardrobe.apply();}for(const c of curtains){if(Math.abs(c.amount-c.target)<.0001)continue;c.amount+=(c.target-c.amount)*(1-Math.exp(-dt*4));if(Math.abs(c.amount-c.target)<.0002)c.amount=c.target;c.apply();}},dispose(){root.removeFromParent();for(const [o,s] of originals){s.parent.add(o);o.position.copy(s.position);o.scale.copy(s.scale);o.quaternion.copy(s.quaternion);}geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }
