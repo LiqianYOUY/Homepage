@@ -3,7 +3,7 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   const S=.022381665533985514,P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S),raw=o=>o.userData?.name||o.name||'';
   const all=[];model.updateWorldMatrix(true,true);model.traverse(o=>{if(o.isMesh)all.push(o);});
   const find=n=>all.find(o=>raw(o)===n),starts=p=>all.filter(o=>raw(o).startsWith(p));
-  const originals=new Map(),geometries=new Set(),materials=new Set(),roots=[],doors=[],colliderRoots=[],cabinets=[],repairs=[],appliances=[];
+  const originals=new Map(),geometries=new Set(),materials=new Set(),roots=[],doors=[],colliderRoots=[],cabinets=[],repairs=[],appliances=[],mirrors=[];
   let disposed=false,pendingDoor=null;
   const remember=o=>{if(!originals.has(o))originals.set(o,{parent:o.parent,position:o.position.clone(),rotation:o.quaternion.clone(),scale:o.scale.clone(),visible:o.visible});};
   const remove=o=>{remember(o);o.removeFromParent();};
@@ -48,7 +48,8 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   const entryTrim=group('V7 fixed sidelight head closure');entryTrim.position.copy(P(1105.5,579,2.19));box(entryTrim,'V7 fixed sidelight head closure',17*S,.02,.065,oak,'door');
   // Keep foliage to the dressing side of the repaired bathroom wall.
   const plantParts=starts('Master plant');for(const o of plantParts){remember(o);o.position.x-=8*S;}
-  for(const o of starts('Bedroom2 plant')){remember(o);o.position.x+=24*S;}
+  // Keep the floor plant beside the new window desk and clear of its chair.
+  for(const o of starts('Bedroom2 plant')){remember(o);o.position.x+=68*S;o.position.z-=4*S;}
   // A compact bedside pedestal leaves a real opening arc for bedroom 3's south wardrobe leaf.
   for(const o of starts('Bedroom 3 queen bed ')){if(!/bedside|lamp /.test(raw(o))||o.position.x>=P(1382,0).x)continue;remember(o);o.position.x=P(1329.5,0).x;o.position.z=P(0,588).z;if(raw(o).endsWith('lamp base'))o.position.y=.4625;if(raw(o).endsWith('bedside')){o.scale.x*=.11/.25;o.scale.z*=.11/.25;}}
 
@@ -72,7 +73,70 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
     d.drag=(dx,dy,ctx={})=>{if(ctx.phase==='start'){pendingDoor=null;d.dragStart=d.amount;const changed={};for(const other of doors)if(other!==d&&other.family===family&&(other.target>.001||other.amount>.001)){other.target=0;changed[other.id]=0;}if(Object.keys(changed).length)setState({doors:{...(getState()?.doors||{}),...changed}});return;}if(ctx.phase==='move'&&!doors.some(other=>other!==d&&other.family===family&&other.amount>.01))d.target=Math.max(0,Math.min(d.maxAllowed,(d.dragStart??d.amount)+dx/150));if(ctx.phase==='end')persistDoor(d);};
     d.setOpen=(amount,instant=false)=>{d.target=Math.max(0,Math.min(1,amount));if(instant)d.apply(d.target);};d.apply(0);doors.push(d);colliderRoots.push(pivot);register(d);return d;
   }
-  function cabinet({name,id,x1,z1,x2,z2,height=2.45,front='south',count=2,wardrobe=false,lower=0,faceTop=null,content='kitchen',doorBottom=null,doorHinges=null}){
+  function liveMirror(parent,width,height,position){
+    // Planar reflected-camera rendering follows Three's Reflector approach:
+    // https://github.com/mrdoob/three.js/blob/r170/examples/jsm/objects/Reflector.js
+    // One small, throttled target is allocated only when the real mirror first becomes visible.
+    const textureMatrix=new THREE.Matrix4(),virtualCamera=new THREE.PerspectiveCamera();
+    const shader=new THREE.ShaderMaterial({name:'Wardrobe live planar mirror',uniforms:{reflection:{value:null},textureMatrix:{value:textureMatrix},ready:{value:0}},vertexShader:`
+      uniform mat4 textureMatrix;
+      varying vec4 reflectedUv;
+      void main(){
+        reflectedUv=textureMatrix*vec4(position,1.0);
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+      }`,fragmentShader:`
+      uniform sampler2D reflection;
+      uniform float ready;
+      varying vec4 reflectedUv;
+      void main(){
+        vec3 reflected=texture2DProj(reflection,reflectedUv).rgb;
+        gl_FragColor=vec4(mix(vec3(0.54,0.61,0.60),reflected*vec3(0.96,0.985,0.98),ready),1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`});materials.add(shader);
+    const surface=mesh(new THREE.PlaneGeometry(width,height),shader,parent,'Master wardrobe full-length floor mirror','decor');surface.position.copy(position);surface.castShadow=false;surface.receiveShadow=false;surface.userData.noMerge=true;
+    const mirrorPoint=new THREE.Vector3(),eye=new THREE.Vector3(),normal=new THREE.Vector3(),rotation=new THREE.Matrix4(),view=new THREE.Vector3(),look=new THREE.Vector3(),reflectedLook=new THREE.Vector3();
+    const mirrorPlane=new THREE.Plane(),clip=new THREE.Vector4(),corner=new THREE.Vector4(),viewport=new THREE.Vector4();
+    const info={object:surface,type:'live-planar',renderCount:0,width:0,height:0,maxHz:0,target:null,lastUpdate:-Infinity};mirrors.push(info);
+    surface.onBeforeRender=(renderer,renderScene,camera)=>{
+      if(disposed||camera===virtualCamera)return;
+      mirrorPoint.setFromMatrixPosition(surface.matrixWorld);eye.setFromMatrixPosition(camera.matrixWorld);
+      rotation.extractRotation(surface.matrixWorld);normal.set(0,0,1).applyMatrix4(rotation).normalize();
+      view.subVectors(mirrorPoint,eye);if(view.dot(normal)>=0)return;
+      const compact=(renderer.domElement.clientWidth||renderer.domElement.width/renderer.getPixelRatio())<760;
+      const interval=compact?160:100,now=globalThis.performance?.now?.()??Date.now();
+      if(now-info.lastUpdate<interval)return;
+      if(!info.target){
+        info.width=compact?256:512;info.height=compact?512:1024;info.maxHz=1000/interval;
+        const type=renderer.extensions.has('EXT_color_buffer_float')?THREE.HalfFloatType:THREE.UnsignedByteType;
+        info.target=new THREE.WebGLRenderTarget(info.width,info.height,{type,depthBuffer:true,stencilBuffer:false,samples:0});
+        info.target.texture.name='Wardrobe mirror live room reflection';info.target.texture.generateMipmaps=false;shader.uniforms.reflection.value=info.target.texture;
+      }
+      // Mirror both the eye and its forward target around the moving wardrobe door plane.
+      virtualCamera.position.copy(view.reflect(normal).negate().add(mirrorPoint));
+      rotation.extractRotation(camera.matrixWorld);look.set(0,0,-1).applyMatrix4(rotation).add(eye);
+      reflectedLook.subVectors(mirrorPoint,look).reflect(normal).negate().add(mirrorPoint);
+      virtualCamera.up.set(0,1,0).applyMatrix4(rotation).reflect(normal);virtualCamera.lookAt(reflectedLook);
+      virtualCamera.near=camera.near;virtualCamera.far=camera.far;virtualCamera.layers.mask=camera.layers.mask;virtualCamera.updateMatrixWorld();virtualCamera.projectionMatrix.copy(camera.projectionMatrix);
+      textureMatrix.set(.5,0,0,.5,0,.5,0,.5,0,0,.5,.5,0,0,0,1).multiply(virtualCamera.projectionMatrix).multiply(virtualCamera.matrixWorldInverse).multiply(surface.matrixWorld);
+      // Oblique near clipping keeps the cabinet and space behind the glass out of its reflection.
+      mirrorPlane.setFromNormalAndCoplanarPoint(normal,mirrorPoint).applyMatrix4(virtualCamera.matrixWorldInverse);
+      clip.set(mirrorPlane.normal.x,mirrorPlane.normal.y,mirrorPlane.normal.z,mirrorPlane.constant);
+      const p=virtualCamera.projectionMatrix.elements;corner.set((Math.sign(clip.x)+p[8])/p[0],(Math.sign(clip.y)+p[9])/p[5],-1,(1+p[10])/p[14]);
+      clip.multiplyScalar(2/clip.dot(corner));p[2]=clip.x;p[6]=clip.y;p[10]=clip.z+1-.003;p[14]=clip.w;
+      virtualCamera.projectionMatrixInverse.copy(virtualCamera.projectionMatrix).invert();
+      const previousTarget=renderer.getRenderTarget(),previousXR=renderer.xr.enabled,previousShadowUpdate=renderer.shadowMap.autoUpdate;renderer.getViewport(viewport);
+      surface.visible=false;renderer.xr.enabled=false;renderer.shadowMap.autoUpdate=false;
+      try{
+        renderer.setRenderTarget(info.target);renderer.state.buffers.depth.setMask(true);if(!renderer.autoClear)renderer.clear();renderer.render(renderScene,virtualCamera);
+        shader.uniforms.ready.value=1;info.renderCount++;info.lastUpdate=now;
+      }finally{
+        renderer.xr.enabled=previousXR;renderer.shadowMap.autoUpdate=previousShadowUpdate;renderer.setRenderTarget(previousTarget);renderer.setViewport(viewport);surface.visible=true;
+      }
+    };
+    return surface;
+  }
+  function cabinet({name,id,x1,z1,x2,z2,height=2.45,front='south',count=2,wardrobe=false,lower=0,faceTop=null,content='kitchen',doorBottom=null,doorHinges=null,mirrorBay=null}){
     const body=group('V7 '+name);body.userData.category='furniture';const w=(front==='east'||front==='west'?z2-z1:x2-x1)*S,d=(front==='east'||front==='west'?x2-x1:z2-z1)*S;
     body.position.copy(P((x1+x2)/2,(z1+z2)/2));body.rotation.y={south:0,north:Math.PI,east:Math.PI/2,west:-Math.PI/2}[front];
     const t=.018,base=lower+.10,top=height-.025,innerW=w-2*t;
@@ -87,7 +151,14 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
     const c={name,id,body,width:w,depth:d,bottom:lower,height,front,plan:[x1,z1,x2,z2],doors:[]};cabinets.push(c);
     for(let i=0;i<count;i++){
       const x=-clearW/2+bay*(i+.5),label=name+(count>1?' '+(i+1):'');
-      c.doors.push(addDoor({id:id+'-'+i,label,owner:body,centerX:x,width:bay-.006,bottom:doorBottom??base+.012,top:faceTop??height-.04,front:d/2+.022,hinge:doorHinges?.[i]||(i%2?'right':'left'),family:wardrobe?id:'kitchen'}));
+      const door=addDoor({id:id+'-'+i,label,owner:body,centerX:x,width:bay-.006,bottom:doorBottom??base+.012,top:faceTop??height-.04,front:d/2+.022,hinge:doorHinges?.[i]||(i%2?'right':'left'),family:wardrobe?id:'kitchen'});c.doors.push(door);
+      if(i===mirrorBay){
+        // The real reflected room travels with the middle wardrobe leaf as it opens.
+        const mirror=liveMirror(door.object,bay-.045,height-.145,new THREE.Vector3(door.sign*(bay-.006)/2,height/2+.015,.023));
+        const edgeMat=material('V8 mirror silver edging',{color:0xc1c4bb,metalness:.85,roughness:.19});
+        for(const edgeX of [-1,1]){const edge=box(door.object,'Master mirror slender full-height edge',.007,height-.13,.012,edgeMat);edge.position.set(door.sign*(bay-.006)/2+edgeX*(bay-.037)/2,height/2+.015,.018);edge.userData.category='decor';}
+        door.mirror=mirror;
+      }
       if(wardrobe){if(i%2===0)hanging(body,name,x,bay-.03,d,height);else folded(body,name,x,bay-.03,d,height,base);}
       else kitchenContents(body,name,x,bay-.04,d,height,base,content,i);
     }
@@ -199,11 +270,10 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
     }
   }
 
-  // Five wardrobes: backs contact the actual partitions/baseboard line, with real interiors.
+  // The dressing-room south bank is continuous: three leaves, with a full-length centre mirror.
   const wardrobeSpecs=[
     {name:'主卧长衣柜',id:'wardrobe-master-north',prefix:'Master wardrobe north',x1:630,z1:553.00,x2:738,z2:578.00,height:2.45,front:'south',count:4},
-    {name:'主卧左衣柜',id:'wardrobe-master-west',prefix:'Master wardrobe south west',x1:632,z1:710,x2:681,z2:738.05,height:2.45,front:'north',count:2},
-    {name:'主卧右衣柜',id:'wardrobe-master-east',prefix:'Master wardrobe south east',x1:736,z1:710,x2:786,z2:738.05,height:2.45,front:'north',count:2},
+    {name:'主卧联排衣柜',id:'wardrobe-master-south',prefix:'Master wardrobe south',x1:632,z1:710,x2:786,z2:738.05,height:2.45,front:'north',count:3,mirrorBay:1,doorBottom:.065},
     {name:'次卧二衣柜',id:'wardrobe-bedroom2',prefix:'Bedroom2 wardrobe',x1:1281,z1:320.30,x2:1311,z2:389,height:2.40,front:'east',count:3},
     {name:'次卧三衣柜',id:'wardrobe-bedroom3',prefix:'Bedroom3 wardrobe',x1:1288,z1:495,x2:1317,z2:583,height:2.40,front:'east',count:4,doorHinges:['right','right','left','right']}
   ];
@@ -301,6 +371,7 @@ export function setupCabinetryV7({THREE,scene,model,register=()=>{},getState=()=
   }
   function reset(){pendingDoor=null;for(const d of doors){d.target=0;d.apply(0);}const values={...(getState()?.doors||{})};for(const d of doors)values[d.id]=0;setState({doors:values});}
   const audit={sourceGLBUnchanged:true,wardrobes:wardrobeSpecs.map(s=>({name:s.name,boundsPlan:[s.x1,s.z1,s.x2,s.z2]})),repairs,cabinetCount:cabinets.length,interactiveDoors:doors.length,contents:['linen dresses','evening gowns','collared shirts','tailored suits with trousers','oil and seasoning bottles','dry goods jars','ceramic mugs and tableware','fork knife spoon trays','biscuits and snack packets'],doorSweep:sweep,appliances:['countertop microwave','rice cooker','hob pot','frying pan','serving bowls','utensil crock'],notes:['All geometry is conceptual and follows the recovered plan; no construction dimensions are implied.','Wardrobe doors use 60mm side stiles so open handles remain within adjacent-wall clearances.','Opposing kitchen doors open sequentially to preserve hinge clearance.','Fixed cabinet cases and contents live in model for pre-optimization collision capture; moving leaves remain outside static batching.']};
-  function dispose(){if(disposed)return;disposed=true;for(const [o,s] of originals){s.parent?.add(o);o.position.copy(s.position);o.quaternion.copy(s.rotation);o.scale.copy(s.scale);o.visible=s.visible;}roots.forEach(r=>r.removeFromParent());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
-  return {update,colliderRoots,doors,cabinets,repairs,appliances,audit,reset,dispose};
+  audit.mirror={type:'live-planar',count:mirrors.length,mobileTarget:[256,512],desktopTarget:[512,1024],mobileMaxHz:6.25,desktopMaxHz:10,shadowMapsReused:true};
+  function dispose(){if(disposed)return;disposed=true;for(const [o,s] of originals){s.parent?.add(o);o.position.copy(s.position);o.quaternion.copy(s.rotation);o.scale.copy(s.scale);o.visible=s.visible;}mirrors.forEach(m=>m.target?.dispose());roots.forEach(r=>r.removeFromParent());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
+  return {update,colliderRoots,doors,cabinets,repairs,appliances,mirrors,audit,reset,dispose};
 }

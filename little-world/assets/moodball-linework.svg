@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <title>MoodBall — interaction prototype line drawing</title>
+  <desc>A woven spherical MoodBall with a visible circuit, softly coloured light nodes and a trailing power cable.</desc>
+  <defs>
+    <clipPath id="sphere"><circle cx="394" cy="285" r="192"/></clipPath>
+    <style>
+      .outline{stroke:#202b33;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+      .thin{stroke:#647784;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+      .hidden{stroke:#8c9aa3;stroke-width:1.2;stroke-dasharray:7 6}
+      .center{stroke:#b05555;stroke-width:1;stroke-dasharray:10 4 2 4}
+      .metal{fill:#d8e0e5;stroke:#303c45;stroke-width:1.6}
+      .blue{fill:#9edcf2;fill-opacity:.55;stroke:#3b9fc5;stroke-width:1.5}
+      .yellow{fill:#ffe8a3;fill-opacity:.65;stroke:#9c7720;stroke-width:1.6}
+      .purple{fill:#d9c7ee;fill-opacity:.65;stroke:#654c82;stroke-width:1.6}
+    </style>
+  </defs>
+  <path d="M128 503H673" class="hidden"/>
+  <path d="M394 62V504M167 285H620" class="center"/>
+  <circle cx="394" cy="285" r="192" fill="#eef3f5" fill-opacity=".4"/>
+  <g clip-path="url(#sphere)">
+    <ellipse cx="394" cy="285" rx="99" ry="192" class="thin"/>
+    <ellipse cx="394" cy="285" rx="166" ry="192" class="thin"/>
+    <ellipse cx="394" cy="285" rx="192" ry="74" class="thin"/>
+    <ellipse cx="394" cy="285" rx="192" ry="143" class="thin"/>
+    <ellipse cx="394" cy="285" rx="192" ry="53" transform="rotate(-42 394 285)" class="thin"/>
+    <ellipse cx="394" cy="285" rx="192" ry="102" transform="rotate(42 394 285)" class="thin"/>
+    <path d="M284 131 535 158 241 396 523 421 313 111 205 284 576 347 419 96 563 198 292 449 218 207 479 115 586 291 395 477 249 161 527 437 566 223 228 368 461 463 339 101 203 320 496 122 564 379 227 227 352 472 582 252 334 103 238 397 550 172 486 453 207 251 477 112" class="outline" opacity=".76"/>
+    <path d="M233 179 460 449 583 301 309 117 525 408 207 296 453 107 294 447 575 232 345 474 223 197 577 351 397 94 221 366 550 171 279 446 583 275 307 115" class="thin"/>
+    <path d="M263 300 320 228 396 247 451 189 521 255 476 341 398 320 335 384 273 345Z" class="hidden"/>
+    <path d="M398 320V392M374 403 316 325 320 228M415 403 476 341" stroke="#9c7720" stroke-width="1.5"/>
+    <rect x="370" y="393" width="55" height="33" rx="4" class="yellow"/>
+    <rect x="384" y="402" width="20" height="15" rx="2" class="metal"/>
+    <path d="M378 400V419M413 400V419M387 389V393M398 389V393M409 389V393" class="thin"/>
+    <circle cx="320" cy="228" r="10" class="blue"/>
+    <circle cx="451" cy="189" r="9" class="yellow"/>
+    <circle cx="521" cy="255" r="9" class="blue"/>
+    <circle cx="476" cy="341" r="11" class="purple"/>
+    <circle cx="335" cy="384" r="10" class="yellow"/>
+    <circle cx="263" cy="300" r="9" class="purple"/>
+    <circle cx="398" cy="320" r="11" class="blue"/>
+    <circle cx="396" cy="247" r="6" class="purple"/>
+    <circle cx="273" cy="345" r="6" class="yellow"/>
+  </g>
+  <circle cx="394" cy="285" r="192" class="outline"/>
+  <path d="M398 427V463C398 485 416 488 448 488H568C594 488 596 472 619 472H654" class="outline"/>
+  <rect x="654" y="465" width="25" height="14" rx="3" class="metal"/>
+  <path d="M679 469H688V476H679" class="outline"/>
+  <path d="M366 475 356 493H435L426 475" fill="#eef3f5" stroke="#303c45" stroke-width="1.6"/>
+</svg>

@@ -10,8 +10,11 @@ export function createWalkCollision({THREE,model,house}){
   const solidCategories=new Set(['wall','upperWall','glass','window','column','furniture','kitchenCabinet','applianceWine','applianceOven','door','serviceBacker','smart']);
   const structureCategories=new Set(['wall','upperWall','glass','window','column','door','serviceBacker']);
   function shapeOf(o){
-    const geometry=o.geometry;if(!geometry.boundingBox)geometry.computeBoundingBox();
-    const b=geometry.boundingBox;if(!b||b.isEmpty())return null;
+    // Instanced geometry can be a unit primitive: bounds must include every
+    // instance transform, otherwise small keycaps create a metre-wide blocker.
+    const boundsSource=o.isInstancedMesh?o:o.geometry;
+    if(!boundsSource.boundingBox)boundsSource.computeBoundingBox();
+    const b=boundsSource.boundingBox;if(!b||b.isEmpty())return null;
     o.updateWorldMatrix(true,false);
     const e=o.matrixWorld.elements,center=b.getCenter(new THREE.Vector3()).applyMatrix4(o.matrixWorld);
     const sx=Math.hypot(e[0],e[2]),sz=Math.hypot(e[8],e[10]);
@@ -69,6 +72,6 @@ export function createWalkCollision({THREE,model,house}){
     for(const root of dynamicRoots())for(const s of liveShapes(root))if(touches(s,x,z))return true;
     return false;
   }
-  const audit={radius_m:radius,eye_height_m:1.57,body_vertical_interval_m:[bodyBottom,bodyTop],floor_slabs:floors.length,static_shapes:shapes.length,static_categories:counts,excluded,method:'Actual GLB floor-slab union and circular-body versus oriented mesh bounds; circular structural columns; live door/chair transforms',floor_union:floors,dynamic_door_count:house?.doors?.length||0,dynamic_chair_count:house?.chairs?.length||0,notes:['Hidden walls and glazing remain solid for walking.','Floor seams are evaluated as a union, so adjacent room slabs do not create false gaps.','The original wintergarden divider remains closed glazing until its real panels are opened or moved.','Low carpets and mounted decoration are excluded; low coffee tables and other freestanding furniture remain solid.']};
+  const audit={radius_m:radius,eye_height_m:1.57,body_vertical_interval_m:[bodyBottom,bodyTop],floor_slabs:floors.length,static_shapes:shapes.length,static_categories:counts,excluded,method:'Actual GLB floor-slab union and circular-body versus oriented mesh bounds; circular structural columns; live door/chair transforms',floor_union:floors,dynamic_door_count:house?.doors?.length||0,dynamic_chair_count:house?.chairs?.length||0,notes:['Hidden walls and glazing remain solid for walking.','Floor seams are evaluated as a union, so adjacent room slabs do not create false gaps.','The southern wintergarden divider leaf uses its live sliding-door transform; the other panes remain solid.','Low carpets and mounted decoration are excluded; low coffee tables and other freestanding furniture remain solid.']};
   return {collision,audit};
 }

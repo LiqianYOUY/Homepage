@@ -1,6 +1,9 @@
+import {addTranslations} from './i18n.js?v=13';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
+import {createPlantLifecycle,PLANT_TRANSLATIONS} from './plant-lifecycle.js?v=13';
+addTranslations(PLANT_TRANSLATIONS);
 // A roofless, walkable terrace along the living / dining / study facade.
-export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setState=()=>{},toast=()=>{},openGarden=()=>{},onDoorOpen=()=>{}}){
+export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setState=()=>{},toast=()=>{},openGarden=()=>{},onDoorOpen=()=>{},plantLife=createPlantLifecycle({getState,setState})}){
  const S=.022381665533985514,P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S);
  const root=new THREE.Group();root.name='Open air terrace';model.add(root);
  const materials=[],geometries=[],colliderRoots=[],doors=[],beds=[],removed=[];
@@ -35,20 +38,23 @@ export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setS
    const count=Math.ceil(length/1.5);for(let i=0;i<count;i++){const offset=-length/2+(i+.5)*length/count;const pane=box(root,'Terrace balustrade glazing',axis==='x'?length/count-.035:.018,1.06,axis==='z'?length/count-.035:.018,glass,'glass');pane.position.set(x+(axis==='x'?offset:0),.574,z+(axis==='z'?offset:0));}
    for(let i=0;i<=count;i++){const offset=-length/2+i*length/count,p=box(root,'Terrace guardrail post',.035,1.16,.035,metal,'wall');p.position.set(x+(axis==='x'?offset:0),.58,z+(axis==='z'?offset:0));}
  }
- const names={mint:'薄荷',rosemary:'迷迭香',daisy:'小雏菊',lavender:'薰衣草'};
+ const names={mint:'薄荷',rosemary:'迷迭香',daisy:'雏菊',lavender:'薰衣草'},dryLeaf=mat('Terrace dry leaves',0x928069),seedMat=mat('Terrace seeds',0xb39d72);
  function saved(id){const d=getState().terrace?.[id];return d&&typeof d==='object'?d:null;}
  function persist(b){setState({terrace:{[b.id]:{...b.state}}});}
  function registerBed(b){b.object.traverse(o=>{o.userData.noMerge=true;if(o.isMesh)o.userData.interactionId=b.id;});}
  function grow(b){
    if(b.plant){b.plant.traverse(o=>{if(o.isMesh)o.geometry.dispose();});b.plant.removeFromParent();}
-   const p=group(b.id+' growing plants',b.object);b.plant=p;const stage=b.state.stage,scale=.50+Math.min(4,stage)*.15;
+   const p=group(b.id+' growing plants',b.object);b.plant=p;const status=plantLife.getBed(b.id),stage=status.stage,scale=[.08,.28,.70,1,.65][stage];b.state=status;if(b.record)b.record.label='花箱 '+(b.index+1)+' · '+status.name;
+   if(status.phase==='empty')return;
+   if(stage===0){for(let i=0;i<5;i++){const seed=sphere(p,'Visible terrace seed',.018,seedMat);seed.scale.y=.6;seed.position.set((i-2)*.18,.443,0);}registerBed(b);return;}
    for(let stem=0;stem<5;stem++){
      const g=group(b.id+' botanical stem '+stem,p),h=(.38+(stem%3)*.13)*scale;g.position.set((stem-2)*.20,.42,(stem%2-.5)*.14);
-     const stalk=cyl(g,'Plant stem',.008,.011,h,leafMats[2]);stalk.position.y=h/2;
+     if(stage===4)g.rotation.z=(stem%2?.6:-.5);
+     const stalk=cyl(g,'Plant stem',.008,.011,h,stage===4?dryLeaf:leafMats[2]);stalk.position.y=h/2;
      const sprigs=b.state.species==='rosemary'?7:4;
-     for(let k=0;k<sprigs;k++)for(const side of [-1,1]){const leaf=sphere(g,'Plant leaf '+k,.105,leafMats[(stem+k)%4]);leaf.scale.set(b.state.species==='rosemary'?.32:.66,.27,1);leaf.rotation.set(side*.32,side*(k*.8+.6),side*.6);leaf.position.set(side*.061,h*(.22+k/sprigs*.65),side*.025);}
-     if(stage>=3&&['lavender','daisy'].includes(b.state.species)){
-       if(b.state.species==='lavender'){for(let k=0;k<5;k++){const flower=sphere(g,'Lavender bloom',.034,petals);flower.scale.set(1,.9,1);flower.position.set(Math.sin(k*2.4)*.018,h+k*.026,Math.cos(k*2.4)*.018);}}
+     for(let k=0;k<sprigs;k++)for(const side of [-1,1]){const leaf=sphere(g,'Plant leaf '+k,.105,stage===4?dryLeaf:leafMats[(stem+k)%4]);leaf.scale.set(b.state.species==='rosemary'?.32:.66,.27,1);leaf.rotation.set(side*.32,side*(k*.8+.6),side*.6);leaf.position.set(side*.061,h*(.22+k/sprigs*.65),side*.025);}
+     if(stage===3&&!status.harvestedAt){
+       if(['lavender','mint','rosemary'].includes(b.state.species)){for(let k=0;k<5;k++){const flower=sphere(g,'Lavender bloom',.034,petals);flower.scale.set(1,.9,1);flower.position.set(Math.sin(k*2.4)*.018,h+k*.026,Math.cos(k*2.4)*.018);}}
        else{const center=sphere(g,'Daisy pollen',.035,yellow);center.position.y=h+.02;for(let k=0;k<8;k++){const f=sphere(g,'Daisy petal',.04,cream),a=k*Math.PI/4;f.scale.set(.6,.28,1.4);f.rotation.y=-a;f.position.set(Math.sin(a)*.057,h+.012,Math.cos(a)*.057);}}
      }
    }
@@ -63,7 +69,8 @@ export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setS
    const dirt=box(g,'Terrace soil '+i,1.14,.024,.44,soil);dirt.position.y=.414;
    const foot=box(g,'Terrace planter recessed foot '+i,1.12,.045,.42,metal);foot.position.y=.0225;
    const old=saved(id)||{},species=Object.keys(names).includes(old.species)?old.species:Object.keys(names)[i%4];
-   const b={id,object:g,index:i,state:{species,stage:Number.isFinite(old.stage)?THREE.MathUtils.clamp(old.stage,0,4):3,watered:Number(old.watered)||0,fertilized:Number(old.fertilized)||0,flowers:Number(old.flowers)||0},plant:null};beds.push(b);grow(b);
+   plantLife.ensureBed(id,{species,legacy:Object.keys(old).length?old:null,established:true});
+   const b={id,object:g,index:i,state:plantLife.getBed(id),plant:null};beds.push(b);grow(b);
    b.record={id,label:'花箱 '+(i+1)+' · '+names[species],kind:'garden',object:g,hotspot:false,anchor:g.position.clone().add(new THREE.Vector3(0,.9,0)),click:()=>openGarden(id)};register(b.record);
  }
  // The west-end outdoor dining set leaves both sliding doors and the facade aisle clear.
@@ -112,12 +119,18 @@ export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setS
  for(const x of [.53,.57]){const tong=box(bbq,'Terrace barbecue serving tongs',.014,.012,.22,steel);tong.position.set(x,.975,.025);tong.rotation.y=x===.53?.10:-.10;}
  const can=group('Terrace watering can');can.position.copy(P(1160,276));const canBody=cyl(can,'Watering can body',.105,.12,.20,leafMats[0]);canBody.position.y=.10;const spout=cyl(can,'Watering can spout',.026,.018,.27,metal);spout.rotation.z=-.85;spout.position.set(.14,.17,0);const handle=mesh(can,'Watering can loop',new THREE.TorusGeometry(.10,.012,8,20),metal);handle.position.set(-.075,.16,0);register({id:'terrace-garden',label:'露台 · 浇水施肥',kind:'garden',object:can,anchor:P(860,190,1.12),click:()=>openGarden()});can.traverse(o=>o.userData.noMerge=true);
  let wateredBed=null,waterUntil=0,time=0;const spray=group('Terrace watering droplets');spray.visible=false;spray.userData.noMerge=true;for(let i=0;i<12;i++){const d=sphere(spray,'Watering droplet',.013,waterMat);d.scale.y=2;d.userData.phase=i/12;d.userData.noMerge=true;}
- function getBed(id){const b=beds.find(b=>b.id===id)||beds[0],s=b.state;return{id:b.id,index:b.index,...s,name:names[s.species],canHarvest:s.stage>=4&&['lavender','daisy'].includes(s.species),label:s.stage===0?'一颗种子，等着探头。':s.stage<2?'小苗慢慢长高了。':s.stage<3?'叶子舒展开，绿意正好。':s.stage<4?(['daisy','lavender'].includes(s.species)?'长得很好，花也悄悄开了。':'枝叶长得很好，空气里有草木香。'):'满满的生命力，今天也越来越好。'};}
+ function getBed(id){const b=target(id);return {...plantLife.getBed(b.id),index:b.index};}
  const target=id=>beds.find(b=>b.id===id)||beds[0];
- function waterBed(id){const b=target(id),now=Date.now();if(now-b.state.watered<8000){toast('土壤还润润的，让它慢慢喝。');return false;}b.state.watered=now;b.state.stage=Math.min(4,b.state.stage+.4);persist(b);grow(b);wateredBed=b;waterUntil=time+1.7;spray.visible=true;toast(names[b.state.species]+'喝到水啦，谢谢你的照顾。');return true;}
- function fertilizeBed(id){const b=target(id),now=Date.now();if(now-b.state.fertilized<30000){toast('营养已经够啦，等一会儿再来照顾它。');return false;}b.state.fertilized=now;b.state.stage=Math.min(4,b.state.stage+.6);persist(b);grow(b);toast('添了一点养分，叶子会更有精神。');return true;}
- function plantBed(id,species){if(!names[species])return false;const b=target(id);b.state={species,stage:0,watered:0,fertilized:0,flowers:b.state.flowers};persist(b);grow(b);toast('种下'+names[species]+'，一起等它长大。');return true;}
- function harvestBed(id){const b=target(id);if(!getBed(id).canHarvest)return false;b.state.flowers++;b.state.stage=1;persist(b);grow(b);toast('收下一朵小花，送给今天的好心情。');return true;}
- function update(dt,elapsed){time=elapsed;for(const d of doors){d.amount=THREE.MathUtils.damp(d.amount,d.target,7,dt);d.object.position.x=d.baseX-d.amount*(d.width+.015);}if(spray.visible&&wateredBed){spray.position.copy(wateredBed.object.position);for(const drop of spray.children){const t=(elapsed*1.5+drop.userData.phase)%1;drop.position.set(Math.sin(drop.userData.phase*23)*.43,1.08-t*.63,Math.cos(drop.userData.phase*17)*.15);}if(elapsed>waterUntil)spray.visible=false;}}
- return {root,doors,beds,colliderRoots,getBed,listBeds:()=>beds.map(b=>getBed(b.id)),waterBed,fertilizeBed,plantBed,harvestBed,update,audit:{deckPlan:[581,166,1170,303],deckAreaM2:width*depth,roof:false,railHeightM:1.15,slidingDoorClearWidthM:(850-792)*S-.06,planters:8,originalFacadeMeshesRemoved:removed.length},dispose(){root.removeFromParent();materials.forEach(m=>m.dispose());geometries.forEach(g=>g.dispose());}};
+ function careResult(result,message){if(result.ok){toast(message);syncBeds();return true;}toast({moist:'土壤还湿润，等它需要水时再来。',fed:'盆土里还有养分，暂时不用施肥。',inactive:'先清理花盆，再种下新的植物吧。','clear-first':'先清理凋谢的植物，再重新种植。',occupied:'这盆植物还在生长，先好好照顾它吧。','not-flowering':'等真正开花后，再剪下一枝。','not-withered':'植物还在生长，不需要清理。'}[result.reason]||'暂时没有可用的花枝。');return false;}
+ function waterBed(id){const b=target(id),ok=careResult(plantLife.water(b.id),'浇好水了，它会按自己的节奏慢慢长大。');if(ok){wateredBed=b;waterUntil=time+1.7;spray.visible=true;}return ok;}
+ function fertilizeBed(id){return careResult(plantLife.fertilize(target(id).id),'添好了养分，等它慢慢吸收。');}
+ function plantBed(id,species){return careResult(plantLife.plant(target(id).id,species),'种下了新的植物，一起等它发芽。');}
+ function harvestBed(id){return careResult(plantLife.harvest(target(id).id),'剪下一枝，可以放进家里的花瓶。');}
+ function clearBed(id,options){return careResult(plantLife.clear(target(id).id,options),'花箱清理好了，可以重新播种。');}
+ function syncBeds(){for(const b of beds){const next=plantLife.getBed(b.id),signature=[next.species,next.phase,next.harvestedAt].join(':');if(signature!==b.signature){b.signature=signature;grow(b);}}}
+ const unsubscribe=plantLife.subscribe(syncBeds);syncBeds();let lastPlantMinute=-1;
+ function requestRobotAccess(){onDoorOpen();for(const d of doors){if(d.id==='terrace-living'){d.target=1;setState({doors:{[d.id]:true}});}}}
+ function cleanupTargets(){return beds.filter(b=>plantLife.getBed(b.id).canClear).map(b=>({id:b.id,position:b.object.position.clone().add(new THREE.Vector3(0,0,.67))}));}
+ function update(dt,elapsed){time=elapsed;const minute=Math.floor(Date.now()/60000);if(minute!==lastPlantMinute){lastPlantMinute=minute;plantLife.refresh();syncBeds();}for(const d of doors){d.amount=THREE.MathUtils.damp(d.amount,d.target,7,dt);d.object.position.x=d.baseX-d.amount*(d.width+.015);}if(spray.visible&&wateredBed){spray.position.copy(wateredBed.object.position);for(const drop of spray.children){const t=(elapsed*1.5+drop.userData.phase)%1;drop.position.set(Math.sin(drop.userData.phase*23)*.43,1.08-t*.63,Math.cos(drop.userData.phase*17)*.15);}if(elapsed>waterUntil)spray.visible=false;}}
+ return {root,doors,beds,colliderRoots,getBed,listBeds:()=>beds.map(b=>getBed(b.id)),waterBed,fertilizeBed,plantBed,harvestBed,clearBed,plantLife,requestRobotAccess,cleanupTargets,update,audit:{deckPlan:[581,166,1170,303],deckAreaM2:width*depth,roof:false,railHeightM:1.15,slidingDoorClearWidthM:(850-792)*S-.06,planters:8,originalFacadeMeshesRemoved:removed.length},dispose(){unsubscribe();root.removeFromParent();materials.forEach(m=>m.dispose());geometries.forEach(g=>g.dispose());}};
 }

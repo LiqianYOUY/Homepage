@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <title>Smart medication support — product concept line drawing</title>
+  <desc>A low circular smart pill box with a lid control, visible pill compartments and three capsule forms.</desc>
+  <defs>
+    <style>
+      .outline{stroke:#202b33;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+      .thin{stroke:#647784;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+      .hidden{stroke:#8c9aa3;stroke-width:1.2;stroke-dasharray:7 6}
+      .center{stroke:#b05555;stroke-width:1;stroke-dasharray:10 4 2 4}
+      .metal{fill:#d8e0e5;stroke:#303c45;stroke-width:1.6}
+      .print{fill:#eef3f5;stroke:#303c45;stroke-width:1.6}
+      .blue{fill:#9edcf2;fill-opacity:.42;stroke:#3b9fc5;stroke-width:1.5}
+      .yellow{fill:#ffe8a3;fill-opacity:.65;stroke:#9c7720;stroke-width:1.6}
+      .purple{fill:#d9c7ee;fill-opacity:.65;stroke:#654c82;stroke-width:1.6}
+    </style>
+    <clipPath id="front"><path d="M232 277V359C232 418 648 418 648 359V277C648 336 232 336 232 277Z"/></clipPath>
+  </defs>
+  <path d="M100 502H707" class="hidden"/>
+  <path d="M440 96V430M185 252H692" class="center"/>
+  <path d="M232 277V359C232 418 648 418 648 359V277" fill="#d8e0e5" fill-opacity=".48" class="outline"/>
+  <g clip-path="url(#front)">
+    <path d="M267 294V355Q306 377 344 381V317M358 320V385Q402 394 439 393V328M454 329V393Q493 394 531 384V321M546 318V381Q585 376 619 355V296" class="thin"/>
+    <path d="M280 340 317 352" stroke="#3b9fc5" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+    <path d="M375 365 411 368" stroke="#9c7720" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+    <path d="M474 367 507 363" stroke="#654c82" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+    <path d="M570 351 601 341" stroke="#3b9fc5" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+  </g>
+  <ellipse cx="440" cy="277" rx="208" ry="68" fill="#eef3f5" fill-opacity=".75" class="outline"/>
+  <path d="M232 331C232 390 648 390 648 331" class="thin"/>
+  <path d="M232 344C232 403 648 403 648 344" class="hidden"/>
+  <path d="M248 249V275C248 333 632 333 632 275V249" class="print"/>
+  <ellipse cx="440" cy="249" rx="192" ry="66" class="print"/>
+  <ellipse cx="440" cy="249" rx="174" ry="54" class="thin"/>
+  <path d="M406 216V233C406 248 474 248 474 233V216" class="metal"/>
+  <ellipse cx="440" cy="216" rx="34" ry="12" class="print"/>
+  <path d="M440 210V217M432 213A11 5 0 1 0 448 213" class="thin"/>
+  <path d="M396 313Q440 320 483 313" stroke="#3b9fc5" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="570" cy="373" r="3" fill="#9c7720"/>
+  <g transform="translate(142 339) rotate(-9)">
+    <rect x="0" y="0" width="48" height="123" rx="24" class="print"/>
+    <path d="M0 60C10 67 38 67 48 60V72C37 79 11 79 0 72Z" class="blue"/>
+    <path d="M9 26V52M9 87V99" class="thin"/>
+  </g>
+  <g transform="translate(259 445) rotate(-26)">
+    <rect x="0" y="0" width="114" height="47" rx="23.5" class="print"/>
+    <path d="M53 0C58 12 58 35 53 47H65C70 35 70 12 65 0Z" class="purple"/>
+    <path d="M18 10H39M82 10H94" class="thin"/>
+  </g>
+  <g transform="translate(467 434) rotate(14)">
+    <rect x="0" y="0" width="51" height="63" rx="25.5" class="print"/>
+    <path d="M0 30Q26 42 51 30V38Q26 50 0 38Z" class="yellow"/>
+    <path d="M12 13Q18 7 26 8" class="thin"/>
+  </g>
+</svg>

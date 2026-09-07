@@ -1,9 +1,9 @@
 const KEY='liqian-3d-home-v5';
-const DICTIONARIES=['cat','furniture','doors','taps','settings','smart','garden','terrace'];
+const DICTIONARIES=['cat','furniture','doors','taps','settings','smart','garden','terrace','gardenWorld','bedroomCurtains','laundry'];
 const ARRAYS=['notes','papers','musicFavorites'];
 const isObject=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 export const localDay=(date=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Sydney',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
-const defaults={version:5,updatedAt:0,notes:[{id:'n-observe',text:'观察\n\n今天注意到了什么？',color:'cream',x:20,y:20},{id:'n-make',text:'尝试\n\n把一个小问题做成原型。',color:'sage',x:260,y:35},{id:'n-reflect',text:'复盘\n\n哪些地方让人更自在？',color:'rose',x:20,y:260}],papers:[],libraryInitialized:false,musicFavorites:[{id:'flower-dance',title:'Flower Dance · DJ Okawari',url:'https://open.spotify.com/track/6RaJbbhKDOuBGQhbZCubCW'}],cat:{name:'小橘',adopted:localDay(),fedDays:[],pets:0,following:true,muted:false},smart:{curtainsOpen:true,lightsOn:true,vacuumAuto:true},garden:{},terrace:{},furniture:{},doors:{},taps:{},settings:{night:false,reducedMotion:false,deskLight:true,moodIndex:0}};
+const defaults={version:5,updatedAt:0,notes:[{id:'n-observe',text:'观察\n\n今天注意到了什么？',color:'cream',x:20,y:20},{id:'n-make',text:'尝试\n\n把一个小问题做成原型。',color:'sage',x:260,y:35},{id:'n-reflect',text:'复盘\n\n哪些地方让人更自在？',color:'rose',x:20,y:260}],papers:[],libraryInitialized:false,musicFavorites:[{id:'flower-dance',title:'Flower Dance · DJ Okawari',url:'https://open.spotify.com/track/6RaJbbhKDOuBGQhbZCubCW'}],cat:{name:'小橘',adopted:localDay(),fedDays:[],pets:0,following:true,muted:false},smart:{curtainsOpen:true,lightsOn:true,vacuumAuto:true},garden:{},terrace:{},gardenWorld:{},bedroomCurtains:{},laundry:{},furniture:{},doors:{},taps:{},settings:{reducedMotion:false,deskLight:true,moodIndex:0}};
 function defaultStorage(){try{return globalThis.localStorage;}catch{return null;}}
 function fallbackTransport({visitor,pageURL,fetchImpl}){
  const page=new URL(pageURL||'https://static.invalid/');

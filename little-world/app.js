@@ -1,28 +1,36 @@
 import * as THREE from 'three';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
-import {createStore,localDay} from './state.js';
-import {createPersonalSpace} from './personal-space.js?v=9';
+import {createStore,localDay} from './state.js?v=13';
+import {createPersonalSpace} from './personal-space.js?v=13';
 import {createCat} from './cat.js';
 import {setupHouseInteractions} from './home-interactions.js';
-import {setupStudio} from './studio.js';
-import {createWalkCollision} from './walk-collision.js';
+import {setupStudio} from './studio.js?v=13';
+import {createWalkCollision} from './walk-collision.js?v=13';
 import {optimizeScene} from './optimize-scene.js';
-import {setupSmartHome} from './smart-home.js?v=9';
-import {setupTerrace} from './terrace-v7.js?v=10';
-import {setupCabinetryV7} from './cabinetry-v7.js?v=10';
+import {setupSmartHome} from './smart-home.js?v=13';
+import {setupTerrace} from './terrace-v7.js?v=13';
+import {setupCabinetryV7} from './cabinetry-v7.js?v=13';
 import {setupLivingRoom} from './living-room.js?v=10';
 import {createCommunityClient} from './community-client.js?v=9';
 import {communityAPI} from './community-config.js?v=9';
-import {createWelcomeWorld} from './welcome-world.js?v=9';
+import {createWelcomeWorld} from './welcome-world.js?v=13';
 import {setupTelevision} from './television.js?v=9';
 import {houseIcon,visitorAvatar,fryingPanIcon,footprintsIcon,roomIcons} from './little-icons.js?v=10';
 import {raiseDialog,consumeDialogEscape,topDialog} from './dialog-stack.js';
 import {createGroundNavigation} from './ground-navigation.js?v=9';
+import {createDaylight,HOME_LOCATION} from './daylight.js?v=13';
+import {initI18n,translate,getLanguage} from './i18n.js?v=13';
+import {createPlantLifecycle} from './plant-lifecycle.js?v=13';
+import {setupRoomRenovation} from './room-renovation.js?v=13';
+import {createPiano} from './piano.js?v=13';
+import {setupBathroomRefinement} from './bathroom-refinement.js?v=13';
+import {setupLaundry} from './laundry.js?v=13';
 
 const $=s=>document.querySelector(s);const S=.022381665533985514;
 const P=(x,z,y=0)=>new THREE.Vector3((x-935)*S,y,(z-512)*S);
 let terrace=null,cabinetry=null,smart=null,worldUI=null,tv=null,visitor=null,community=null,lightingReady=false,pointerFloor=null,pointerUpdated=0;
+let renovation=null,livingRoom=null,piano=null,bathroom=null,laundry=null;
 let studio=null,cat=null,house=null,model=null,personal=null,walk=false,currentRoom='overview',showHotspots=true;
 let walkCollision=null,watchingCat=false;
 let stateStore,moveTween=null,toastTimer=null;const records=new Map(),hotspotEntries=[],wallBoxes=[];let loadDone=false;
@@ -37,8 +45,10 @@ async function postcard(kind,text=''){community=await communityClient.postcard(k
 $('#house-icon').innerHTML=houseIcon;document.querySelector('link[rel=icon]').href='data:image/svg+xml,'+encodeURIComponent(houseIcon.replace('aria-hidden="true"','xmlns="http://www.w3.org/2000/svg"'));$('#cat-avatar-button').innerHTML=visitorAvatar(48);
 for(const button of document.querySelectorAll('[data-room]')){const label=button.querySelector('span').textContent;button.innerHTML=(roomIcons[button.dataset.room]||fryingPanIcon)+' <span>'+label+'</span>';}
 updateWalkButton(false);
+initI18n();
 stateStore=await createStore(()=>{refreshCare();studio?.updateNotes();studio?.refreshBooks?.();if(lightingReady)applyLighting();},message=>$('#save-status').textContent='生活记录 · '+message,{visitor,communityClient});
 const state=()=>stateStore.get(),setState=patch=>stateStore.set(patch);
+const plantLife=createPlantLifecycle({getState:state,setState});
 personal=createPersonalSpace({getState:state,setState,getSaveStatus:()=>stateStore.getStatus(),onNotesChange:notes=>studio?.updateNotes(notes),onMusicState:info=>{document.body.dataset.musicPlaying=String(info.playing===true);},toast});
 refreshCare();
 worldUI=createWelcomeWorld({getVisitor:()=>visitor,getCommunity:()=>community,refreshCommunity,postcard,getSmart:()=>smart,getTerrace:()=>terrace,toast,onStateChange:()=>applyLighting(),onTV:()=>tv?.open(),onMusic:()=>personal.openMusic(),onBooks:()=>{go('study');personal.openLibrary();},onCat:()=>{petCat();$('#focus-cat').click();},onWave:()=>cat?.greet()});
@@ -63,7 +73,7 @@ const nightLights=[];for(const [x,z] of [[620,420],[777,421],[873,407],[1040,365
 
 function isVisible(o){for(let n=o;n;n=n.parent)if(!n.visible)return false;return true;}
 const hotspotLineLayer=document.createElementNS('http://www.w3.org/2000/svg','svg');hotspotLineLayer.classList.add('hotspot-lines');hotspotLineLayer.setAttribute('aria-hidden','true');$('#hotspots').append(hotspotLineLayer);
-function register(record){if(!record?.object||!record.id)return;record.object.traverse(o=>{if(o.isMesh)o.userData.interactionId=record.id;});records.set(record.id,record);record.initialPosition=record.object.position.clone();record.initialAnchor=(record.anchor||new THREE.Box3().setFromObject(record.object).getCenter(new THREE.Vector3())).clone();if(record.hotspot!==false&&record.kind!=='chair'){const b=document.createElement('button');b.className='hotspot';b.type='button';b.textContent=record.label;b.setAttribute('aria-label',record.label);b.addEventListener('click',e=>{e.stopPropagation();record.click?.();});$('#hotspots').append(b);const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.style.display='none';hotspotLineLayer.append(line);const size=b.getBoundingClientRect();hotspotEntries.push({record,button:b,line,width:size.width,height:size.height});}diagnostics.interactionCount=records.size;}
+function register(record){if(!record?.object||!record.id)return;record.object.traverse(o=>{if(o.isMesh)o.userData.interactionId=record.id;});records.set(record.id,record);record.initialPosition=record.object.position.clone();record.initialAnchor=(record.anchor||new THREE.Box3().setFromObject(record.object).getCenter(new THREE.Vector3())).clone();if(record.hotspot!==false&&record.kind!=='chair'){const b=document.createElement('button');b.className='hotspot';b.type='button';b.textContent=translate(record.label);b.setAttribute('aria-label',translate(record.label));b.addEventListener('click',e=>{e.stopPropagation();record.click?.();});$('#hotspots').append(b);const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.style.display='none';hotspotLineLayer.append(line);const size=b.getBoundingClientRect();hotspotEntries.push({record,button:b,line,width:size.width,height:size.height});}diagnostics.interactionCount=records.size;}
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2(),floorPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
 function setRay(event){const r=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-r.left)/r.width)*2-1,-((event.clientY-r.top)/r.height)*2+1);ray.setFromCamera(pointer,camera);}
 function pick(event){setRay(event);const hits=ray.intersectObjects(scene.children,true);for(const hit of hits){if(!isVisible(hit.object)||hit.object===ground)continue;const id=hit.object.userData.interactionId;if(id&&records.has(id))return records.get(id);const material=hit.object.material;if((Array.isArray(material)?material.every(m=>m.transparent):material?.transparent)||hit.object.userData.category==='rug')continue;return null;}return null;}
@@ -79,16 +89,21 @@ const groundNavigation=createGroundNavigation({
  }
 });
 renderer.domElement.addEventListener('pointerdown',e=>{if(groundNavigation.blocksSceneInput()){e.preventDefault();return;}if(e.button!==0)return;watchingCat=false;const rec=pick(e);gesture={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,record:rec,moved:0,maxMoved:0};if(rec||walk){controls.enabled=false;renderer.domElement.setPointerCapture(e.pointerId);}rec?.drag?.(0,0,{phase:'start',worldPoint:floorPoint(e)});},true);
-renderer.domElement.addEventListener('pointermove',e=>{if(groundNavigation.blocksSceneInput()){e.preventDefault();return;}if(!gesture){pointerFloor=floorPoint(e);pointerUpdated=performance.now();}if(gesture&&gesture.id===e.pointerId){const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;gesture.moved=Math.hypot(dx,dy);gesture.maxMoved=Math.max(gesture.maxMoved,gesture.moved);if(gesture.record?.drag&&gesture.moved>4){gesture.record.drag(dx,dy,{phase:'move',worldPoint:floorPoint(e)});}else if(walk&&gesture.moved>4&&!gesture.record?.drag){lookYaw-=(e.clientX-gesture.lastX)*.004;lookPitch=THREE.MathUtils.clamp(lookPitch-(e.clientY-gesture.lastY)*.004,-1.18,1.18);camera.rotation.set(lookPitch,lookYaw,0,'YXZ');}gesture.lastX=e.clientX;gesture.lastY=e.clientY;$('#hover-label').hidden=true;return;}const rec=pick(e);renderer.domElement.style.cursor=rec?(rec.drag?'grab':'pointer'):(walk?'crosshair':'grab');const tip=$('#hover-label');tip.hidden=!rec;if(rec){tip.textContent=rec.label+(rec.drag?' · 点击 / 拖动':' · 点击');tip.style.left=Math.min(innerWidth-230,e.clientX+14)+'px';tip.style.top=Math.max(75,e.clientY-32)+'px';}});
+renderer.domElement.addEventListener('pointermove',e=>{if(groundNavigation.blocksSceneInput()){e.preventDefault();return;}if(!gesture){pointerFloor=floorPoint(e);pointerUpdated=performance.now();}if(gesture&&gesture.id===e.pointerId){const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;gesture.moved=Math.hypot(dx,dy);gesture.maxMoved=Math.max(gesture.maxMoved,gesture.moved);if(gesture.record?.drag&&gesture.moved>4){gesture.record.drag(dx,dy,{phase:'move',worldPoint:floorPoint(e)});}else if(walk&&gesture.moved>4&&!gesture.record?.drag){lookYaw-=(e.clientX-gesture.lastX)*.004;lookPitch=THREE.MathUtils.clamp(lookPitch-(e.clientY-gesture.lastY)*.004,-1.18,1.18);camera.rotation.set(lookPitch,lookYaw,0,'YXZ');}gesture.lastX=e.clientX;gesture.lastY=e.clientY;$('#hover-label').hidden=true;return;}const rec=pick(e);renderer.domElement.style.cursor=rec?(rec.drag?'grab':'pointer'):(walk?'crosshair':'grab');const tip=$('#hover-label');tip.hidden=!rec;if(rec){tip.textContent=translate(rec.label+(rec.drag?' · 点击 / 拖动':' · 点击'));tip.style.left=Math.min(innerWidth-230,e.clientX+14)+'px';tip.style.top=Math.max(75,e.clientY-32)+'px';}});
 function release(e){if(!gesture||gesture.id!==e.pointerId)return;const g=gesture;gesture=null;if(g.maxMoved<5)g.record?.click?.();g.record?.drag?.(e.clientX-g.x,e.clientY-g.y,{phase:'end',worldPoint:floorPoint(e)});controls.enabled=!walk;try{renderer.domElement.releasePointerCapture(e.pointerId);}catch{}}
 renderer.domElement.addEventListener('pointerup',release);renderer.domElement.addEventListener('pointercancel',e=>{gesture=null;controls.enabled=!walk;});renderer.domElement.addEventListener('pointerleave',()=>{$('#hover-label').hidden=true;pointerFloor=null;});
 
-function applyVisibility(){if(!model)return;const wall=$('#full-walls').checked,glass=$('#show-glass').checked,ceiling=$('#show-ceiling').checked;model.traverse(o=>{if(!o.isMesh)return;const c=o.userData.category;if(c==='upperWall')o.visible=wall;else if(['ceilingMain','soffit','ceilingFixture'].includes(c)||c?.startsWith('hvac'))o.visible=ceiling;else if(['glass','window','curtain'].includes(c))o.visible=glass;});for(const curtain of smart?.curtains||[])curtain.object.visible=glass;}
-function applyLighting(){if(studio?.lampLight)studio.lampLight.intensity=state().smart.lightsOn&&state().settings.deskLight?3:0;const night=!!state().settings.night;document.body.classList.toggle('night',night);$('#light-mode').innerHTML=night?'☾ <span>夜晚</span>':'☀ <span>日间</span>';hemi.intensity=night?.5:2.5;sun.intensity=night?.5:3.15;fill.intensity=night?.23:.75;sun.color.set(night?'#e4b57b':'#fff1d6');scene.background.set(night?'#717e74':'#e7e8df');ground.material.color.set(night?'#727e6d':'#e4e6db');nightLights.forEach(l=>l.intensity=state().smart.lightsOn?(night?9:1.5):0);renderer.toneMappingExposure=night?1.24:1.16;}
-lightingReady=true;applyLighting();
+function applyVisibility(){if(!model)return;const wall=$('#full-walls').checked,glass=$('#show-glass').checked,ceiling=$('#show-ceiling').checked;model.traverse(o=>{if(!o.isMesh)return;const c=o.userData.category;if(c==='upperWall')o.visible=wall;else if(['ceilingMain','soffit','ceilingFixture'].includes(c)||c?.startsWith('hvac'))o.visible=ceiling;else if(['glass','window','curtain','bedroomCurtain'].includes(c))o.visible=glass;});for(const curtain of smart?.curtains||[])curtain.object.visible=glass;}
+const daylight=createDaylight({THREE,scene,renderer,hemi,sun,fill,ground,nightLights,getState:state,getStudio:()=>studio,getSmart:()=>smart,onChange:info=>{
+ diagnostics.daylight={phase:info.phase,altitude:info.altitude,sunrise:info.sunrise?.toISOString(),sunset:info.sunset?.toISOString(),timeZone:info.location.timeZone};
+ const time=new Intl.DateTimeFormat('en-GB',{timeZone:HOME_LOCATION.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+ $('#clock').title=`${HOME_LOCATION.label} · 日出 ${info.sunrise?time.format(info.sunrise):'—'} · 日落 ${info.sunset?time.format(info.sunset):'—'}`;
+}});
+function applyLighting(){daylight.refresh();}
+lightingReady=true;
 function setReduced(on){setState({settings:{reducedMotion:on}});document.body.dataset.reducedMotion=String(on);$('#reduce-motion').checked=on;}
 document.body.dataset.reducedMotion=String(!!state().settings.reducedMotion);$('#reduce-motion').checked=!!state().settings.reducedMotion;
-$('#light-mode').onclick=()=>{setState({settings:{night:!state().settings.night}});applyLighting();};$('#reduce-motion').onchange=e=>setReduced(e.target.checked);for(const id of ['full-walls','show-glass','show-ceiling'])$('#'+id).onchange=applyVisibility;
+$('#reduce-motion').onchange=e=>setReduced(e.target.checked);for(const id of ['full-walls','show-glass','show-ceiling'])$('#'+id).onchange=applyVisibility;
 
 const views={terrace:{eye:[-10,7.3,-12.5],target:[-5.8,.4,-5.7]},overview:{eye:[15,22,27],target:[-1,.6,0]},television:{eye:[-7.117,1.65,-3.9],target:[-7.117,1.42,.683]},living:{eye:[-7.05,6.0,-4.0],target:[-7.0,.55,-1.8]},study:{eye:[4.2,2.35,-4.4],target:[1.65,1.14,-3.18]},kitchen:{eye:[-4.8,3.7,-4.6],target:[-1.0,.8,-1.6]},master:{eye:[-9.0,4.5,.1],target:[-6.7,.55,3.43]},garden:{eye:[-6.7,4.8,1.8],target:[-10.8,.6,-1.6]}};
 function go(room,instant=false){if(!model)return;watchingCat=false;if(walk)exitWalk(false);currentRoom=room==='television'?'living':room;const v=views[room]||views.overview;let eye=new THREE.Vector3(...v.eye),target=new THREE.Vector3(...v.target);if(room==='overview'){const bounds=new THREE.Box3().setFromObject(model),center=bounds.getCenter(new THREE.Vector3());center.y=.5;const direction=eye.clone().sub(target).normalize();const right=new THREE.Vector3().crossVectors(camera.up,direction).normalize(),up=new THREE.Vector3().crossVectors(direction,right).normalize();const tanV=Math.tan(THREE.MathUtils.degToRad(camera.fov/2)),tanH=tanV*camera.aspect;const safeX=innerWidth>1000?.76:.9;let distance=0;for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){const d=new THREE.Vector3(x,y,z).sub(center);distance=Math.max(distance,d.dot(direction)+Math.abs(d.dot(right))/(tanH*safeX),d.dot(direction)+Math.abs(d.dot(up))/(tanV*.78));}target=center;eye=center.clone().addScaledVector(direction,distance);}
@@ -99,7 +114,7 @@ function go(room,instant=false){if(!model)return;watchingCat=false;if(walk)exitW
 document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>go(b.dataset.room));
 $('#desk-shortcut').onclick=()=>{go('study');personal.openNotes();};$('#book-shortcut').onclick=()=>{go('study');personal.openLibrary();};$('#music-shortcut').onclick=()=>personal.openMusic();
 const PORTFOLIO='https://liqianyouy.github.io/Homepage/portfolio/';
-function openPortfolio(url=PORTFOLIO){$('#portfolio-window').hidden=false;$('#portfolio-frame').src='./portfolio-room.html?v=10';$('#portfolio-external').href=url;raiseDialog($('#portfolio-window'));$('#portfolio-close').focus();}
+function openPortfolio(url=PORTFOLIO){$('#portfolio-window').hidden=false;$('#portfolio-frame').src='./portfolio-room.html?v=13';$('#portfolio-external').href=url;raiseDialog($('#portfolio-window'));$('#portfolio-close').focus();}
 function closePortfolio(){$('#portfolio-window').hidden=true;$('#portfolio-frame').src='about:blank';}
 $('#portfolio-shortcut').onclick=()=>{go('study');openPortfolio();};$('#portfolio-close').onclick=closePortfolio;
 let floatingDrag=null;$('#portfolio-drag').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const r=$('#portfolio-window').getBoundingClientRect();floatingDrag={id:e.pointerId,x:e.clientX,y:e.clientY,left:r.left,top:r.top};e.currentTarget.setPointerCapture(e.pointerId);});$('#portfolio-drag').addEventListener('pointermove',e=>{if(!floatingDrag||e.pointerId!==floatingDrag.id)return;const panel=$('#portfolio-window');panel.style.left=THREE.MathUtils.clamp(floatingDrag.left+e.clientX-floatingDrag.x,0,innerWidth-180)+'px';panel.style.top=THREE.MathUtils.clamp(floatingDrag.top+e.clientY-floatingDrag.y,0,innerHeight-70)+'px';});$('#portfolio-drag').addEventListener('pointerup',()=>floatingDrag=null);
@@ -137,15 +152,16 @@ function typing(e){return /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.targ
 document.addEventListener('keydown',e=>{if(consumeDialogEscape(e,$('#portfolio-window')))closePortfolio();else if(consumeDialogEscape(e,$('#settings')))$('#settings').hidden=true;},true);
 window.addEventListener('keydown',e=>{if(e.defaultPrevented||typing(e))return;if(e.key==='Escape'){if(!$('#portfolio-window').hidden)closePortfolio();else if(walk)exitWalk();}});
 
-const sydneyTime=new Intl.DateTimeFormat('en-GB',{timeZone:'Australia/Sydney',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}),sydneyDate=new Intl.DateTimeFormat('zh-CN',{timeZone:'Australia/Sydney',month:'long',day:'numeric',weekday:'short'});
-function updateClock(){const now=new Date();const time=sydneyTime.format(now);$('#clock').replaceChildren();const t=document.createElement('strong');t.textContent=time;const d=document.createElement('small');d.textContent='悉尼 · '+sydneyDate.format(now);$('#clock').append(t,d);const hour=Number(time.slice(0,2));$('#greeting').textContent=(hour<12?'早上好':hour<18?'下午好':'晚上好')+'，可爱的朋友';}updateClock();setInterval(updateClock,1000);
+const sydneyTime=new Intl.DateTimeFormat('en-GB',{timeZone:HOME_LOCATION.timeZone,hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+const sydneyDates={zh:new Intl.DateTimeFormat('zh-CN',{timeZone:HOME_LOCATION.timeZone,month:'long',day:'numeric',weekday:'short'}),en:new Intl.DateTimeFormat('en-AU',{timeZone:HOME_LOCATION.timeZone,month:'short',day:'numeric',weekday:'short'})};
+function updateClock(){const now=new Date();const time=sydneyTime.format(now);$('#clock').replaceChildren();const t=document.createElement('strong');t.textContent=time;const d=document.createElement('small');d.textContent=(getLanguage()==='en'?'Sydney':HOME_LOCATION.label)+' · '+sydneyDates[getLanguage()].format(now);$('#clock').append(t,d);const hour=Number(time.slice(0,2));$('#greeting').textContent=(hour<12?'早上好':hour<18?'下午好':'晚上好')+'，可爱的朋友';}updateClock();setInterval(updateClock,1000);window.addEventListener('little-world:languagechange',()=>{updateClock();updateHotspots();});
 
 function updateHotspots(){
- const primary=new Set(['desk-notes','book-0','speaker','portfolio','cat','tap-kitchen','door-entry','television','smart-controls','garden-planter','terrace-garden','terrace-living']);
+ const primary=new Set(['desk-notes','book-0','speaker','portfolio','cat','tap-kitchen','door-entry','television','smart-controls','garden-planter','terrace-garden','terrace-living','piano','laundry-washer','laundry-dryer']);
  const occupied=[],blocked=['.welcome','.cat-card','.topbar','.room-nav','.interaction-help'].map(selector=>document.querySelector(selector)?.getBoundingClientRect()).filter(r=>r&&r.width>0&&r.height>0);
  const overlaps=(a,b,gap=7)=>a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
  const offsets=[[0,0]];for(let r=1;r<=5;r++)for(const [x,y] of [[0,-1],[0,1],[-1,0],[1,0],[-1,-1],[1,-1],[-1,1],[1,1]])offsets.push([x*r*47,y*r*31]);
- for(const entry of hotspotEntries){const {record,button,line}=entry;if(button.textContent!==record.label){button.textContent=record.label;button.setAttribute('aria-label',record.label);entry.width=0;}
+ for(const entry of hotspotEntries){const {record,button,line}=entry;const label=translate(record.label);if(button.textContent!==label){button.textContent=label;button.setAttribute('aria-label',label);entry.width=0;}
   const p=(record.anchor||record.initialAnchor).clone();if(record.kind==='cat'&&cat)p.copy(cat.root.position).add(new THREE.Vector3(0,.77,0));const v=p.clone().project(camera);
   let show=showHotspots&&loadDone&&!walk&&v.z<1&&v.z>-1&&Math.abs(v.x)<.95&&Math.abs(v.y)<.91;
   if(currentRoom==='overview')show=show&&primary.has(record.id);else show=show&&p.distanceTo(controls.target)<(currentRoom==='study'?2.4:6);
@@ -162,23 +178,31 @@ function updateHotspots(){
 }
 
 try{
- const loaded=await new GLTFLoader().loadAsync('./apartment.glb',e=>{if(e.total)$('#load-detail').textContent='小屋准备中 '+Math.round(e.loaded/e.total*100)+'%';});model=loaded.scene;scene.add(model);model.updateMatrixWorld(true);
+ const loaded=await new GLTFLoader().loadAsync('./apartment.glb',e=>{if(e.total)$('#load-detail').textContent='Making room for you… '+Math.round(e.loaded/e.total*100)+'%';});model=loaded.scene;scene.add(model);model.updateMatrixWorld(true);
  model.traverse(o=>{if(!o.isMesh)return;o.castShadow=!o.material?.transparent;o.receiveShadow=true;if(o.material?.transparent){o.material.depthWrite=false;o.renderOrder=2;}const c=o.userData.category;if(['wall','upperWall'].includes(c)){const b=new THREE.Box3().setFromObject(o);if(b.max.y>.2)wallBoxes.push(b);}});
- diagnostics.livingRoom=setupLivingRoom({THREE,model}).audit;
+ livingRoom=setupLivingRoom({THREE,model});diagnostics.livingRoom=livingRoom.audit;
+ renovation=setupRoomRenovation({THREE,model,register,getState:state,setState,toast});diagnostics.renovation=renovation.audit;
  applyVisibility();house=setupHouseInteractions({THREE,scene,model,register,toast,getState:state,setState});
+ bathroom=setupBathroomRefinement({THREE,model,house});diagnostics.bathroom=bathroom.audit;
  let navigation=null;try{const r=await fetch('./cat-navigation.json?v=10');if(r.ok)navigation=await r.json();}catch{}
- smart=setupSmartHome({THREE,scene,model,register,getState:state,setState,toast,openControls:()=>worldUI.openControls(),openGarden:()=>{go('garden');worldUI.openGarden();},navigation:navigation||{}});cabinetry=setupCabinetryV7({THREE,scene,model,register,getState:state,setState,toast,house});diagnostics.cabinetry=cabinetry.audit;terrace=setupTerrace({THREE,model,register,getState:state,setState,toast,openGarden:id=>worldUI.openTerrace(id),onDoorOpen:()=>smart.setCurtains(true)});house.colliderRoots=[...smart.colliderRoots,...cabinetry.colliderRoots,...terrace.colliderRoots];diagnostics.terrace=terrace.audit;applyVisibility();
- walkCollision=createWalkCollision({THREE,model,house});diagnostics.walk=walkCollision.audit;
+ smart=setupSmartHome({THREE,scene,model,register,plantLife,openVases:()=>worldUI.openFlowerVases(),getState:state,setState,toast,openControls:()=>worldUI.openControls(),openGarden:()=>{go('garden');worldUI.openGarden();},navigation:navigation||{}});cabinetry=setupCabinetryV7({THREE,scene,model,register,getState:state,setState,toast,house});diagnostics.cabinetry=cabinetry.audit;bathroom.finalizeCabinetry();terrace=setupTerrace({THREE,model,register,plantLife,getState:state,setState,toast,openGarden:id=>worldUI.openTerrace(id),onDoorOpen:()=>smart.setCurtains(true)});house.colliderRoots=[...smart.colliderRoots,...cabinetry.colliderRoots,...terrace.colliderRoots];diagnostics.terrace=terrace.audit;applyVisibility();
  studio=setupStudio({THREE,scene,model,register,openNotes:()=>personal.openNotes(),openLibrary:id=>personal.openLibrary(id),openMusic:()=>personal.openMusic(),openPortfolio,getState:state,setState,toast,turnLightsOn:()=>smart.setLights(true)});
+ laundry=setupLaundry({THREE,model,scene,register,getState:state,setState,toast});diagnostics.laundry=laundry.audit;
+ house.colliderRoots.push(...laundry.colliderRoots);
+ house.colliderRoots.push(...(studio.colliderRoots||[]));
+ wallBoxes.length=0;model.traverse(o=>{if(o.isMesh&&['wall','upperWall'].includes(o.userData.category)){const b=new THREE.Box3().setFromObject(o);if(b.max.y>.2)wallBoxes.push(b);}});
+ walkCollision=createWalkCollision({THREE,model,house});diagnostics.walk=walkCollision.audit;
+ smart.setGardenTerrace(terrace);
+ piano=createPiano({THREE,piano:livingRoom.piano,register});
  tv=setupTelevision({THREE,scene,model,camera,register,go,toast});diagnostics.optimization=optimizeScene({THREE,model});
  cat=createCat({THREE,scene,initialPosition:navigation?.initialPosition||[-6,.03,-.8],navigation,getPlayerPosition:()=>walk?camera.position:controls.target,getRobotPosition:()=>smart?.vacuum?.position,getPointerPosition:()=>!gesture&&performance.now()-pointerUpdated<4000?pointerFloor:null,onMess:p=>smart.addMess(p),onWelcome:()=>toast('小橘来迎接你啦，靠近后摸摸她的头。'),reducedMotion:()=>state().settings.reducedMotion,getMuted:()=>state().cat.muted,store:{getCatState:()=>state().cat,setCatState:c=>setState({cat:c})}});
  register({id:'cat',label:'小橘 · 摸摸头',kind:'cat',object:cat.root,anchor:cat.root.position.clone().add(new THREE.Vector3(0,.7,0)),click:petCat});
  register({id:'cat-food',label:'给小橘添猫粮',kind:'cat-bowl',object:cat.bowls.food,anchor:new THREE.Box3().setFromObject(cat.bowls.food).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:feedCat});
  register({id:'cat-water',label:'给小橘添清水',kind:'cat-bowl',object:cat.bowls.water,anchor:new THREE.Box3().setFromObject(cat.bowls.water).getCenter(new THREE.Vector3()).add(new THREE.Vector3(0,.2,0)),hotspot:false,click:()=>cat.water()});smart.setObstacles([cat.root,cat.bowls.food,cat.bowls.water]);
- cat.setFollowing(state().cat.following!==false);diagnostics.loaded=true;loadDone=true;$('#loading').hidden=true;go('overview',true);refreshCare();
- window.homeApp={scene,model,camera,controls,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
-}catch(e){console.error(e);diagnostics.errors.push(String(e));$('#load-detail').textContent='画面还没载入完成，检查一下网络，再刷新试试吧。';$('#loading h2').textContent='小屋暂时没打开';}
+ cat.setFollowing(state().cat.following!==false);diagnostics.loaded=true;loadDone=true;$('#loading').hidden=true;go('overview',true);refreshCare();applyLighting();
+ window.homeApp={bathroom,laundry,renovation,livingRoom,piano,plantLife,studio,scene,model,camera,controls,daylight,groundNavigation,records,cat,house,smart,terrace,cabinetry,tv,visitor,state:stateStore,go,diagnostics,openNotes:()=>personal.openNotes(),openLibrary:()=>personal.openLibrary(),openMusic:()=>personal.openMusic(),openPortfolio};document.body.dataset.ready='true';
+}catch(e){console.error(e);diagnostics.errors.push(String(e));$('#load-detail').textContent='Please check your connection and try refreshing.';$('#loading h2').textContent='小屋暂时没打开';}
 let last=performance.now(),elapsed=0,lastCatAction='';
-function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}
+function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);renovation?.update(dt);laundry?.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);daylight.update();tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}
 requestAnimationFrame(tick);
 window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);if(currentRoom==='overview'&&!walk)go('overview',true);});

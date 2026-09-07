@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <title>FoodCare — connected food recognition prototype line drawing</title>
+  <desc>A phone showing a food card alongside an overhead camera, a tray of fruit and vegetables and a connected recognition module.</desc>
+  <defs>
+    <style>
+      .outline{stroke:#202b33;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+      .thin{stroke:#647784;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+      .hidden{stroke:#8c9aa3;stroke-width:1.2;stroke-dasharray:7 6}
+      .center{stroke:#b05555;stroke-width:1;stroke-dasharray:10 4 2 4}
+      .metal{fill:#d8e0e5;stroke:#303c45;stroke-width:1.6}
+      .print{fill:#eef3f5;stroke:#303c45;stroke-width:1.6}
+      .blue{fill:#9edcf2;fill-opacity:.42;stroke:#3b9fc5;stroke-width:1.5}
+      .yellow{fill:#ffe8a3;fill-opacity:.65;stroke:#9c7720;stroke-width:1.6}
+      .purple{fill:#d9c7ee;fill-opacity:.65;stroke:#654c82;stroke-width:1.6}
+    </style>
+  </defs>
+  <path d="M86 495H718" class="hidden"/>
+  <path d="M434 157V434" class="center"/>
+  <path d="M417 212 338 376M451 212 542 376" stroke="#3b9fc5" stroke-width="1.2" stroke-dasharray="7 6"/>
+  <path d="M558 173H472M558 176V403" stroke="#303c45" stroke-width="10" stroke-linecap="round"/>
+  <path d="M558 173H472M558 176V403" stroke="#d8e0e5" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="558" cy="174" r="9" class="metal"/>
+  <path d="M443 168H480V190H443" class="metal"/>
+  <rect x="403" y="155" width="58" height="47" rx="7" class="print"/>
+  <path d="M410 202V211Q432 218 454 211V202" class="metal"/>
+  <ellipse cx="432" cy="211" rx="15" ry="5" class="blue"/>
+  <path d="M414 165H446M414 171H435" class="thin"/>
+  <circle cx="450" cy="187" r="2.5" fill="#9c7720"/>
+  <path d="M512 404 561 389 615 409 566 426Z" class="print"/>
+  <path d="M512 404V413L566 435 615 418V409M566 426V435" class="outline"/>
+  <path d="M462 174C508 134 598 158 598 237V356C598 381 624 379 631 403" class="thin"/>
+  <path d="M313 408 467 368 578 410 423 455Z" class="print"/>
+  <path d="M313 408V421L423 469 578 423V410M423 455V469" class="outline"/>
+  <path d="M325 408 467 379 565 410 423 444Z" class="thin"/>
+  <g>
+    <path d="M458 391C433 366 434 344 444 344 440 325 456 323 462 332 465 311 480 314 482 329 494 313 508 327 501 340 518 333 528 349 515 359 533 361 529 377 513 380L488 405Z" fill="#e1e9d9" stroke="#647784" stroke-width="1.6"/>
+    <path d="M488 405 475 339M483 379 451 351M487 389 513 365M479 362 497 342" class="thin"/>
+    <path d="M398 377C384 363 362 371 362 391 362 411 374 424 389 423 395 423 398 421 404 423 420 424 432 406 429 391 426 375 409 369 398 377Z" class="yellow"/>
+    <path d="M397 380Q394 366 402 359" class="outline"/>
+    <path d="M400 368Q414 353 425 362 419 374 400 368Z" fill="#e1e9d9" stroke="#647784" stroke-width="1.2"/>
+    <path d="M374 387Q369 397 374 405" class="thin"/>
+    <circle cx="451" cy="407" r="24" class="yellow"/>
+    <path d="M444 389 451 396 459 390M451 396V386" class="thin"/>
+    <g class="purple">
+      <circle cx="509" cy="388" r="11"/><circle cx="530" cy="392" r="11"/>
+      <circle cx="497" cy="405" r="11"/><circle cx="519" cy="410" r="11"/>
+      <circle cx="506" cy="426" r="10"/>
+    </g>
+    <path d="M519 385Q523 375 529 376" class="thin"/>
+  </g>
+  <path d="M589 426 650 408 704 429 643 449Z" class="print"/>
+  <path d="M589 426V473L643 495V449Z" class="metal"/>
+  <path d="M643 449 704 429V475L643 495Z" class="print"/>
+  <path d="M600 440 630 452M600 447 630 459M600 454 630 466M600 461 630 473" class="thin"/>
+  <circle cx="661" cy="468" r="3" class="blue"/>
+  <path d="M671 466 690 459V467L671 474Z" class="metal"/>
+  <rect x="111" y="194" width="126" height="278" rx="20" class="metal"/>
+  <rect x="118" y="201" width="112" height="264" rx="15" class="print"/>
+  <path d="M153 206H195" stroke="#303c45" stroke-width="4" stroke-linecap="round"/>
+  <path d="M132 237H184M132 245H169" class="thin"/>
+  <rect x="132" y="260" width="84" height="91" rx="7" fill="#e1e9d9" stroke="#647784" stroke-width="1.2"/>
+  <path d="M174 281C164 272 145 279 148 297 150 313 160 326 172 324 184 331 203 309 200 293 198 280 185 276 174 281Z" class="yellow"/>
+  <path d="M174 284Q173 274 179 269M177 274Q185 266 191 272" class="thin"/>
+  <path d="M133 367H194M133 377H178" class="thin"/>
+  <rect x="132" y="396" width="84" height="19" rx="9.5" class="blue"/>
+  <path d="M162 405 168 410 181 400" class="thin"/>
+  <rect x="132" y="425" width="84" height="19" rx="9.5" class="yellow"/>
+  <path d="M157 435H191" class="thin"/>
+  <path d="M244 274Q262 260 280 274M249 282Q262 272 275 282M255 290Q262 284 269 290" stroke="#3b9fc5" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="262" cy="296" r="2" fill="#3b9fc5"/>
+</svg>

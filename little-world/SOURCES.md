@@ -23,6 +23,8 @@
 
 药盒与 FoodCare 的三张新增图片和原公开项目素材逐字节一致。住宅界面与本地作品预览使用「小尤」等匿名名称；外部原作品网站及 URL 可能显示真实姓名或账号。
 
+2026-09-07 本地修改：住宅工作室的 MoodBall、药盒和 FoodCare 封面改用 `assets/moodball-linework.svg`、`assets/smart-medication-linework.svg`、`assets/foodcare-linework.svg`。线稿根据已有产品形态以 SVG 绘制，与 `washer.svg` 保持一致的展示风格；上述照片保留为原始素材。
+
 ## 音乐与电视
 
 Flower Dance — DJ Okawari 使用原平台提供的播放器或入口：
@@ -61,3 +63,15 @@ v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审
 提示词：将 FoodCare 手机原型完整放在深色厨房台面的左侧，保留右侧摄像头、果蔬和计算机；匹配光照和接触阴影，保留 FoodCare / care for your health / Submit / Link to Costco 的界面文字；输出一张 16:9 场景图，不加标题或边框。
 
 `../portfolio/assets/images/little-world/home-preview.jpg` 来自本项目更新后的实时三维场景。
+
+## 自动日照
+
+`daylight.js` 按 NOAA / Jean Meeus 的太阳位置与日出日落方程在本机计算，不调用外部服务。公式参考：[NOAA Solar Calculation Details](https://gml.noaa.gov/grad/solcalc/calcdetails.html)。默认位置为悉尼，时区使用 `Australia/Sydney`，日出日落以太阳中心高度 −0.833° 为界；房间配色、亮度与窗边斜光为氛围设计。
+
+## 本地交互与房间改造
+
+钢琴声音由 Web Audio 合成，没有新增外部音频。升降桌、人体工学椅、沙袋沙发、儿童床、洗漱用品和窗帘均由 Three.js 几何生成。全身镜使用实际房间的平面反射，算法参考 [Three.js Reflector](https://github.com/mrdoob/three.js/blob/r170/examples/jsm/objects/Reflector.js)，并限制分辨率和更新频率以控制移动端开销。
+
+植物使用真实经过的天数和品种差异；其发芽、开花、水肥与凋谢规则、园艺来源及模拟边界见 [PLANT-LIFECYCLE.md](PLANT-LIFECYCLE.md)。
+
+洗衣机衣物、键帽、卫浴内腔及柜板开孔由本项目生成。45 分钟洗涤与 60 分钟烘干是小屋选定的交互程序时长，不对应具体产品参数；衣物每 14 天生成一次，使用浏览器保存的真实时间戳。

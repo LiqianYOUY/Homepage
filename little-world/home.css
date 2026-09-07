@@ -4,6 +4,15 @@
 
 /* One shared icon box keeps every room and walking mark optically aligned. */
 .room-nav{--room-icon-size:18px}.room-nav button>svg{display:block;width:var(--room-icon-size);height:var(--room-icon-size);flex:0 0 var(--room-icon-size);align-self:center}.room-nav button>span{line-height:1.2}
+.room-nav button,.room-nav .nav-divider{flex-shrink:0}.room-nav{scrollbar-width:none}.room-nav::-webkit-scrollbar{display:none}
 @media(max-width:760px){.room-nav{--room-icon-size:15px}.room-nav button{padding-inline:7px;gap:4px}}
 
 @media(max-width:430px){.room-nav button{padding-inline:5px;gap:3px}.room-nav button>span{font-size:8px}.room-nav .nav-divider{margin-inline:2px}}
+
+/* The language switch stays compact beside the clock on narrow screens. */
+.language-toggle{min-width:44px;padding:0 10px;font-size:13px;font-weight:650;letter-spacing:.04em}
+html[lang=en] .room-nav span{font-size:10px}
+html[lang=en] .welcome.friend-card .visitor-chip{font-size:11px}
+html[lang=en] .text-action{line-height:1.5}
+@media(max-width:600px){.topbar .clock{margin-right:0;flex-shrink:1;min-width:0}.topbar .clock strong{font-size:11px;letter-spacing:.2px}.topbar .clock small{font-size:7px;white-space:nowrap}.topbar .brand{gap:6px}.topbar .brand strong{font-size:17px}.topbar .top-actions{gap:3px}.topbar .icon-button{padding:0 8px}html[lang=en] .room-nav button{padding:8px 7px}html[lang=en] .room-nav span{font-size:9px}}
+@media(max-width:370px){.topbar .clock small{display:none}.topbar .brand strong{font-size:16px}.topbar .home-mark{width:30px;height:30px}.topbar .clock strong{font-size:10px}}

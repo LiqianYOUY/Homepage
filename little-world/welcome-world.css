@@ -55,6 +55,8 @@
 .cat-tools .cat-focus{flex:1;font-size:11px;text-align:center}
 .cat-card.compactible-card .cat-caption{margin:10px 0 0;font-size:9px;line-height:1.6;color:#8d977f}
 .compactible-card.is-collapsed{border-radius:19px}
+.welcome.friend-card.is-expanded,.close-view .welcome.friend-card.is-expanded,.walk-mode .welcome.friend-card.is-expanded{z-index:10;background:var(--cream,#fbfbf3)}
+.cat-card.compactible-card[hidden]{display:none!important}
 @media(max-width:1100px) and (min-width:761px){.welcome.friend-card,.close-view .welcome.friend-card{width:216px;left:20px}.cat-card.compactible-card{width:216px;right:20px}.compactible-card .card-body{padding-left:16px;padding-right:16px}.welcome.friend-card .visitor-chip{font-size:11px}.welcome.friend-card .card-body h1{font-size:19px}}
 @media(max-width:760px){
  :root{--cards-top:calc(76px + env(safe-area-inset-top,0px));--cards-bottom-gap:calc(116px + env(safe-area-inset-bottom,0px))}
@@ -78,6 +80,7 @@
  .compactible-card.is-collapsed{z-index:8}
  .welcome.friend-card.is-expanded,.close-view .welcome.friend-card.is-expanded,.cat-card.compactible-card.is-expanded{left:12px;right:12px;width:auto}
  .compactible-card.is-expanded>.card-header{width:calc((100% - 12px)/2)}
+ .welcome.friend-card.is-expanded>.card-header{width:100%}
  .cat-card.compactible-card.is-expanded>.card-header{margin-left:auto}
  .compactible-card .card-body,.cat-card.compactible-card .card-body{padding:9px 18px 16px;border-top:1px solid #dce2d3;margin-top:1px}
  .welcome.friend-card .card-body h1,.close-view .welcome.friend-card .card-body h1{font-size:21px}
@@ -104,3 +107,5 @@
 .tv-player video,.tv-overlay video{display:block;object-fit:contain;background:#111813}
 .tv-connection .world-button{color:#f5f0df;background:#ffffff18;border:1px solid #ffffff35}
 @media(max-width:760px){.tv-connection{gap:10px;padding:13px;font-size:10px}.tv-connection strong{font-size:15px}.tv-connection .world-button{font-size:10px;padding:7px 9px}.tv-remote{max-width:calc(100vw - 28px)}}
+
+.plant-stages{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}.plant-stages span{padding:5px 9px;border:1px solid var(--line);border-radius:20px;font-size:12px;color:#7d8973}.plant-stages .current{background:#657e59;color:#fffdf1;border-color:#657e59}.plant-care-facts{display:grid;grid-template-columns:1fr 1.3fr;gap:8px 12px;font-size:13px;line-height:1.6;margin:16px 0}.plant-care-facts dt{color:#879078}.plant-care-facts dd{margin:0;color:#536649}.vase-choice{border-top:1px solid #e0e5d6;padding:17px 0}.vase-choice h3{font-size:17px;margin:0 0 8px}.vase-choice p{font-size:13px;line-height:1.65;color:#7a876f}.vase-choice select,.seed-options select{font:inherit;font-size:13px;min-height:44px;border:1px solid #d6dfce;border-radius:9px;background:#fffdf4;color:#536649;padding:8px;max-width:100%}.planter-detail .stats-caption{font-size:12px;line-height:1.8}.world-button:disabled{opacity:.48;cursor:default}.world-button:disabled:active{transform:none}

@@ -337,7 +337,7 @@ export function createPersonalSpace({getState = () => ({}), setState = () => {},
         const actions = el('div', {class: 'ps-actions'}, button('小窗阅读', () => openReader(paper), 'ps-primary'));
         if (safe) actions.append(link('新标签页 ↗', safe));
         actions.append(button('编辑', () => { const current = libraryPapers().find(p => p.id === paper.id); if (!current) { render(); return; } editing = current.id; title.value = current.title; url.value = current.url; submit.textContent = '保存修改'; cancel.hidden = false; form.closest('details').open = true; title.focus(); }), button('移除', () => { papers = libraryPapers().filter(p => p.id !== paper.id); patch({papers}); windows.get(`reader:${paper.id}`)?.close(); if (editing === paper.id) reset(); render(); }, 'ps-quiet'));
-        list.append(el('article', {class: 'ps-paper'}, el('span', {class: 'ps-book-mark', 'aria-hidden': 'true', text: '≡'}), el('div', {class: 'ps-paper-info'}, el('h3', {text: paper.title || '未命名书籍'}), el('p', {text: isBundledBook(paper.url) ? '公版原著 · 英文全文' : paper.url}), actions)));
+        list.append(el('article', {class: 'ps-paper'}, el('span', {class: 'ps-book-mark', 'aria-hidden': 'true', text: '≡'}), el('div', {class: 'ps-paper-info'}, el('h3', {text: paper.title || '未命名书籍', 'data-i18n-skip': isBundledBook(paper.url) ? null : ''}), el('p', {text: isBundledBook(paper.url) ? '公版原著 · 英文全文' : paper.url}), actions)));
       });
     }
     win.content.append(list, el('details', {class: 'ps-add-paper', open: !papers.length}, el('summary', {text: '添加 / 编辑书籍'}), form));
