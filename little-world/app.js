@@ -3,7 +3,7 @@ import {OrbitControls} from './vendor/OrbitControls.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {createStore,localDay} from './state.js?v=20';
 import {createPersonalSpace} from './personal-space.js?v=20';
-import {createCat} from './cat.js';
+import {createCat} from './cat.js?v=plush-1';
 import {setupHouseInteractions} from './home-interactions.js?v=15';
 import {setupStudio} from './studio.js?v=20';
 import {createWalkCollision} from './walk-collision.js?v=14';
@@ -129,7 +129,11 @@ function feedCat(){const c=state().cat,day=localDay();const already=(c.fedDays||
 
 function petCat(){cat?.pet();setState({cat:{pets:(state().cat.pets||0)+1}});$('#cat-status').textContent='呼噜呼噜，她在你身边放松下来。';toast(`${state().cat.name}蹭了蹭你的手。`);}
 $('#feed-cat').onclick=feedCat;$('#pet-cat').onclick=petCat;$('#cat-follow').onchange=e=>{cat?.setFollowing(e.target.checked);setState({cat:{following:e.target.checked}});$('#cat-status').textContent=e.target.checked?'在客厅里陪你走走。':'找个舒服的地方歇一会儿。';};
-$('#focus-cat').onclick=()=>{if(!cat)return;watchingCat=true;if(walk)exitWalk(false);currentRoom='living';document.body.classList.add('close-view');document.querySelectorAll('[data-room]').forEach(b=>b.classList.toggle('active',b.dataset.room==='living'));const p=cat.root.position;moveTween={start:performance.now(),from:camera.position.clone(),to:p.clone().add(new THREE.Vector3(.4,1.65,-1.2)),lookFrom:controls.target.clone(),lookTo:p.clone().add(new THREE.Vector3(0,.25,0))};};
+function catCameraPosition(){
+ const distance=Math.max(1,.8/camera.aspect);
+ return cat.root.position.clone().add(new THREE.Vector3(.45,.35,1.12).multiplyScalar(distance).applyAxisAngle(new THREE.Vector3(0,1,0),cat.root.rotation.y)).add(new THREE.Vector3(0,.27,0));
+}
+$('#focus-cat').onclick=()=>{if(!cat)return;watchingCat=true;if(walk)exitWalk(false);currentRoom='living';document.body.classList.add('close-view');document.querySelectorAll('[data-room]').forEach(b=>b.classList.toggle('active',b.dataset.room==='living'));const p=cat.root.position;moveTween={start:performance.now(),from:camera.position.clone(),to:catCameraPosition(),lookFrom:controls.target.clone(),lookTo:p.clone().add(new THREE.Vector3(0,.27,0))};};
 $('#rename-cat').addEventListener('change',e=>{const name=e.target.value.trim().slice(0,16)||'小橘';setState({cat:{name}});toast('她的新名字是'+name+'。');});
 setInterval(refreshCare,60000);
 
@@ -216,4 +220,4 @@ try{
 let last=performance.now(),elapsed=0,lastCatAction='';
 function tick(now){requestAnimationFrame(tick);const dt=Math.min(.045,(now-last)/1000);last=now;if(document.hidden)return;elapsed+=dt;if(moveTween){const u=Math.min(1,(now-moveTween.start)/850),t=u*u*(3-2*u);camera.position.lerpVectors(moveTween.from,moveTween.to,t);controls.target.lerpVectors(moveTween.lookFrom,moveTween.lookTo,t);if(u===1)moveTween=null;}if(!walk)controls.update();if(watchingCat&&!moveTween&&cat){const target=cat.root.position.clone().add(new THREE.Vector3(0,.25,0));camera.position.add(target.clone().sub(controls.target));controls.target.copy(target);camera.lookAt(target);}groundNavigation.update(dt);renovation?.update(dt);entryDetails?.update(dt);bedroomDetails?.update(dt);laundry?.update(dt);house?.update(dt);terrace?.update(dt,elapsed);cabinetry?.update(dt);cat?.update(dt,elapsed);smart?.update(dt,elapsed);daylight.update();tv?.update();studio?.update(dt,elapsed);const action=cat?.root.userData.catState?.action;if(action&&action!==lastCatAction){lastCatAction=action;$('#cat-status').textContent=({drink:'咕嘟咕嘟，喝一点清水。',beg:'踮起脚来：可以摸摸我的头吗？',align:'走到自己的小碗前，准备开饭。',greet:'听见你来了，她跑来打招呼。',trot:'在小屋里轻快地跑几步。',eat:'低头认真吃饭，尾巴轻轻摆着。',pet:'呼噜呼噜，在你身边放松下来。',walk:'在客厅里陪你走走。',idle:'找个舒服的地方，安静陪着你。'})[action]||'在家里伸个懒腰。';}updateHotspots();renderer.render(scene,camera);}
 requestAnimationFrame(tick);
-window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);if(currentRoom==='overview'&&!walk)go('overview',true);});
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);if(watchingCat&&cat){moveTween=null;camera.position.copy(catCameraPosition());controls.target.copy(cat.root.position).add(new THREE.Vector3(0,.27,0));controls.update();}else if(currentRoom==='overview'&&!walk)go('overview',true);});

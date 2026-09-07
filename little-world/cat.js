@@ -1,5 +1,5 @@
 import {createCatAudio} from './cat-audio.js';
-import {buildCatVisuals} from './cat-visuals.js';
+import {buildCatVisuals} from './cat-visuals.js?v=plush-1';
 
 /** A small, entirely mesh-built companion. Coordinates use glTF/Three.js Y-up.
  * Optional navigation = {points: [[x,z], ...], edges: [[a,b], ...]}.
@@ -33,7 +33,7 @@ export function createCat({THREE, scene, onInteract, getPlayerPosition, getPoint
     const obj=new THREE.Mesh(geometry,mat);obj.name=name;obj.position.set(...pos);obj.scale.set(...scale);
     obj.castShadow=true;obj.receiveShadow=true;obj.userData.interactable='cat';parent.add(obj);return obj;
   }
-  const {torso,legs,head,ears,eyeGroups,tailBase,animateTail,setMouth}=buildCatVisuals({THREE,root,geometries,materials,textures});
+  const {torso,legs,head,ears,eyeGroups,tailBase,animateTail,setMouth,setEyeOpen}=buildCatVisuals({THREE,root,geometries,materials,textures});
   const readState=()=> {
     try {
       if(store?.getCatState)return store.getCatState()||{};
@@ -294,12 +294,12 @@ export function createCat({THREE, scene, onInteract, getPlayerPosition, getPoint
     torso.rotation.x=-begWeight*.18;
     for(let i=0;i<4;i++) {
       const phase=travelPhase+(i===0||i===3?0:Math.PI);
-      legs[i].position.y=.25+(i<2?begWeight*.035:0);
+      legs[i].position.y=.195+(i<2?begWeight*.035:0);
       legs[i].rotation.x=moving&&!reduced?Math.sin(phase)*(running?.46:.29):(i<2?eatWeight*.08-begWeight*.56:begWeight*.035);
       legs[i].scale.y=i<2?1-eatWeight*.07:1;
     }
-    head.position.y=.347-eatWeight*.187+begWeight*.095+petWeight*Math.sin(t*4)*.009;
-    head.position.z=.227+eatWeight*.105-begWeight*.025;
+    head.position.y=.330-eatWeight*.130+begWeight*.095+petWeight*Math.sin(t*4)*.009;
+    head.position.z=.205+eatWeight*.105-begWeight*.025;
     head.rotation.x=eatWeight*(.64+(!reduced?Math.sin(t*(drinking?12:8))*.018:0))-petWeight*.12-begWeight*.26;
     head.rotation.y=petWeight*Math.sin(t*3.5)*.15+(moving||eating||drinking||begging?0:!reduced?Math.sin(t*.5)*.065:0);
     head.rotation.z=petWeight*Math.sin(t*3.5)*.10;
@@ -309,8 +309,8 @@ export function createCat({THREE, scene, onInteract, getPlayerPosition, getPoint
     ears[0].rotation.z=.16+(!reduced?Math.sin(t*.7)*.02:0);ears[1].rotation.z=-.16-(!reduced?Math.sin(t*.8)*.02:0);
     if(t>=nextBlink){blinkStart=t;nextBlink=t+3.1+Math.random()*2;}
     const blink=t-blinkStart,open=!reduced&&blink>=0&&blink<.2?Math.max(.05,Math.abs(blink-.1)*10):1;
-    eyeGroups.forEach(e=>e.scale.y=(petting?.45:eating||drinking?.68:1)*open);
-    tailBase.position.y=.287+begWeight*.025;tailBase.rotation.x=petting||begging?-.30:-1.05;
+    setEyeOpen((petting?.45:eating||drinking?.68:1)*open);
+    tailBase.position.y=.257+begWeight*.025;tailBase.rotation.x=petting||begging?-.30:-1.05;
     tailBase.rotation.z=!reduced?Math.sin(t*(moving?4:1.8))*(petting?.2:.12):0;
     animateTail(t,reduced);
     locomotion=moving?(running?'trot':'walk'):'rest';
