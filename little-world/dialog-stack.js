@@ -1,7 +1,7 @@
 /** One visible dialog owns Escape. This module never handles movement keys. */
 const SELECTOR='[role="dialog"],#settings';
 function visible(panel){
- if(!panel?.isConnected||!panel.getClientRects().length)return false;
+ if(!panel?.isConnected||panel.hidden||panel.closest('[hidden]')||!panel.getClientRects().length)return false;
  for(let p=panel;p;p=p.parentElement){const s=getComputedStyle(p);if(p.hidden||s.display==='none'||s.visibility==='hidden'||s.visibility==='collapse')return false;}
  return true;
 }
@@ -21,8 +21,8 @@ function paintOrder(a,b){
  const az=Number.parseInt(getComputedStyle(aa).zIndex,10)||0,bz=Number.parseInt(getComputedStyle(bb).zIndex,10)||0;
  return az-bz||documentOrder(aa,bb);
 }
-export function topDialog(){
- const panels=[...document.querySelectorAll(SELECTOR)].filter(visible);
+export function topDialog(exclude=null){
+ const panels=[...document.querySelectorAll(SELECTOR)].filter(p=>p!==exclude&&visible(p));
  return panels.sort(paintOrder).at(-1)||null;
 }
 export function isTopDialog(panel){return !!panel&&topDialog()===panel;}

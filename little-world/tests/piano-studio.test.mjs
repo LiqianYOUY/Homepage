@@ -5,7 +5,7 @@ import * as THREE from '../vendor/three.module.js';
 import {registerHooks} from 'node:module';
 registerHooks({resolve(specifier,context,nextResolve){return nextResolve(specifier==='three'?new URL('../vendor/three.module.js',import.meta.url).href:specifier,context);}});
 const {GLTFLoader}=await import('../vendor/GLTFLoader.js');
-import {createPianoAudio,frequencyForMidi,PIANO_KEYS} from '../piano.js?v=14';
+import {createPianoAudio,frequencyForMidi,PIANO_KEYS,pianoMidiForCode,clampPianoOctave} from '../piano.js?v=14';
 import {setupStudio} from '../studio.js?v=14';
 import {createWalkCollision} from '../walk-collision.js?v=14';
 
@@ -29,17 +29,35 @@ class FakeAudioContext {
  close(){this.closed=true;}
 }
 
-test('the two-octave piano has correctly tuned pitches and the physical white/black arrangement',()=>{
+test('all 88 piano notes have correctly tuned pitches and the physical white/black arrangement',()=>{
  assert.equal(frequencyForMidi(69),440);
  assert.ok(Math.abs(frequencyForMidi(60)-261.6255653)<.00001);
  assert.equal(frequencyForMidi(72),2*frequencyForMidi(60));
- assert.equal(PIANO_KEYS.length,25);assert.equal(PIANO_KEYS.filter(key=>!key.black).length,15);assert.equal(PIANO_KEYS.filter(key=>key.black).length,10);
- assert.deepEqual([PIANO_KEYS[0].name,PIANO_KEYS.at(-1).name],['C4','C6']);
+ assert.equal(PIANO_KEYS.length,88);assert.equal(PIANO_KEYS.filter(key=>!key.black).length,52);assert.equal(PIANO_KEYS.filter(key=>key.black).length,36);
+ assert.deepEqual([PIANO_KEYS[0].name,PIANO_KEYS.at(-1).name],['A0','C8']);
+});
+
+test('three letter rows play low, middle and high notes, and octave shifts cover every piano key',()=>{
+ const rows=[['ZXCVBNM',48],['ASDFGHJ',60],['QWERTYU',72]],steps=[0,2,4,5,7,9,11];
+ for(const [letters,base] of rows)for(const [index,letter] of [...letters].entries()){
+  assert.equal(pianoMidiForCode('Key'+letter,4),base+steps[index]);
+  assert.equal(pianoMidiForCode('Key'+letter,3),base+steps[index]-12);
+  assert.equal(pianoMidiForCode('Key'+letter,5),base+steps[index]+12);
+ }
+ assert.equal(pianoMidiForCode('KeyA',4,true),61);assert.equal(pianoMidiForCode('KeyD',4,true),64,'E has no separate sharp black key');
+ const reachable=new Set();for(let octave=1;octave<=7;octave++)for(const letter of 'ZXCVBNMASDFGHJQWERTYU')for(const sharp of [false,true]){
+  const midi=pianoMidiForCode('Key'+letter,octave,sharp);if(midi!==undefined)reachable.add(midi);
+ }
+ assert.deepEqual([...reachable].sort((a,b)=>a-b),PIANO_KEYS.map(key=>key.midi));
+ assert.equal(pianoMidiForCode('KeyN',1),21);assert.equal(pianoMidiForCode('KeyQ',7),108);
+ assert.equal(pianoMidiForCode('KeyZ',1),undefined);assert.equal(pianoMidiForCode('KeyW',7),undefined);assert.equal(pianoMidiForCode('ArrowLeft',4),undefined);
+ assert.equal(clampPianoOctave(0),1);assert.equal(clampPianoOctave(8),7);assert.equal(clampPianoOctave(NaN),4);
 });
 
 test('audio is gesture-created, supports chords, and releases held and sustained notes',()=>{
  FakeAudioContext.contexts=[];const audio=createPianoAudio({AudioContextClass:FakeAudioContext});
  assert.equal(FakeAudioContext.contexts.length,0);
+ assert.equal(audio.start(20),false);assert.equal(audio.start(109),false);assert.equal(FakeAudioContext.contexts.length,0);
  [60,64,67].forEach(note=>assert.equal(audio.start(note),true));
  assert.equal(FakeAudioContext.contexts.length,1);assert.equal(audio.activeVoiceCount,3);
  audio.release(60);assert.equal(audio.activeVoiceCount,2);

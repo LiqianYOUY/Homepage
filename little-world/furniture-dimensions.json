@@ -1,0 +1,2579 @@
+{
+  "units": "metres",
+  "method": "World bounds before static scene optimization; seated and worktop heights measured separately.",
+  "entries": [
+    {
+      "name": "客厅沙发",
+      "dimensionsXYZm": [
+        2.68,
+        0.768,
+        0.99
+      ],
+      "bottomM": 0,
+      "topM": 0.768,
+      "notes": "三人沙发；座高含坐垫",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "客厅茶几 / 棋牌桌",
+      "dimensionsXYZm": [
+        1.72,
+        0.55,
+        1.18
+      ],
+      "bottomM": 0.015,
+      "topM": 0.565,
+      "notes": "包围盒含桌上棋牌；桌面尺寸另列",
+      "worktopM": [
+        1.72,
+        1.18
+      ],
+      "surfaceHeightM": 0.465
+    },
+    {
+      "name": "电子钢琴",
+      "dimensionsXYZm": [
+        0.433,
+        1.055,
+        1.36
+      ],
+      "bottomM": 0,
+      "topM": 1.055,
+      "notes": ""
+    },
+    {
+      "name": "钢琴琴凳",
+      "dimensionsXYZm": [
+        0.32,
+        0.515,
+        0.62
+      ],
+      "bottomM": 0,
+      "topM": 0.515,
+      "notes": "可调琴凳造型"
+    },
+    {
+      "name": "餐桌",
+      "dimensionsXYZm": [
+        0.98,
+        0.76,
+        2.55
+      ],
+      "bottomM": 0,
+      "topM": 0.76,
+      "notes": "桌面厚度约 67 mm",
+      "surfaceHeightM": 0.76
+    },
+    {
+      "name": "餐椅 west 382",
+      "dimensionsXYZm": [
+        0.49,
+        0.837,
+        0.48
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 east 382",
+      "dimensionsXYZm": [
+        0.49,
+        0.837,
+        0.48
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 west 423",
+      "dimensionsXYZm": [
+        0.49,
+        0.837,
+        0.48
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 east 423",
+      "dimensionsXYZm": [
+        0.49,
+        0.837,
+        0.48
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 west 464",
+      "dimensionsXYZm": [
+        0.49,
+        0.837,
+        0.48
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 east 464",
+      "dimensionsXYZm": [
+        0.49,
+        0.837,
+        0.48
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 north",
+      "dimensionsXYZm": [
+        0.48,
+        0.837,
+        0.49
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "餐椅 south",
+      "dimensionsXYZm": [
+        0.48,
+        0.837,
+        0.49
+      ],
+      "bottomM": 0,
+      "topM": 0.837,
+      "notes": "拖动后的朝向会改变 X/Z 包围盒",
+      "seatHeightM": 0.46
+    },
+    {
+      "name": "客厅电视",
+      "dimensionsXYZm": [
+        2,
+        1.08,
+        0.055
+      ],
+      "bottomM": 0.88,
+      "topM": 1.96,
+      "notes": ""
+    },
+    {
+      "name": "客厅电视柜",
+      "dimensionsXYZm": [
+        3.23,
+        0.32,
+        0.36
+      ],
+      "bottomM": 0.15,
+      "topM": 0.47,
+      "notes": ""
+    },
+    {
+      "name": "回音壁",
+      "dimensionsXYZm": [
+        1.06,
+        0.065,
+        0.075
+      ],
+      "bottomM": 0.47,
+      "topM": 0.535,
+      "notes": ""
+    },
+    {
+      "name": "室内阳台茶桌",
+      "dimensionsXYZm": [
+        0.86,
+        0.455,
+        0.61
+      ],
+      "bottomM": 0,
+      "topM": 0.455,
+      "notes": ""
+    },
+    {
+      "name": "入户换鞋凳",
+      "dimensionsXYZm": [
+        0.38,
+        0.502,
+        0.7
+      ],
+      "bottomM": 0,
+      "topM": 0.502,
+      "notes": ""
+    },
+    {
+      "name": "厨房灶具",
+      "dimensionsXYZm": [
+        0.57,
+        0.015,
+        0.73
+      ],
+      "bottomM": 0.933,
+      "topM": 0.947,
+      "notes": ""
+    },
+    {
+      "name": "双层洗烘机外壳",
+      "dimensionsXYZm": [
+        0.62,
+        1.68,
+        0.67
+      ],
+      "bottomM": 0,
+      "topM": 1.68,
+      "notes": "含机壳；前方门圈另突出约 36 mm"
+    },
+    {
+      "name": "恒温酒柜",
+      "dimensionsXYZm": [
+        0.6,
+        1.926,
+        0.65
+      ],
+      "bottomM": 0.114,
+      "topM": 2.04,
+      "notes": "本体含门与把手，不含顶柜"
+    },
+    {
+      "name": "烤箱外围高柜",
+      "dimensionsXYZm": [
+        0.761,
+        2.46,
+        0.649
+      ],
+      "bottomM": 0,
+      "topM": 2.46,
+      "notes": ""
+    },
+    {
+      "name": "下层嵌入式烤箱",
+      "dimensionsXYZm": [
+        0.726,
+        0.613,
+        0.701
+      ],
+      "bottomM": 0.555,
+      "topM": 1.168,
+      "notes": ""
+    },
+    {
+      "name": "上层嵌入式烤箱",
+      "dimensionsXYZm": [
+        0.726,
+        0.613,
+        0.701
+      ],
+      "bottomM": 1.215,
+      "topM": 1.828,
+      "notes": ""
+    },
+    {
+      "name": "冰箱本体",
+      "dimensionsXYZm": [
+        0.96,
+        1.83,
+        0.764
+      ],
+      "bottomM": 0,
+      "topM": 1.83,
+      "notes": "含门把手；2.46 m 是外部储物柜总高",
+      "nominalWidthM": 0.96,
+      "nominalHeightM": 1.83,
+      "surroundHeightM": 2.46
+    },
+    {
+      "name": "冰箱外围储物柜",
+      "dimensionsXYZm": [
+        1.527,
+        2.46,
+        0.619
+      ],
+      "bottomM": 0,
+      "topM": 2.46,
+      "notes": ""
+    },
+    {
+      "name": "书房升降桌",
+      "dimensionsXYZm": [
+        0.794,
+        1.315,
+        1.8
+      ],
+      "bottomM": 0,
+      "topM": 1.315,
+      "notes": "包围盒含屏幕、桌面物件及桌腿；桌面另列",
+      "worktopM": [
+        1.8,
+        0.76
+      ],
+      "surfaceHeightM": 0.7925,
+      "standingHeightM": 1.1325
+    },
+    {
+      "name": "书房人体工学椅",
+      "dimensionsXYZm": [
+        0.674,
+        1.149,
+        0.667
+      ],
+      "bottomM": 0.006,
+      "topM": 1.155,
+      "notes": ""
+    },
+    {
+      "name": "书房降噪耳机及支架",
+      "dimensionsXYZm": [
+        0.135,
+        0.307,
+        0.294
+      ],
+      "bottomM": 0.793,
+      "topM": 1.099,
+      "notes": ""
+    },
+    {
+      "name": "主卧大床",
+      "dimensionsXYZm": [
+        2.2,
+        1.1,
+        2.225
+      ],
+      "bottomM": 0,
+      "topM": 1.1,
+      "notes": ""
+    },
+    {
+      "name": "主卧大床 床垫",
+      "dimensionsXYZm": [
+        1.8,
+        0.26,
+        2.03
+      ],
+      "bottomM": 0.28,
+      "topM": 0.54,
+      "notes": ""
+    },
+    {
+      "name": "主卧大床 床头柜 1",
+      "dimensionsXYZm": [
+        0.5,
+        0.45,
+        0.5
+      ],
+      "bottomM": 0,
+      "topM": 0.45,
+      "notes": ""
+    },
+    {
+      "name": "主卧大床 床头柜 2",
+      "dimensionsXYZm": [
+        0.5,
+        0.45,
+        0.5
+      ],
+      "bottomM": 0,
+      "topM": 0.45,
+      "notes": ""
+    },
+    {
+      "name": "次卧双人床",
+      "dimensionsXYZm": [
+        2,
+        1.1,
+        2.145
+      ],
+      "bottomM": 0,
+      "topM": 1.1,
+      "notes": ""
+    },
+    {
+      "name": "次卧双人床 床垫",
+      "dimensionsXYZm": [
+        1.6,
+        0.26,
+        1.95
+      ],
+      "bottomM": 0.28,
+      "topM": 0.54,
+      "notes": ""
+    },
+    {
+      "name": "次卧双人床 床头柜 1",
+      "dimensionsXYZm": [
+        0.5,
+        0.45,
+        0.5
+      ],
+      "bottomM": 0,
+      "topM": 0.45,
+      "notes": ""
+    },
+    {
+      "name": "次卧双人床 床头柜 2",
+      "dimensionsXYZm": [
+        0.5,
+        0.45,
+        0.5
+      ],
+      "bottomM": 0,
+      "topM": 0.45,
+      "notes": ""
+    },
+    {
+      "name": "主卧电视柜",
+      "dimensionsXYZm": [
+        1.84,
+        0.52,
+        0.29
+      ],
+      "bottomM": 0,
+      "topM": 0.52,
+      "notes": ""
+    },
+    {
+      "name": "主卧休憩椅",
+      "dimensionsXYZm": [
+        1.154,
+        1.822,
+        1.232
+      ],
+      "bottomM": 0.002,
+      "topM": 1.824,
+      "notes": "含坐垫和灯",
+      "seatHeightM": 0.48
+    },
+    {
+      "name": "主卧衣帽架",
+      "dimensionsXYZm": [
+        0.473,
+        1.811,
+        0.28
+      ],
+      "bottomM": 0.001,
+      "topM": 1.813,
+      "notes": ""
+    },
+    {
+      "name": "衣帽间收纳岛台",
+      "dimensionsXYZm": [
+        1.5,
+        0.939,
+        0.72
+      ],
+      "bottomM": 0,
+      "topM": 0.939,
+      "notes": "包围盒含衣物；台面高 850 mm",
+      "worktopM": [
+        1.5,
+        0.72
+      ],
+      "surfaceHeightM": 0.85,
+      "clearances": {
+        "position": [
+          -5.6,
+          0,
+          2.72
+        ],
+        "bounds": {
+          "min": [
+            -6.35,
+            -1.7881393449270533e-9,
+            2.3599999856948854
+          ],
+          "max": [
+            -4.85,
+            0.9394999742507935,
+            3.080000014305115
+          ],
+          "size": [
+            1.5,
+            0.9394999760389328,
+            0.7200000286102295
+          ]
+        },
+        "footprintM": [
+          1.5,
+          0.72
+        ],
+        "worktopHeightM": 0.85,
+        "placement": "Full accessory storage island; clear east bath route and west bedroom route",
+        "contents": [
+          "folded knitwear",
+          "accessory drawers",
+          "leather-lined tray",
+          "watch",
+          "bracelet",
+          "paired earrings",
+          "folded scarf"
+        ],
+        "northClosedWardrobeClearanceM": 0.8038100608392715,
+        "northFullDoorSweepClearanceM": 0.2923822244827732,
+        "southClosedWardrobeClearanceM": 1.272569761811447,
+        "southFullDoorSweepClearanceM": 0.22660279522952287
+      }
+    },
+    {
+      "name": "次卧书桌",
+      "dimensionsXYZm": [
+        1.18,
+        1.055,
+        0.5
+      ],
+      "bottomM": 0,
+      "topM": 1.055,
+      "notes": ""
+    },
+    {
+      "name": "次卧座椅",
+      "dimensionsXYZm": [
+        0.47,
+        0.849,
+        0.451
+      ],
+      "bottomM": 0.014,
+      "topM": 0.863,
+      "notes": ""
+    },
+    {
+      "name": "儿童房子母上下铺",
+      "dimensionsXYZm": [
+        1.57,
+        2.21,
+        2.05
+      ],
+      "bottomM": 0,
+      "topM": 2.21,
+      "notes": "含护栏和侧梯；床垫分别列出"
+    },
+    {
+      "name": "儿童下铺床垫",
+      "dimensionsXYZm": [
+        1.28,
+        0.15,
+        1.92
+      ],
+      "bottomM": 0.337,
+      "topM": 0.487,
+      "notes": ""
+    },
+    {
+      "name": "儿童上铺床垫",
+      "dimensionsXYZm": [
+        0.9,
+        0.145,
+        1.92
+      ],
+      "bottomM": 1.624,
+      "topM": 1.768,
+      "notes": ""
+    },
+    {
+      "name": "儿童窗边整体长桌",
+      "dimensionsXYZm": [
+        0.6,
+        0.75,
+        2.46
+      ],
+      "bottomM": 0,
+      "topM": 0.75,
+      "notes": "一个连续桌面，两个学习位",
+      "surfaceHeightM": 0.75
+    },
+    {
+      "name": "儿童学习椅 1",
+      "dimensionsXYZm": [
+        0.451,
+        0.849,
+        0.47
+      ],
+      "bottomM": 0.014,
+      "topM": 0.863,
+      "notes": "含坐垫",
+      "seatHeightM": 0.467
+    },
+    {
+      "name": "儿童学习椅 2",
+      "dimensionsXYZm": [
+        0.451,
+        0.849,
+        0.47
+      ],
+      "bottomM": 0.014,
+      "topM": 0.863,
+      "notes": "含坐垫",
+      "seatHeightM": 0.467
+    },
+    {
+      "name": "儿童对称书柜 1",
+      "dimensionsXYZm": [
+        0.52,
+        2.271,
+        0.58
+      ],
+      "bottomM": 0,
+      "topM": 2.271,
+      "notes": "含两侧板；有效书架深度 320 mm"
+    },
+    {
+      "name": "儿童对称书柜 2",
+      "dimensionsXYZm": [
+        0.52,
+        2.271,
+        0.58
+      ],
+      "bottomM": 0,
+      "topM": 2.271,
+      "notes": "含两侧板；有效书架深度 320 mm"
+    },
+    {
+      "name": "儿童中央衣柜",
+      "dimensionsXYZm": [
+        1.3,
+        2.271,
+        0.613
+      ],
+      "bottomM": 0,
+      "topM": 2.271,
+      "notes": "含两扇推拉门"
+    },
+    {
+      "name": "阳台懒人沙发 1",
+      "dimensionsXYZm": [
+        1.102,
+        0.671,
+        1.64
+      ],
+      "bottomM": 0.025,
+      "topM": 0.696,
+      "notes": ""
+    },
+    {
+      "name": "阳台懒人沙发 2",
+      "dimensionsXYZm": [
+        1.102,
+        0.671,
+        1.64
+      ],
+      "bottomM": 0.025,
+      "topM": 0.696,
+      "notes": ""
+    },
+    {
+      "name": "主卧长衣柜",
+      "dimensionsXYZm": [
+        2.417,
+        2.45,
+        0.651
+      ],
+      "bottomM": 0,
+      "topM": 2.45,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 2.417,
+      "caseDepthM": 0.56,
+      "caseHeightM": 2.45
+    },
+    {
+      "name": "主卧联排衣柜",
+      "dimensionsXYZm": [
+        3.447,
+        2.45,
+        0.719
+      ],
+      "bottomM": 0,
+      "topM": 2.45,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 3.447,
+      "caseDepthM": 0.628,
+      "caseHeightM": 2.45
+    },
+    {
+      "name": "次卧二衣柜",
+      "dimensionsXYZm": [
+        0.762,
+        2.4,
+        1.538
+      ],
+      "bottomM": 0,
+      "topM": 2.4,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 1.538,
+      "caseDepthM": 0.671,
+      "caseHeightM": 2.4
+    },
+    {
+      "name": "食品储藏柜",
+      "dimensionsXYZm": [
+        0.582,
+        2.45,
+        0.705
+      ],
+      "bottomM": 0,
+      "topM": 2.45,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 0.582,
+      "caseDepthM": 0.626,
+      "caseHeightM": 2.45
+    },
+    {
+      "name": "厨房餐具高柜",
+      "dimensionsXYZm": [
+        1.477,
+        2.45,
+        0.705
+      ],
+      "bottomM": 0,
+      "topM": 2.45,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 1.477,
+      "caseDepthM": 0.626,
+      "caseHeightM": 2.45
+    },
+    {
+      "name": "家务储物柜",
+      "dimensionsXYZm": [
+        0.739,
+        2.45,
+        0.705
+      ],
+      "bottomM": 0,
+      "topM": 2.45,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 0.739,
+      "caseDepthM": 0.626,
+      "caseHeightM": 2.45
+    },
+    {
+      "name": "家居通讯柜",
+      "dimensionsXYZm": [
+        0.761,
+        2.45,
+        0.705
+      ],
+      "bottomM": 0,
+      "topM": 2.45,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 0.761,
+      "caseDepthM": 0.626,
+      "caseHeightM": 2.45
+    },
+    {
+      "name": "灶台下橱柜",
+      "dimensionsXYZm": [
+        0.863,
+        0.87,
+        2.56
+      ],
+      "bottomM": 0,
+      "topM": 0.87,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 2.56,
+      "caseDepthM": 0.784,
+      "caseHeightM": 0.87
+    },
+    {
+      "name": "中岛储物柜",
+      "dimensionsXYZm": [
+        0.939,
+        0.86,
+        2.693
+      ],
+      "bottomM": 0,
+      "topM": 0.86,
+      "notes": "当前柜门姿态的尺寸；柜体标称另列",
+      "caseWidthM": 2.693,
+      "caseDepthM": 0.86,
+      "caseHeightM": 0.86
+    },
+    {
+      "name": "入户鞋柜 1",
+      "dimensionsXYZm": [
+        0.237,
+        0.94,
+        0.455
+      ],
+      "bottomM": 0,
+      "topM": 0.94,
+      "notes": ""
+    },
+    {
+      "name": "入户鞋柜 2",
+      "dimensionsXYZm": [
+        0.237,
+        0.94,
+        0.455
+      ],
+      "bottomM": 0,
+      "topM": 0.94,
+      "notes": ""
+    },
+    {
+      "name": "入户鞋柜 3",
+      "dimensionsXYZm": [
+        0.237,
+        0.94,
+        0.455
+      ],
+      "bottomM": 0,
+      "topM": 0.94,
+      "notes": ""
+    },
+    {
+      "name": "Laundry sink inset basin",
+      "dimensionsXYZm": [
+        0.41,
+        0.214,
+        0.34
+      ],
+      "bottomM": 0.602,
+      "topM": 0.816,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.816,
+      "cavityDepthM": 0.19399999999999995
+    },
+    {
+      "name": "Bathroom2 vanity inset basin",
+      "dimensionsXYZm": [
+        0.442,
+        0.214,
+        0.34
+      ],
+      "bottomM": 0.602,
+      "topM": 0.816,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.816,
+      "cavityDepthM": 0.19399999999999995
+    },
+    {
+      "name": "Bathroom3 vanity inset basin",
+      "dimensionsXYZm": [
+        0.34,
+        0.214,
+        0.364
+      ],
+      "bottomM": 0.602,
+      "topM": 0.816,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.816,
+      "cavityDepthM": 0.19399999999999995
+    },
+    {
+      "name": "Master basin 1",
+      "dimensionsXYZm": [
+        0.38,
+        0.199,
+        0.53
+      ],
+      "bottomM": 0.716,
+      "topM": 0.915,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.915,
+      "cavityDepthM": 0.17900000000000005
+    },
+    {
+      "name": "Master basin 2",
+      "dimensionsXYZm": [
+        0.38,
+        0.199,
+        0.53
+      ],
+      "bottomM": 0.716,
+      "topM": 0.915,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.915,
+      "cavityDepthM": 0.17900000000000005
+    },
+    {
+      "name": "Kitchen island sink",
+      "dimensionsXYZm": [
+        0.48,
+        0.271,
+        0.63
+      ],
+      "bottomM": 0.69,
+      "topM": 0.961,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.9615,
+      "cavityDepthM": 0.24650000000000005
+    },
+    {
+      "name": "Bathroom2 toilet 完整马桶",
+      "dimensionsXYZm": [
+        0.4,
+        0.8,
+        0.65
+      ],
+      "bottomM": 0,
+      "topM": 0.8,
+      "notes": "含水箱、底座、座圈",
+      "seatHeightM": 0.435
+    },
+    {
+      "name": "Bathroom3 toilet 完整马桶",
+      "dimensionsXYZm": [
+        0.65,
+        0.8,
+        0.4
+      ],
+      "bottomM": 0,
+      "topM": 0.8,
+      "notes": "含水箱、底座、座圈",
+      "seatHeightM": 0.435
+    },
+    {
+      "name": "Master WC 完整马桶",
+      "dimensionsXYZm": [
+        0.4,
+        0.8,
+        0.65
+      ],
+      "bottomM": 0,
+      "topM": 0.8,
+      "notes": "含水箱、底座、座圈",
+      "seatHeightM": 0.435
+    },
+    {
+      "name": "Master freestanding bath",
+      "dimensionsXYZm": [
+        1.66,
+        0.59,
+        0.82
+      ],
+      "bottomM": 0.015,
+      "topM": 0.605,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.605,
+      "cavityDepthM": 0.485
+    },
+    {
+      "name": "Master shower",
+      "dimensionsXYZm": [
+        1.276,
+        0.036,
+        0.895
+      ],
+      "bottomM": 0.016,
+      "topM": 0.052,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.052,
+      "cavityDepthM": 0.032
+    },
+    {
+      "name": "Bathroom2 shower",
+      "dimensionsXYZm": [
+        0.918,
+        0.036,
+        1.074
+      ],
+      "bottomM": 0.016,
+      "topM": 0.052,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.052,
+      "cavityDepthM": 0.032
+    },
+    {
+      "name": "Bathroom3 shower",
+      "dimensionsXYZm": [
+        1.365,
+        0.036,
+        1.074
+      ],
+      "bottomM": 0.016,
+      "topM": 0.052,
+      "notes": "外壳尺寸；顶边离地高度另列",
+      "rimHeightM": 0.052,
+      "cavityDepthM": 0.032
+    },
+    {
+      "name": "露台柚木餐桌",
+      "dimensionsXYZm": [
+        1.04,
+        0.765,
+        0.658
+      ],
+      "bottomM": 0.024,
+      "topM": 0.79,
+      "notes": "包围盒含桌上物品；藤椅座面距露台地板 455 mm"
+    },
+    {
+      "name": "露台藤椅 1",
+      "dimensionsXYZm": [
+        0.595,
+        0.871,
+        0.71
+      ],
+      "bottomM": 0.022,
+      "topM": 0.894,
+      "notes": "包围盒含桌上物品；藤椅座面距露台地板 455 mm"
+    },
+    {
+      "name": "露台藤椅 2",
+      "dimensionsXYZm": [
+        0.595,
+        0.871,
+        0.71
+      ],
+      "bottomM": 0.022,
+      "topM": 0.894,
+      "notes": "包围盒含桌上物品；藤椅座面距露台地板 455 mm"
+    },
+    {
+      "name": "露台烧烤车",
+      "dimensionsXYZm": [
+        1.12,
+        1.473,
+        0.622
+      ],
+      "bottomM": 0.027,
+      "topM": 1.5,
+      "notes": "包围盒含桌上物品；藤椅座面距露台地板 455 mm"
+    },
+    {
+      "name": "微波炉",
+      "dimensionsXYZm": [
+        0.403,
+        0.308,
+        0.47
+      ],
+      "bottomM": 0.928,
+      "topM": 1.235,
+      "notes": ""
+    },
+    {
+      "name": "电饭煲",
+      "dimensionsXYZm": [
+        0.316,
+        0.251,
+        0.26
+      ],
+      "bottomM": 0.928,
+      "topM": 1.178,
+      "notes": ""
+    },
+    {
+      "name": "厨房操作台面",
+      "dimensionsXYZm": [
+        0.822,
+        0.055,
+        2.6
+      ],
+      "bottomM": 0.873,
+      "topM": 0.927,
+      "notes": ""
+    },
+    {
+      "name": "厨房中岛台面",
+      "dimensionsXYZm": [
+        0.97,
+        0.065,
+        3.14
+      ],
+      "bottomM": 0.868,
+      "topM": 0.933,
+      "notes": ""
+    },
+    {
+      "name": "书房墙上书架",
+      "dimensionsXYZm": [
+        0.3,
+        0.288,
+        1.65
+      ],
+      "bottomM": 1.585,
+      "topM": 1.873,
+      "notes": ""
+    },
+    {
+      "name": "Living olive plant 花盆",
+      "dimensionsXYZm": [
+        0.44,
+        0.32,
+        0.44
+      ],
+      "bottomM": 0,
+      "topM": 0.32,
+      "notes": ""
+    },
+    {
+      "name": "Bedroom2 plant 花盆",
+      "dimensionsXYZm": [
+        0.44,
+        0.32,
+        0.44
+      ],
+      "bottomM": 0,
+      "topM": 0.32,
+      "notes": ""
+    },
+    {
+      "name": "Ensuite corner plant 花盆",
+      "dimensionsXYZm": [
+        0.44,
+        0.32,
+        0.44
+      ],
+      "bottomM": 0,
+      "topM": 0.32,
+      "notes": ""
+    },
+    {
+      "name": "Wintergarden tall planting 花盆",
+      "dimensionsXYZm": [
+        0.44,
+        0.32,
+        0.44
+      ],
+      "bottomM": 0,
+      "topM": 0.32,
+      "notes": ""
+    },
+    {
+      "name": "Wintergarden south planting 花盆",
+      "dimensionsXYZm": [
+        0.44,
+        0.32,
+        0.44
+      ],
+      "bottomM": 0,
+      "topM": 0.32,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 1",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 2",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 3",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 4",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 5",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 6",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 7",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "露台花箱 8",
+      "dimensionsXYZm": [
+        1.22,
+        0.41,
+        0.52
+      ],
+      "bottomM": 0,
+      "topM": 0.41,
+      "notes": ""
+    },
+    {
+      "name": "Laundry sink 柜 / 台",
+      "dimensionsXYZm": [
+        0.665,
+        1.831,
+        0.55
+      ],
+      "bottomM": 0,
+      "topM": 1.831,
+      "notes": ""
+    },
+    {
+      "name": "Bathroom2 vanity 柜 / 台",
+      "dimensionsXYZm": [
+        0.715,
+        0.783,
+        0.55
+      ],
+      "bottomM": 0,
+      "topM": 0.783,
+      "notes": ""
+    },
+    {
+      "name": "Bathroom3 vanity 柜 / 台",
+      "dimensionsXYZm": [
+        0.55,
+        0.783,
+        0.595
+      ],
+      "bottomM": 0,
+      "topM": 0.783,
+      "notes": ""
+    },
+    {
+      "name": "Master double vanity 柜 / 台",
+      "dimensionsXYZm": [
+        0.65,
+        0.58,
+        1.72
+      ],
+      "bottomM": 0.2,
+      "topM": 0.78,
+      "notes": ""
+    },
+    {
+      "name": "Master vanity stone 柜 / 台",
+      "dimensionsXYZm": [
+        0.675,
+        0.05,
+        1.78
+      ],
+      "bottomM": 0.78,
+      "topM": 0.83,
+      "notes": ""
+    }
+  ],
+  "remainingComponents": [
+    {
+      "name": "Living rug",
+      "dimensionsXYZm": [
+        3.648,
+        0.015,
+        3.111
+      ],
+      "topM": 0.015
+    },
+    {
+      "name": "TV image surface",
+      "dimensionsXYZm": [
+        1.89,
+        0.97,
+        0.012
+      ],
+      "topM": 1.905
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "TV oak slat",
+      "dimensionsXYZm": [
+        0.05,
+        2.35,
+        0.045
+      ],
+      "topM": 2.395
+    },
+    {
+      "name": "Kitchen island stone end",
+      "dimensionsXYZm": [
+        0.97,
+        0.91,
+        0.055
+      ],
+      "topM": 0.91
+    },
+    {
+      "name": "Kitchen island stone end",
+      "dimensionsXYZm": [
+        0.97,
+        0.91,
+        0.055
+      ],
+      "topM": 0.91
+    },
+    {
+      "name": "Island dishwasher touch control",
+      "dimensionsXYZm": [
+        0.13,
+        0.012,
+        0.08
+      ],
+      "topM": 0.957
+    },
+    {
+      "name": "Induction hob ring",
+      "dimensionsXYZm": [
+        0.19,
+        0.003,
+        0.19
+      ],
+      "topM": 0.951
+    },
+    {
+      "name": "Induction hob ring",
+      "dimensionsXYZm": [
+        0.19,
+        0.003,
+        0.19
+      ],
+      "topM": 0.951
+    },
+    {
+      "name": "Induction hob ring",
+      "dimensionsXYZm": [
+        0.19,
+        0.003,
+        0.19
+      ],
+      "topM": 0.951
+    },
+    {
+      "name": "Induction hob ring",
+      "dimensionsXYZm": [
+        0.19,
+        0.003,
+        0.19
+      ],
+      "topM": 0.951
+    },
+    {
+      "name": "Wine fridge · carcass side",
+      "dimensionsXYZm": [
+        0.018,
+        2.46,
+        0.627
+      ],
+      "topM": 2.46
+    },
+    {
+      "name": "Wine fridge · carcass side",
+      "dimensionsXYZm": [
+        0.018,
+        2.46,
+        0.627
+      ],
+      "topM": 2.46
+    },
+    {
+      "name": "Wine fridge · carcass back",
+      "dimensionsXYZm": [
+        0.771,
+        2.46,
+        0.02
+      ],
+      "topM": 2.46
+    },
+    {
+      "name": "Wine fridge · carcass horizontal",
+      "dimensionsXYZm": [
+        0.771,
+        0.018,
+        0.627
+      ],
+      "topM": 0.114
+    },
+    {
+      "name": "Wine fridge · carcass horizontal",
+      "dimensionsXYZm": [
+        0.771,
+        0.018,
+        0.627
+      ],
+      "topM": 2.46
+    },
+    {
+      "name": "Wine fridge · cream filler",
+      "dimensionsXYZm": [
+        0.095,
+        1.922,
+        0.022
+      ],
+      "topM": 2.047
+    },
+    {
+      "name": "Wine fridge · cream filler",
+      "dimensionsXYZm": [
+        0.095,
+        1.922,
+        0.022
+      ],
+      "topM": 2.047
+    },
+    {
+      "name": "Laundry sink tap",
+      "dimensionsXYZm": [
+        0.03,
+        0.21,
+        0.03
+      ],
+      "topM": 0.99
+    },
+    {
+      "name": "Laundry sink spout",
+      "dimensionsXYZm": [
+        0.028,
+        0.025,
+        0.15
+      ],
+      "topM": 0.992
+    },
+    {
+      "name": "Bedroom 2 queen bed lamp base",
+      "dimensionsXYZm": [
+        0.2,
+        0.035,
+        0.2
+      ],
+      "topM": 0.485
+    },
+    {
+      "name": "Bedroom 2 queen bed lamp stem",
+      "dimensionsXYZm": [
+        0.026,
+        0.1,
+        0.026
+      ],
+      "topM": 0.58
+    },
+    {
+      "name": "Bedroom 2 queen bed lamp shade",
+      "dimensionsXYZm": [
+        0.24,
+        0.17,
+        0.24
+      ],
+      "topM": 0.725
+    },
+    {
+      "name": "Bedroom 2 queen bed lamp base",
+      "dimensionsXYZm": [
+        0.2,
+        0.035,
+        0.2
+      ],
+      "topM": 0.485
+    },
+    {
+      "name": "Bedroom 2 queen bed lamp stem",
+      "dimensionsXYZm": [
+        0.026,
+        0.1,
+        0.026
+      ],
+      "topM": 0.58
+    },
+    {
+      "name": "Bedroom 2 queen bed lamp shade",
+      "dimensionsXYZm": [
+        0.24,
+        0.17,
+        0.24
+      ],
+      "topM": 0.725
+    },
+    {
+      "name": "Bathroom2 vanity tap",
+      "dimensionsXYZm": [
+        0.03,
+        0.21,
+        0.03
+      ],
+      "topM": 0.99
+    },
+    {
+      "name": "Bathroom2 vanity spout",
+      "dimensionsXYZm": [
+        0.028,
+        0.025,
+        0.15
+      ],
+      "topM": 0.992
+    },
+    {
+      "name": "Bathroom2 shower riser",
+      "dimensionsXYZm": [
+        0.03,
+        1.26,
+        0.035
+      ],
+      "topM": 2.16
+    },
+    {
+      "name": "Bathroom2 shower connected shower arm",
+      "dimensionsXYZm": [
+        0.157,
+        0.026,
+        0.026
+      ],
+      "topM": 2.173
+    },
+    {
+      "name": "Bathroom2 shower rain head",
+      "dimensionsXYZm": [
+        0.32,
+        0.025,
+        0.25
+      ],
+      "topM": 2.173
+    },
+    {
+      "name": "Bathroom2 shower mixer",
+      "dimensionsXYZm": [
+        0.065,
+        0.07,
+        0.2
+      ],
+      "topM": 1.075
+    },
+    {
+      "name": "Bathroom2 shower wall bracket",
+      "dimensionsXYZm": [
+        0.085,
+        0.045,
+        0.045
+      ],
+      "topM": 1.063
+    },
+    {
+      "name": "Bathroom2 shower wall bracket",
+      "dimensionsXYZm": [
+        0.085,
+        0.045,
+        0.045
+      ],
+      "topM": 1.973
+    },
+    {
+      "name": "Bathroom2 shower glass floor channel",
+      "dimensionsXYZm": [
+        0.034,
+        0.055,
+        1.074
+      ],
+      "topM": 0.083
+    },
+    {
+      "name": "Bathroom3 vanity tap",
+      "dimensionsXYZm": [
+        0.03,
+        0.21,
+        0.03
+      ],
+      "topM": 0.99
+    },
+    {
+      "name": "Bathroom3 vanity spout",
+      "dimensionsXYZm": [
+        0.15,
+        0.025,
+        0.028
+      ],
+      "topM": 0.992
+    },
+    {
+      "name": "Bathroom3 shower riser",
+      "dimensionsXYZm": [
+        0.03,
+        1.26,
+        0.035
+      ],
+      "topM": 2.16
+    },
+    {
+      "name": "Bathroom3 shower connected shower arm",
+      "dimensionsXYZm": [
+        0.157,
+        0.026,
+        0.026
+      ],
+      "topM": 2.173
+    },
+    {
+      "name": "Bathroom3 shower rain head",
+      "dimensionsXYZm": [
+        0.32,
+        0.025,
+        0.25
+      ],
+      "topM": 2.173
+    },
+    {
+      "name": "Bathroom3 shower mixer",
+      "dimensionsXYZm": [
+        0.065,
+        0.07,
+        0.2
+      ],
+      "topM": 1.075
+    },
+    {
+      "name": "Bathroom3 shower wall bracket",
+      "dimensionsXYZm": [
+        0.085,
+        0.045,
+        0.045
+      ],
+      "topM": 1.063
+    },
+    {
+      "name": "Bathroom3 shower wall bracket",
+      "dimensionsXYZm": [
+        0.085,
+        0.045,
+        0.045
+      ],
+      "topM": 1.973
+    },
+    {
+      "name": "Bathroom3 shower glass floor channel",
+      "dimensionsXYZm": [
+        0.034,
+        0.055,
+        1.074
+      ],
+      "topM": 0.083
+    },
+    {
+      "name": "Master king bed lamp base",
+      "dimensionsXYZm": [
+        0.2,
+        0.035,
+        0.2
+      ],
+      "topM": 0.485
+    },
+    {
+      "name": "Master king bed lamp stem",
+      "dimensionsXYZm": [
+        0.026,
+        0.1,
+        0.026
+      ],
+      "topM": 0.58
+    },
+    {
+      "name": "Master king bed lamp shade",
+      "dimensionsXYZm": [
+        0.24,
+        0.17,
+        0.24
+      ],
+      "topM": 0.725
+    },
+    {
+      "name": "Master king bed lamp base",
+      "dimensionsXYZm": [
+        0.2,
+        0.035,
+        0.2
+      ],
+      "topM": 0.485
+    },
+    {
+      "name": "Master king bed lamp stem",
+      "dimensionsXYZm": [
+        0.026,
+        0.1,
+        0.026
+      ],
+      "topM": 0.58
+    },
+    {
+      "name": "Master king bed lamp shade",
+      "dimensionsXYZm": [
+        0.24,
+        0.17,
+        0.24
+      ],
+      "topM": 0.725
+    },
+    {
+      "name": "Master bedroom rug",
+      "dimensionsXYZm": [
+        3.536,
+        0.015,
+        2.395
+      ],
+      "topM": 0.015
+    },
+    {
+      "name": "Master art frame",
+      "dimensionsXYZm": [
+        1.1,
+        0.68,
+        0.045
+      ],
+      "topM": 1.68
+    },
+    {
+      "name": "Master abstract art",
+      "dimensionsXYZm": [
+        1.035,
+        0.615,
+        0.012
+      ],
+      "topM": 1.648
+    },
+    {
+      "name": "Bath filler",
+      "dimensionsXYZm": [
+        0.048,
+        0.77,
+        0.048
+      ],
+      "topM": 0.77
+    },
+    {
+      "name": "Bath spout",
+      "dimensionsXYZm": [
+        0.27,
+        0.025,
+        0.03
+      ],
+      "topM": 0.773
+    },
+    {
+      "name": "Master shower riser",
+      "dimensionsXYZm": [
+        0.03,
+        1.26,
+        0.035
+      ],
+      "topM": 2.16
+    },
+    {
+      "name": "Master shower connected shower arm",
+      "dimensionsXYZm": [
+        0.157,
+        0.026,
+        0.026
+      ],
+      "topM": 2.173
+    },
+    {
+      "name": "Master shower rain head",
+      "dimensionsXYZm": [
+        0.32,
+        0.025,
+        0.25
+      ],
+      "topM": 2.173
+    },
+    {
+      "name": "Master shower mixer",
+      "dimensionsXYZm": [
+        0.065,
+        0.07,
+        0.2
+      ],
+      "topM": 1.075
+    },
+    {
+      "name": "Master shower wall bracket",
+      "dimensionsXYZm": [
+        0.085,
+        0.045,
+        0.045
+      ],
+      "topM": 1.063
+    },
+    {
+      "name": "Master shower wall bracket",
+      "dimensionsXYZm": [
+        0.085,
+        0.045,
+        0.045
+      ],
+      "topM": 1.973
+    },
+    {
+      "name": "Master shower glass floor channel",
+      "dimensionsXYZm": [
+        0.034,
+        0.055,
+        0.895
+      ],
+      "topM": 0.083
+    },
+    {
+      "name": "Wintergarden woven rug",
+      "dimensionsXYZm": [
+        2.081,
+        0.012,
+        2.977
+      ],
+      "topM": 0.012
+    },
+    {
+      "name": "TV console concealed wall bracket",
+      "dimensionsXYZm": [
+        0.09,
+        0.2,
+        0.1
+      ],
+      "topM": 0.46
+    },
+    {
+      "name": "TV console concealed wall bracket",
+      "dimensionsXYZm": [
+        0.09,
+        0.2,
+        0.1
+      ],
+      "topM": 0.46
+    },
+    {
+      "name": "Master art concealed mounting cleat",
+      "dimensionsXYZm": [
+        0.54,
+        0.11,
+        0.046
+      ],
+      "topM": 1.395
+    },
+    {
+      "name": "TV wall mounting plate",
+      "dimensionsXYZm": [
+        0.46,
+        0.24,
+        0.025
+      ],
+      "topM": 1.54
+    },
+    {
+      "name": "Master vanity concealed wall bracket",
+      "dimensionsXYZm": [
+        0.09,
+        0.22,
+        0.06
+      ],
+      "topM": 0.72
+    },
+    {
+      "name": "Master vanity concealed wall bracket",
+      "dimensionsXYZm": [
+        0.09,
+        0.22,
+        0.06
+      ],
+      "topM": 0.72
+    },
+    {
+      "name": "中岛储物柜 fixed case shelf · real bowl cutout",
+      "dimensionsXYZm": [
+        0.844,
+        0.018,
+        2.657
+      ],
+      "topM": 0.844
+    },
+    {
+      "name": "中岛储物柜 internal divider · below sink bowl",
+      "dimensionsXYZm": [
+        0.828,
+        0.578,
+        0.018
+      ],
+      "topM": 0.678
+    },
+    {
+      "name": "V7 retained appliance toe-kick",
+      "dimensionsXYZm": [
+        0.783,
+        0.11,
+        0.1
+      ],
+      "topM": 0.11
+    },
+    {
+      "name": "V7 retained appliance toe-kick",
+      "dimensionsXYZm": [
+        0.761,
+        0.11,
+        0.1
+      ],
+      "topM": 0.11
+    },
+    {
+      "name": "酒柜上方杯具柜 fixed side stile",
+      "dimensionsXYZm": [
+        0.05,
+        0.368,
+        0.025
+      ],
+      "topM": 2.438
+    },
+    {
+      "name": "酒柜上方杯具柜 fixed side stile",
+      "dimensionsXYZm": [
+        0.05,
+        0.368,
+        0.025
+      ],
+      "topM": 2.438
+    },
+    {
+      "name": "酒柜上方杯具柜 supported inner shelf",
+      "dimensionsXYZm": [
+        0.771,
+        0.018,
+        0.54
+      ],
+      "topM": 2.114
+    },
+    {
+      "name": "烤箱上方餐具柜 fixed side stile",
+      "dimensionsXYZm": [
+        0.05,
+        0.598,
+        0.025
+      ],
+      "topM": 2.438
+    },
+    {
+      "name": "烤箱上方餐具柜 fixed side stile",
+      "dimensionsXYZm": [
+        0.05,
+        0.598,
+        0.025
+      ],
+      "topM": 2.438
+    },
+    {
+      "name": "烤箱上方餐具柜 supported inner shelf",
+      "dimensionsXYZm": [
+        0.565,
+        0.018,
+        0.54
+      ],
+      "topM": 1.884
+    },
+    {
+      "name": "Entry continuous oak counter",
+      "dimensionsXYZm": [
+        0.242,
+        0.025,
+        1.392
+      ],
+      "topM": 0.965
+    },
+    {
+      "name": "Laundry washer front panel with open drum aperture",
+      "dimensionsXYZm": [
+        0.615,
+        0.818,
+        0.028
+      ],
+      "topM": 0.829
+    },
+    {
+      "name": "Laundry controls",
+      "dimensionsXYZm": [
+        0.48,
+        0.055,
+        0.026
+      ],
+      "topM": 0.808
+    },
+    {
+      "name": "Laundry dryer front panel with open drum aperture",
+      "dimensionsXYZm": [
+        0.615,
+        0.818,
+        0.028
+      ],
+      "topM": 1.669
+    },
+    {
+      "name": "Laundry controls",
+      "dimensionsXYZm": [
+        0.48,
+        0.055,
+        0.026
+      ],
+      "topM": 1.608
+    },
+    {
+      "name": "Island faucet upright",
+      "dimensionsXYZm": [
+        0.038,
+        0.34,
+        0.038
+      ],
+      "topM": 1.25
+    },
+    {
+      "name": "Island faucet spout",
+      "dimensionsXYZm": [
+        0.033,
+        0.033,
+        0.2
+      ],
+      "topM": 1.262
+    },
+    {
+      "name": "Master tap",
+      "dimensionsXYZm": [
+        0.13,
+        0.027,
+        0.026
+      ],
+      "topM": 1.004
+    },
+    {
+      "name": "Master tap wall connection",
+      "dimensionsXYZm": [
+        0.105,
+        0.052,
+        0.052
+      ],
+      "topM": 1.016
+    },
+    {
+      "name": "Master tap",
+      "dimensionsXYZm": [
+        0.13,
+        0.027,
+        0.026
+      ],
+      "topM": 1.004
+    },
+    {
+      "name": "Master tap wall connection",
+      "dimensionsXYZm": [
+        0.105,
+        0.052,
+        0.052
+      ],
+      "topM": 1.016
+    },
+    {
+      "name": "酒柜上方杯具柜 door panel",
+      "dimensionsXYZm": [
+        0.671,
+        0.362,
+        0.024
+      ],
+      "topM": 2.438
+    },
+    {
+      "name": "酒柜上方杯具柜 metal handle",
+      "dimensionsXYZm": [
+        0.018,
+        0.174,
+        0.018
+      ],
+      "topM": 2.303
+    },
+    {
+      "name": "酒柜上方杯具柜 handle support",
+      "dimensionsXYZm": [
+        0.011,
+        0.012,
+        0.037
+      ],
+      "topM": 2.157
+    },
+    {
+      "name": "酒柜上方杯具柜 handle support",
+      "dimensionsXYZm": [
+        0.011,
+        0.012,
+        0.037
+      ],
+      "topM": 2.287
+    },
+    {
+      "name": "酒柜上方杯具柜 hinge barrel",
+      "dimensionsXYZm": [
+        0.013,
+        0.042,
+        0.014
+      ],
+      "topM": 2.217
+    },
+    {
+      "name": "酒柜上方杯具柜 hinge barrel",
+      "dimensionsXYZm": [
+        0.013,
+        0.042,
+        0.014
+      ],
+      "topM": 2.339
+    },
+    {
+      "name": "烤箱上方餐具柜 door panel",
+      "dimensionsXYZm": [
+        0.465,
+        0.592,
+        0.024
+      ],
+      "topM": 2.438
+    },
+    {
+      "name": "烤箱上方餐具柜 metal handle",
+      "dimensionsXYZm": [
+        0.018,
+        0.2,
+        0.018
+      ],
+      "topM": 2.086
+    },
+    {
+      "name": "烤箱上方餐具柜 handle support",
+      "dimensionsXYZm": [
+        0.011,
+        0.012,
+        0.037
+      ],
+      "topM": 1.927
+    },
+    {
+      "name": "烤箱上方餐具柜 handle support",
+      "dimensionsXYZm": [
+        0.011,
+        0.012,
+        0.037
+      ],
+      "topM": 2.057
+    },
+    {
+      "name": "烤箱上方餐具柜 hinge barrel",
+      "dimensionsXYZm": [
+        0.013,
+        0.042,
+        0.014
+      ],
+      "topM": 1.987
+    },
+    {
+      "name": "烤箱上方餐具柜 hinge barrel",
+      "dimensionsXYZm": [
+        0.013,
+        0.042,
+        0.014
+      ],
+      "topM": 2.339
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.3,
+        0.045
+      ],
+      "topM": 2.15
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.275,
+        0.045
+      ],
+      "topM": 2.138
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.25,
+        0.045
+      ],
+      "topM": 2.125
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.3,
+        0.045
+      ],
+      "topM": 2.15
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.275,
+        0.045
+      ],
+      "topM": 2.138
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.25,
+        0.045
+      ],
+      "topM": 2.125
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.3,
+        0.045
+      ],
+      "topM": 2.15
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.275,
+        0.045
+      ],
+      "topM": 2.138
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.25,
+        0.045
+      ],
+      "topM": 2.125
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.3,
+        0.045
+      ],
+      "topM": 2.15
+    },
+    {
+      "name": "Study books",
+      "dimensionsXYZm": [
+        0.22,
+        0.275,
+        0.045
+      ],
+      "topM": 2.138
+    }
+  ],
+  "totalFurnitureMeshes": 1202
+}

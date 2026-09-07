@@ -1,5 +1,34 @@
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 
+/** Retain the original spatial partitions while rendering a single merged mesh.
+ * Mesh.raycast still computes every actual triangle hit and its UV/face data.
+ */
+function partitionedRaycast(THREE,mesh,geometry,chunks){
+  const nativeRaycast=THREE.Mesh.prototype.raycast;
+  const inverse=new THREE.Matrix4(),localRay=new THREE.Ray(),boxHit=new THREE.Vector3();
+  const position=geometry.attributes.position,index=geometry.index;
+  const positionVersion=position.version,indexVersion=index?.version;
+  mesh.raycast=function(raycaster,hits){
+    const g=this.geometry,range=g.drawRange;
+    // A later geometry edit or a non-triangle-aligned draw range invalidates the
+    // original partitions; the native implementation remains the exact fallback.
+    if(g!==geometry||g.attributes.position!==position||position.version!==positionVersion||g.index!==index||index?.version!==indexVersion||Array.isArray(this.material)||g.groups.length||range.start%3||Number.isFinite(range.count)&&range.count%3){nativeRaycast.call(this,raycaster,hits);return;}
+    inverse.copy(this.matrixWorld).invert();localRay.copy(raycaster.ray).applyMatrix4(inverse);
+    const start=range.start,count=range.count,end=start+count;
+    try{
+      for(const chunk of chunks){
+        const first=Math.max(start,chunk.start),last=Math.min(end,chunk.start+chunk.count);if(last<=first)continue;
+        if(!chunk.bounds.containsPoint(localRay.origin)){
+          if(!localRay.intersectBox(chunk.bounds,boxHit))continue;
+          // Raycaster.far is measured in world units, including parent scaling.
+          if(boxHit.applyMatrix4(this.matrixWorld).distanceTo(raycaster.ray.origin)>raycaster.far+1e-7)continue;
+        }
+        g.setDrawRange(first,last-first);nativeRaycast.call(this,raycaster,hits);
+      }
+    }finally{g.setDrawRange(start,count);}
+  };
+}
+
 /** Batch opaque static meshes after interactions and walk colliders are built.
  * Interactive objects, transparent surfaces, and unsupported geometry stay intact.
  * Original/shared materials and geometries are never disposed by this function.
@@ -85,7 +114,7 @@ export function optimizeScene({THREE, model}) {
   }
   for (const sources of groups.values()) {
     if (sources.length < 2) {skip('singleton'); continue;}
-    const copies = [];
+    const copies = [], raycastChunks = [];
     let mergedGeometry = null;
     try {
       let expectedTriangles = 0;
@@ -96,7 +125,10 @@ export function optimizeScene({THREE, model}) {
         const copy = source.geometry.clone(); copies.push(copy);
         copy.applyMatrix4(transform);
         if (determinant < 0) reverseWinding(copy);
-        expectedTriangles += (copy.index?.count ?? copy.attributes.position.count) / 3;
+        const elementCount=copy.index?.count ?? copy.attributes.position.count;
+        copy.computeBoundingBox();
+        raycastChunks.push({start:expectedTriangles*3,count:elementCount,bounds:copy.boundingBox.clone().expandByScalar(1e-7)});
+        expectedTriangles += elementCount / 3;
       }
       mergedGeometry = mergeGeometries(copies, false);
       if (!mergedGeometry) throw new Error('mergeGeometries rejected this group.');
@@ -112,6 +144,7 @@ export function optimizeScene({THREE, model}) {
       merged.visible = first.visible; merged.castShadow = first.castShadow;
       merged.receiveShadow = first.receiveShadow; merged.renderOrder = first.renderOrder;
       merged.layers.mask = first.layers.mask;
+      partitionedRaycast(THREE,merged,mergedGeometry,raycastChunks);
       // Geometry is already in model-local coordinates; the batch stays identity.
       model.add(merged);
       for (const source of sources) source.removeFromParent();

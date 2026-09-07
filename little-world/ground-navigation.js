@@ -5,6 +5,15 @@
 const DIRECTIONS=Object.freeze({forward:{f:1,r:0,label:'向前走',symbol:'↑',x:0,z:-1,rotation:0},backward:{f:-1,r:0,label:'向后退',symbol:'↓',x:0,z:1,rotation:Math.PI},left:{f:0,r:-1,label:'向左走',symbol:'←',x:-1,z:0,rotation:Math.PI/2},right:{f:0,r:1,label:'向右走',symbol:'→',x:1,z:0,rotation:-Math.PI/2}});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
+// Hidden inputs can retain focus after a panel closes. Checkboxes and buttons
+// never own movement keys; visible text editing still does.
+export function isEditingNavigationTarget(target){
+ if(!target||target.closest?.('[hidden]')||target.getClientRects?.().length===0)return false;
+ if(target.isContentEditable||target.closest?.('[contenteditable="true"]'))return true;
+ if(/^(TEXTAREA|SELECT)$/.test(target.tagName))return true;
+ return target.tagName==='INPUT'&&!['checkbox','radio','button','submit','reset','range','color','file','hidden'].includes(target.type?.toLowerCase());
+}
+
 /** Pure movement controller: also usable in a Node collision regression test. */
 export function createGroundMovement({getPosition,getYaw,collision,speed=1.05,fastSpeed=1.8,clickDistance=.30,onMove=()=>{}}){
   if(typeof getPosition!=='function'||typeof getYaw!=='function'||typeof collision!=='function')throw Error('Ground navigation needs position, yaw and collision callbacks.');
@@ -35,6 +44,7 @@ export function createGroundMovement({getPosition,getYaw,collision,speed=1.05,fa
 export function createGroundNavigation({THREE,scene,camera,controls,domElement,collision,getYaw,
   isEnabled=()=>false,isBlocked=()=>false,onInputStart=()=>{},onMove=()=>{},getGroundHeight=()=>0,
   keyboard=true,speed=1.05,fastSpeed=1.8,clickDistance=.30,
+  withCollisionSnapshot=fn=>fn(),
   documentRef=globalThis.document,windowRef=globalThis.window}={}) {
   const doc=documentRef,win=windowRef;if(!THREE||!scene||!camera||!domElement||!doc||!win)throw Error('Ground navigation requires Three.js, the camera, canvas and DOM.');
   const worldDirection=new THREE.Vector3();getYaw ||=()=>{camera.getWorldDirection(worldDirection);return Math.atan2(-worldDirection.x,-worldDirection.z);};
@@ -56,24 +66,32 @@ export function createGroundNavigation({THREE,scene,camera,controls,domElement,c
   doc.head.append(style);doc.body.append(overlay);
   const movement=createGroundMovement({getPosition:()=>camera.position,getYaw,collision,speed,fastSpeed,clickDistance,onMove:d=>{if(status.textContent!=='点击走一步 · 长按连续走')status.textContent='点击走一步 · 长按连续走';if(pointer)pointer.distance+=d;onMove(d);}});
   function on(target,type,handler,options){target.addEventListener(type,handler,options);listeners.push(()=>target.removeEventListener(type,handler,options));}
-  const editing=target=>!!target&&(target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)||!!target.closest?.('[contenteditable="true"]'));
+  const editing=isEditingNavigationTarget;
   function blocked(){return doc.hidden||editing(doc.activeElement)||!!isBlocked();}
   function enabled(){return !disposed&&(explicitEnabled===null?!!isEnabled():explicitEnabled);}
   function cancelInput(){keys.clear();movement.cancel();if(pointer){const old=pointer;pointer=null;buttons.get(old.name)?.setAttribute('data-pressed','false');try{old.button.releasePointerCapture(old.id);}catch{}}}
-  function prepareInput(){if(!enabled()||blocked())return false;onInputStart();if(controls)controls.enabled=false;return true;}
-  function press(name,event){if(event.button!==0||pointer||!prepareInput())return;event.preventDefault();event.stopImmediatePropagation();if(!movement.canMove(name)){status.textContent='这边暂时走不过去，换个方向试试。';return;}const button=buttons.get(name);pointer={id:event.pointerId,name,button,started:clock,distance:0};button.setAttribute('data-pressed','true');try{button.setPointerCapture(event.pointerId);}catch{}keys.clear();const d=DIRECTIONS[name];movement.setHeld({forward:d.f,right:d.r});}
+  function prepareInput(){if(!enabled()||doc.hidden||isBlocked())return false;if(editing(doc.activeElement))doc.activeElement.blur?.();if(blocked())return false;onInputStart();if(controls)controls.enabled=false;return true;}
+  function canMove(name){return withCollisionSnapshot(()=>movement.canMove(name));}
+  function press(name,event){if(event.button!==0||pointer||!prepareInput())return;event.preventDefault();event.stopImmediatePropagation();if(!canMove(name)){status.textContent='这边暂时走不过去，换个方向试试。';return;}const button=buttons.get(name);pointer={id:event.pointerId,name,button,started:clock,distance:0};button.setAttribute('data-pressed','true');try{button.setPointerCapture(event.pointerId);}catch{}keys.clear();const d=DIRECTIONS[name];movement.setHeld({forward:d.f,right:d.r});}
   function release(event,cancelled=false){if(!pointer||event.pointerId!==pointer.id)return;event.preventDefault();event.stopImmediatePropagation();const old=pointer;pointer=null;old.button.setAttribute('data-pressed','false');movement.setHeld({});try{old.button.releasePointerCapture(old.id);}catch{}if(!cancelled&&enabled()&&!blocked()&&clock-old.started<.22)movement.queueTap(old.name,Math.max(0,clickDistance-old.distance));else movement.cancel();}
   for(const [name,d] of Object.entries(DIRECTIONS)){const b=doc.createElement('button');b.type='button';b.className='ground-direction';b.dataset.direction=name;b.setAttribute('aria-label',d.label+'：点击一步，长按连续移动');b.title=d.label;const icon=doc.createElement('span');icon.textContent=d.symbol;icon.setAttribute('aria-hidden','true');b.append(icon);buttons.set(name,b);overlay.append(b);
     on(b,'pointerdown',e=>press(name,e));on(b,'pointerup',e=>release(e));on(b,'pointercancel',e=>release(e,true));on(b,'lostpointercapture',e=>{if(pointer?.id===e.pointerId)cancelInput();});
-    on(b,'click',e=>{e.preventDefault();e.stopImmediatePropagation();if(e.detail===0&&prepareInput()&&movement.canMove(name)){movement.cancel();movement.queueTap(name);}});on(b,'contextmenu',e=>e.preventDefault());
+    on(b,'click',e=>{e.preventDefault();e.stopImmediatePropagation();if(e.detail===0&&prepareInput()&&canMove(name)){movement.cancel();movement.queueTap(name);}});on(b,'contextmenu',e=>e.preventDefault());
   }
   const moveKeys=new Set(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright','shift']);
   on(win,'keydown',e=>{const k=e.key?.toLowerCase();if(!keyboard||!moveKeys.has(k)||e.defaultPrevented||!enabled()||blocked()||editing(e.target)||e.ctrlKey||e.metaKey||e.altKey)return;e.preventDefault();if(pointer)return;if(!keys.size)prepareInput();keys.add(k);});
   on(win,'keyup',e=>{const k=e.key?.toLowerCase();if(moveKeys.has(k))keys.delete(k);},true);
   on(doc,'focusin',e=>{if(editing(e.target)||isBlocked())cancelInput();},true);on(win,'blur',cancelInput);on(doc,'visibilitychange',()=>{if(doc.hidden)cancelInput();});
   const ray=new THREE.Raycaster(),world=new THREE.Vector3(),projected=new THREE.Vector3(),cameraWorld=new THREE.Vector3();
-  function visibleObject(o){for(let p=o;p;p=p.parent)if(!p.visible)return false;return true;}
-  function occluded(point){camera.getWorldPosition(cameraWorld);const length=cameraWorld.distanceTo(point);ray.set(cameraWorld,world.copy(point).sub(cameraWorld).normalize());ray.far=Math.max(.01,length-.06);for(const hit of ray.intersectObjects(scene.children,true)){if(hit.object.userData.groundNavigation||!visibleObject(hit.object))continue;const m=hit.object.material;if((Array.isArray(m)?m.every(v=>v.transparent):m?.transparent)||hit.object.userData.category==='rug')continue;return true;}return false;}
+  const occlusionHits=[];
+  function occluded(point){camera.getWorldPosition(cameraWorld);const length=cameraWorld.distanceTo(point);ray.set(cameraWorld,world.copy(point).sub(cameraWorld).normalize());ray.far=Math.max(.01,length-.06);
+    // We only need to know whether *any* opaque object blocks the patch. Avoid
+    // intersecting and sorting every triangle in the apartment for each arrow.
+    const stack=[...scene.children];while(stack.length){const o=stack.pop();if(!o.visible||o.userData.groundNavigation)continue;
+      if(o.isMesh){const m=o.material;if(!(Array.isArray(m)?m.every(v=>v.transparent):m?.transparent)&&o.userData.category!=='rug'){occlusionHits.length=0;ray.intersectObject(o,false,occlusionHits);if(occlusionHits.length)return true;}}
+      stack.push(...o.children);
+    }return false;
+  }
   function clearGround(point){const height=Number(getGroundHeight(point));return Number.isFinite(height)&&!collision({x:point.x,y:camera.position.y,z:point.z});}
   function layout(){const yaw=Number(getYaw())||0,forward={x:-Math.sin(yaw),z:-Math.cos(yaw)},right={x:Math.cos(yaw),z:-Math.sin(yaw)},foot=camera.position,spacing=.27;let best=null;
     // Prefer one clear floor patch in front; never place an arrow on a cabinet.
@@ -92,11 +110,13 @@ export function createGroundNavigation({THREE,scene,camera,controls,domElement,c
     root.userData.projectedTargets=positions.map(p=>({...p}));overlay.dataset.layout=allProjected?'projected':'dock';
     const size=win.innerHeight<500?48:54,cx=r.left+r.width/2,cy=r.bottom-(win.innerHeight<500?175:210);
     for(const p of positions){const d=DIRECTIONS[p.name],b=buttons.get(p.name);b.style.left=(allProjected?p.x:cx+d.x*size)+'px';b.style.top=(allProjected?p.y:cy+d.z*size)+'px';b.style.width=(allProjected?p.w:48)+'px';b.style.height=(allProjected?p.h:48)+'px';}
-    lastLayoutPosition.copy(camera.position);lastYaw=yaw;layoutDue=clock+.15;
+    lastLayoutPosition.copy(camera.position);lastYaw=yaw;layoutDue=clock+.25;
   }
-  function update(dt){if(disposed)return;clock+=clamp(Number(dt)||0,0,.05);const active=enabled();root.visible=active&&!blocked();overlay.hidden=!root.visible;if(!active||blocked()){cancelInput();return;}if(controls)controls.enabled=false;
+  function update(dt){if(disposed)return;clock+=clamp(Number(dt)||0,0,.05);const active=enabled(),paused=blocked();root.visible=active&&!paused;overlay.hidden=!root.visible;if(!active||paused){cancelInput();return;}if(controls)controls.enabled=false;
     if(!pointer){const forward=Number(keys.has('w')||keys.has('arrowup'))-Number(keys.has('s')||keys.has('arrowdown')),right=Number(keys.has('d')||keys.has('arrowright'))-Number(keys.has('a')||keys.has('arrowleft'));movement.setHeld({forward,right,fast:keys.has('shift')});}
-    movement.update(dt);camera.updateWorldMatrix(true,false);const yaw=Number(getYaw())||0;if(clock>=layoutDue||camera.position.distanceToSquared(lastLayoutPosition)>.008||Math.abs(yaw-lastYaw)>.035)layout();
+    const needsLayout=()=>clock>=layoutDue||camera.position.distanceToSquared(lastLayoutPosition)>.008||Math.abs((Number(getYaw())||0)-lastYaw)>.035;
+    if(!pointer&&!keys.size&&!movement.getStatus().queuedDistance&&!needsLayout())return;
+    withCollisionSnapshot(()=>{movement.update(dt);camera.updateWorldMatrix(true,false);if(needsLayout())layout();});
   }
   function setEnabled(value){explicitEnabled=!!value;if(!value){cancelInput();root.visible=false;overlay.hidden=true;}else layoutDue=0;}
   function dispose(){if(disposed)return;disposed=true;cancelInput();listeners.forEach(remove=>remove());root.removeFromParent();overlay.remove();style.remove();geometry.dispose();materials.forEach(m=>m.dispose());}

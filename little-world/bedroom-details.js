@@ -50,7 +50,7 @@ export function setupBedroomDetails({THREE,model,renovation,cabinetry,register=(
   const inner=mesh(chair,'Master pod padded inner shell',new THREE.SphereGeometry(1,28,18,Math.PI,Math.PI),sage);inner.scale.set(.477,.745,.507);inner.position.set(0,1.015,.018);inner.material.side=THREE.DoubleSide;
   const trim=mesh(chair,'Master pod continuous shell lip',new THREE.TorusGeometry(1,.024,8,56),champagne);trim.scale.set(.51,.79,1);trim.position.set(0,1.015,.009);
   const rim=mesh(chair,'Master pod warm edge light',new THREE.TorusGeometry(1,.007,6,56),glow);rim.scale.set(.482,.757,1);rim.position.set(0,1.015,.041);rim.castShadow=false;
-  oval(chair,'Master pod deep seat cushion',[.365,.11,.405],sage,[0,.474,.075],'furniture');
+  oval(chair,'Master pod deep seat cushion',[.365,.066,.405],sage,[0,.414,.075],'furniture');
   const back=oval(chair,'Master pod reclining back cushion',[.362,.365,.135],sage,[0,.869,-.275]);back.rotation.x=-.15;
   oval(chair,'Master pod soft headrest',[.242,.12,.07],linen,[0,1.373,-.232]);
   for(const sign of [-1,1])oval(chair,'Master pod padded armrest '+sign,[.070,.070,.255],sage,[sign*.369,.668,.002],'furniture');
@@ -125,11 +125,9 @@ export function setupBedroomDetails({THREE,model,renovation,cabinetry,register=(
   box(rack,'Master valet soft accessories pouch',.115,.039,.072,clay,[.057,.367,.027],'decor');
   const ring=mesh(rack,'Master valet jewellery ring on tray',new THREE.TorusGeometry(.014,.0025,5,14),champagne);ring.rotation.x=Math.PI/2;ring.position.set(.062,.389,.024);
 
-  // The dressing room has 1.24 m between the two banks' complete door sweeps.
-  // A low, narrow dressing perch fills its centre without hiding the mirror or
-  // occupying the bath route along the east side. The west end is a soft seat;
-  // the east end holds the accessories one takes off at the end of the day.
-  const island=group('Master dressing low rounded accessory island');island.position.set(-5.40,0,2.66);
+  // A 1500 × 720 × 850 mm accessory island, measured against both wardrobe banks.
+  // The full-height mirror and the bedroom/ensuite routes remain usable around it.
+  const island=group('Master dressing rounded storage island');island.position.set(-5.60,0,2.72);
   function roundedBox(parent,name,w,h,d,r,mat,at,category='decor'){
     const shape=new THREE.Shape(),x=w/2,z=d/2;
     shape.moveTo(-x+r,-z);shape.lineTo(x-r,-z);shape.quadraticCurveTo(x,-z,x,-z+r);
@@ -139,18 +137,19 @@ export function setupBedroomDetails({THREE,model,renovation,cabinetry,register=(
     geometry.rotateX(-Math.PI/2);geometry.translate(0,-h/2,0);
     const o=mesh(parent,name,geometry,mat,category);o.position.set(...at);return o;
   }
-  roundedBox(island,'Master island recessed plinth',.82,.068,.35,.065,graphite,[0,.034,0],'furniture');
-  roundedBox(island,'Master island rounded oak storage body',.92,.325,.42,.067,oak,[0,.231,0],'furniture');
-  roundedBox(island,'Master island softly rounded ivory top',.96,.027,.46,.082,ivory,[0,.407,0],'furniture');
+  roundedBox(island,'Master island recessed plinth',1.34,.09,.57,.065,graphite,[0,.045,0],'furniture');
+  roundedBox(island,'Master island rounded oak storage body',1.45,.726,.67,.067,oak,[0,.453,0],'furniture');
+  roundedBox(island,'Master island softly rounded ivory top',1.50,.034,.72,.082,ivory,[0,.833,0],'furniture');
   // Recessed seams and finger pulls imply the two shallow accessory drawers.
-  box(island,'Master island drawer dividing shadow',.012,.234,.002,graphite,[.034,.247,.211],'decor');
-  for(const x of [-.203,.228]){
-    box(island,'Master island drawer bottom shadow',.385,.003,.002,graphite,[x,.122,.211],'decor');
-    box(island,'Master island inset drawer finger pull',.115,.014,.006,champagne,[x,.341,.214],'decor');
+  for(const side of [-1,1]){
+    box(island,'Master island drawer dividing shadow',.008,.63,.002,graphite,[0,.46,side*.336],'decor');
+    for(const x of [-.35,.35])for(const y of [.32,.55,.78]){
+      box(island,'Master island drawer bottom shadow',.63,.003,.002,graphite,[x,y-.19,side*.336],'decor');
+      box(island,'Master island inset drawer finger pull',.17,.014,.006,champagne,[x,y,side*.339],'decor');
+    }
   }
-  roundedBox(island,'Master island upholstered sitting pad',.40,.060,.40,.074,sage,[-.244,.450,0],'decor');
-  roundedBox(island,'Master island fabric seat piping',.408,.006,.408,.076,linen,[-.244,.429,0],'decor');
-  const tray=group('Master island leather-lined accessories tray',island);tray.position.set(.232,.424,.034);
+  for(let layer=0;layer<3;layer++)roundedBox(island,'Master island folded knitwear',.40,.029,.33,.025,layer===1?linen:sage,[-.43,.865+layer*.03,.015],'decor');
+  const tray=group('Master island leather-lined accessories tray',island);tray.position.set(.36,.853,.034);
   roundedBox(tray,'Master island shallow oak tray base',.335,.012,.272,.047,oak,[0,.006,0]);
   roundedBox(tray,'Master island camel suede tray lining',.313,.005,.25,.037,clay,[0,.014,0]);
   // A raised, continuous rounded lip leaves the middle genuinely open.
@@ -167,8 +166,8 @@ export function setupBedroomDetails({THREE,model,renovation,cabinetry,register=(
   const earrings=group('Master island paired earrings',tray);earrings.position.set(.079,.023,.065);
   for(const x of [-.019,.019]){const hoop=mesh(earrings,'Master island jewellery hoop',new THREE.TorusGeometry(.010,.002,5,12),champagne);hoop.rotation.x=Math.PI/2;hoop.position.x=x;}
   // The folded scarf lives on the slim rear edge, leaving the sitting pad clear.
-  for(let layer=0;layer<2;layer++)roundedBox(island,'Master island folded sand scarf layer',.255,.017,.094,.011,linen,[.211,.432+layer*.018,-.169]);
-  for(let i=0;i<6;i++)rod(island,'Master island scarf soft fringe',[.084+i*.010,.442,-.189],[.062+i*.010,.440,-.205],.0018,linen);
+  for(let layer=0;layer<2;layer++)roundedBox(island,'Master island folded sand scarf layer',.30,.017,.10,.011,linen,[.15,.860+layer*.018,-.25]);
+  for(let i=0;i<6;i++)rod(island,'Master island scarf soft fringe',[.015+i*.010,.870,-.27],[-.008+i*.010,.868,-.29],.0018,linen);
 
   // Batch each fixed furnishing in its own coordinates, preserving ownership
   // so disposal still removes every detail after the apartment's optimizer.
@@ -202,6 +201,6 @@ export function setupBedroomDetails({THREE,model,renovation,cabinetry,register=(
     islandClearance[side+'FullDoorSweepClearanceM']=side==='north'?islandBounds.min[2]-sweep.max.z:sweep.min.z-islandBounds.max[2];
   }
   let meshCount=0,triangles=0;root.traverse(o=>{if(o.isMesh){meshCount++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;}});
-  const audit={sourceGLBUnchanged:true,replacedStaticChairParts:originals.length,chair:{position:chair.position.toArray(),rotationY:chair.rotation.y,bounds:chairBounds,seatHeightM:.474,style:'Open ivory egg shell, sage cushion, warm edge, focused reading light'},valet:{position:rack.position.toArray(),bounds:rackBounds,baseFootprintM:[.46,.28],placement:'Inside the master bedroom, viewer-right of the north-wall console, facing into the room',consoleClearanceM:console?planGap(rackBox,new THREE.Box3().setFromObject(console)):null,bedFootClearanceM:bed?new THREE.Box3().setFromObject(bed).min.z-rackBox.max.z:null,contents:['linen overshirt','scarf','brimmed hat','shoulder bag','tray','perfume','storage basket']},dressingIsland:{position:island.position.toArray(),bounds:islandBounds,footprintM:[.96,.46],seatHeightM:.48,placement:'Low rounded centre perch; clear east bath route and west bedroom route',contents:['upholstered sitting pad','accessory drawers','leather-lined tray','watch','bracelet','paired earrings','folded scarf'],...islandClearance},curtainClearanceM:masterCurtain?chairBounds.min[0]-new THREE.Box3().setFromObject(masterCurtain.object).max.x:null,mirrorClearanceM:mirror?planGap(rackBox,new THREE.Box3().setFromObject(mirror)):null,meshCount,triangles,collision:{solid:'furniture',accessories:'decor',installBeforeCollision:true},savedSetting:'settings.bedroomReadingLight'};
+  const audit={sourceGLBUnchanged:true,replacedStaticChairParts:originals.length,chair:{position:chair.position.toArray(),rotationY:chair.rotation.y,bounds:chairBounds,seatHeightM:.48,style:'Open ivory egg shell, sage cushion, warm edge, focused reading light'},valet:{position:rack.position.toArray(),bounds:rackBounds,baseFootprintM:[.46,.28],placement:'Inside the master bedroom, viewer-right of the north-wall console, facing into the room',consoleClearanceM:console?planGap(rackBox,new THREE.Box3().setFromObject(console)):null,bedFootClearanceM:bed?new THREE.Box3().setFromObject(bed).min.z-rackBox.max.z:null,contents:['linen overshirt','scarf','brimmed hat','shoulder bag','tray','perfume','storage basket']},dressingIsland:{position:island.position.toArray(),bounds:islandBounds,footprintM:[1.50,.72],worktopHeightM:.85,placement:'Full accessory storage island; clear east bath route and west bedroom route',contents:['folded knitwear','accessory drawers','leather-lined tray','watch','bracelet','paired earrings','folded scarf'],...islandClearance},curtainClearanceM:masterCurtain?chairBounds.min[0]-new THREE.Box3().setFromObject(masterCurtain.object).max.x:null,mirrorClearanceM:mirror?planGap(rackBox,new THREE.Box3().setFromObject(mirror)):null,meshCount,triangles,collision:{solid:'furniture',accessories:'decor',installBeforeCollision:true},savedSetting:'settings.bedroomReadingLight'};
   return {root,chair,rack,island,readingLight,record,audit,getStatus:()=>({readingLight:lightOn,effectiveReadingLight:lightOn&&houseLightsOn,houseLightsOn}),update,dispose(){if(disposed)return;disposed=true;record.disabled=true;readingLight.intensity=0;root.removeFromParent();for(const {object,parent} of originals)parent?.add(object);geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

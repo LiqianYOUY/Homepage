@@ -41,7 +41,7 @@ test('the pod upgrades a static reading chair with a practical seat and clear cu
  assert.ok(bounds(floor).containsPoint(new THREE.Vector3(b.max.x,0,b.max.z)));
  assert.ok(b.getSize(new THREE.Vector3()).x<1.20&&b.getSize(new THREE.Vector3()).z<1.25&&b.max.y<1.90);
  assert.ok(f.details.audit.curtainClearanceM>.15);
- const seat=f.details.chair.getObjectByName('Master pod deep seat cushion');assert.ok(seat.position.y>.43&&seat.position.y<.50);
+ const seat=f.details.chair.getObjectByName('Master pod deep seat cushion');assert.ok(Math.abs(bounds(seat).max.y-.48)<.001,'seat height includes the cushion thickness');
  assert.ok(f.details.audit.meshCount<50,'fixed details should be grouped into a modest draw-call budget');
  assert.ok(f.details.audit.triangles<15000);
 });
@@ -78,8 +78,8 @@ test('all master room doors and wardrobe leaves clear the details throughout the
 test('entry, wardrobe mirror, bed-side aisles and chair approach remain reachable with walking body radius',()=>{
  const routes=[
   [[-3.9,.70],[-3.9,1.20],[-4.1,1.75],[-4.6,2.30],[-4.6,3.30],[-5.06,3.80]],
-  [[-4.6,3.30],[-6.0,3.25],[-6.5,3.10],[-7.4,3.10],[-7.55,3.70]],
-  [[-4.3,2.10],[-6.3,2.10],[-6.3,3.10]],
+  [[-4.6,3.30],[-4.6,3.50],[-6.60,3.50],[-7.4,3.10],[-7.55,3.70]],
+  [[-4.3,2.10],[-6.6,2.10],[-6.6,3.10]],
   [[-4.6,2.40],[-3.7,2.40]],
   [[-7.4,3.10],[-8.0,2.48],[-9.0,2.45],[-10.12,2.45]],
   [[-10.12,2.45],[-10.75,2.70],[-10.90,3.10],[-10.90,4.00]]
@@ -94,20 +94,20 @@ test('entry, wardrobe mirror, bed-side aisles and chair approach remain reachabl
  assert.equal(f.walk.collision(new THREE.Vector3(-3.64,1.57,2.03)),false,'the former doorway placement is completely clear again');
 });
 
-test('the compact dressing island provides seating and accessories with usable circulation around both sides',()=>{
+test('the full-size dressing island has a usable worktop and circulation around all sides',()=>{
  const {island,audit}=f.details,b=bounds(island),size=b.getSize(new THREE.Vector3());
- assert.ok(size.x<=.961&&size.z<=.461&&b.max.y<=.501,'a low, narrow furnishing leaves the full-length mirror in view');
+ assert.ok(Math.abs(size.x-1.50)<.001&&Math.abs(size.z-.72)<.001&&b.max.y<1,'150 cm storage island with accessories under 1 m');assert.equal(audit.dressingIsland.worktopHeightM,.85);
  const floor=bounds(f.existing.find(o=>raw(o)==='Master suite · oak floor'));
  assert.ok(floor.containsPoint(new THREE.Vector3(b.min.x,0,b.min.z))&&floor.containsPoint(new THREE.Vector3(b.max.x,0,b.max.z)));
  const names=meshes(island).flatMap(o=>o.userData.sourceNames||[raw(o)]);
- for(const detail of ['upholstered sitting pad','leather watch strap','inset watch dial','simple bracelet','folded sand scarf layer','paired']){
+ for(const detail of ['folded knitwear','leather watch strap','inset watch dial','simple bracelet','folded sand scarf layer','paired']){
   if(detail==='paired')assert.equal(names.filter(n=>n==='Master island jewellery hoop').length,2);
   else assert.ok(names.some(n=>n.includes(detail)),detail+' should survive batching');
  }
- assert.ok(audit.dressingIsland.northClosedWardrobeClearanceM>.86);
- assert.ok(audit.dressingIsland.southClosedWardrobeClearanceM>1.45);
+ assert.ok(audit.dressingIsland.northClosedWardrobeClearanceM>.79);
+ assert.ok(audit.dressingIsland.southClosedWardrobeClearanceM>1.20);
  assert.equal(f.walk.collision(island.getWorldPosition(new THREE.Vector3()).setY(1.57)),true,'the island is actual solid furniture');
- assert.ok(b.min.x>-6.25&&b.max.x<-4.55,'both east and west aisles remain open, as the route test verifies with the walking body radius');
+ assert.ok(b.min.x>-6.40&&b.max.x<-4.70,'both east and west aisles remain open, as the route test verifies with the walking body radius');
  for(const bank of ['north','south']){
   const sweep=new THREE.Box3();
   for(const door of f.cabinetry.doors.filter(d=>d.id.startsWith('wardrobe-master-'+bank))){
@@ -115,7 +115,7 @@ test('the compact dressing island provides seating and accessories with usable c
    for(let step=0;step<=90;step++){door.apply(step/90);sweep.union(bounds(door.object));}
    door.apply(saved);
   }
-  assert.ok(bank==='north'?b.min.z-sweep.max.z>.35:sweep.min.z-b.max.z>.40,bank+' wardrobe full sweep leaves a real gap');
+  assert.ok(bank==='north'?b.min.z-sweep.max.z>.20:sweep.min.z-b.max.z>.20,bank+' wardrobe full sweep leaves a real gap');
  }
  assert.deepEqual(f.details.rack.position.toArray(),[-7.53,0,1.25],'the user-approved TV-side stand stays put');
  assert.deepEqual(f.details.chair.position.toArray(),[-10.52,0,1.73],'the pod remains in its existing reading corner');

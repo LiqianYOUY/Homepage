@@ -37,6 +37,14 @@ const project=(point,camera)=>point.clone().project(camera);
 const projectedCentre=(objects,camera)=>project(centre(objects),camera);
 after(()=>smart.dispose());
 
+test('the domestic fridge and display fit below the full-height cupboard surround',()=>{
+ const size=new THREE.Box3().setFromObject(fridge).getSize(new THREE.Vector3());
+ assert.ok(Math.abs(size.x-.96)<.001&&Math.abs(size.y-1.83)<.001&&size.z<.80);
+ const display=new THREE.Box3().setFromObject(screen).getSize(new THREE.Vector3());
+ assert.ok(Math.abs(Math.hypot(display.x,display.y)/.0254-21.6)<.1);
+ const surround=scene.getObjectByName('Smart fridge full-height surrounding storage');assert.ok(surround);assert.ok(Math.abs(new THREE.Box3().setFromObject(surround).max.y-2.46)<.001);
+});
+
 test('the front and two oblique views read the refrigerator and freezer numbers from left to right',()=>{
  assert.ok(screen&&degree&&minus);
  assert.deepEqual([0,4,1,8].map(n=>digits(n).length),[6,4,2,7]);

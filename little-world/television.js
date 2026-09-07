@@ -1,4 +1,4 @@
-import {raiseDialog,consumeDialogEscape} from './dialog-stack.js';
+import {raiseDialog,consumeDialogEscape} from './dialog-stack.js?v=22';
 const CHANNELS=[
  {key:'uluru',kind:'video',title:'Uluru · 日出与日落',caption:'小尤的旅行影像 · 乌鲁鲁的晨昏',source:'./media/uluru-sunrise-sunset.mp4',poster:'./assets/uluru-poster.jpg'},
  {key:'darling',kind:'youtube',id:'d-NUlz3FXpw',title:'达令港的烟花',caption:'Darling Harbour · 烟花影像',source:'https://www.youtube.com/watch?v=d-NUlz3FXpw'},

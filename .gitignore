@@ -1,0 +1,17 @@
+# Local system files and dependencies
+.DS_Store
+node_modules/
+
+# Temporary browser QA pages and screenshots; keep tests/ regression sources.
+/little-world/qa-*.html
+/little-world/qa-*.js
+/little-world/qa-*.mjs
+/little-world/qa-*.png
+/little-world/qa-*.jpg
+/little-world/qa-*.webp
+/little-world/qa-screenshots/
+/little-world/test-results/
+/little-world/playwright-report/
+/little-world/coverage/
+/little-world/.cache/
+/little-world/.tmp/

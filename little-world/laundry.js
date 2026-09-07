@@ -1,6 +1,6 @@
 import {createLaundryLifecycle,GARMENTS,WASH_DURATION,DRY_DURATION,LAUNDRY_DAY} from './laundry-lifecycle.js?v=14';
 import {addTranslations,translate,getLanguage} from './i18n.js?v=14';
-import {consumeDialogEscape,isTopDialog,raiseDialog} from './dialog-stack.js';
+import {consumeDialogEscape,isTopDialog,raiseDialog} from './dialog-stack.js?v=22';
 
 const TEXT={
  '洗衣机 · 照顾衣物':'Washer · Care for your clothes','烘干机 · 温暖蓬松':'Dryer · Warm and soft',
@@ -32,28 +32,60 @@ export function setupLaundry({THREE,model,scene=model,register=()=>{},getState=(
  const named=(...names)=>source.filter(o=>names.includes(raw(o))),centre=o=>new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3());
  const doors=named('Laundry round dark door').sort((a,b)=>centre(a).y-centre(b).y),panes=named('Laundry glass door').sort((a,b)=>centre(a).y-centre(b).y),controls=named('Laundry controls').sort((a,b)=>centre(a).y-centre(b).y);
  const mat=(name,color,extra={})=>{const m=new THREE.MeshStandardMaterial({color,roughness:.65,...extra});m.name=name;materials.add(m);return m;};
- const metal=mat('Laundry brushed rim',0xb5bab5,{metalness:.6,roughness:.29}),dark=mat('Laundry recessed drum',0x303e40),glass=mat('Laundry clear porthole',0xb7d6df,{transparent:true,opacity:.12,roughness:.12,depthWrite:false,side:THREE.DoubleSide}),linenMats=new Map();
+ const metal=mat('Laundry brushed rim',0xb5bab5,{metalness:.6,roughness:.29}),dark=mat('Laundry recessed drum',0x303e40,{side:THREE.DoubleSide}),seal=mat('Laundry flexible door seal',0x636f6b,{roughness:.82}),shell=mat('Laundry ivory enamel',0xf1f1e8,{roughness:.32}),glass=mat('Laundry clear porthole',0xb7d6df,{transparent:true,opacity:.12,roughness:.12,depthWrite:false,side:THREE.DoubleSide}),linenMats=new Map();
  const linen=color=>{if(!linenMats.has(color))linenMats.set(color,mat('Laundry woven cloth '+color,color,{roughness:.96,side:THREE.DoubleSide}));return linenMats.get(color);};
  function mesh(parent,name,geometry,material){geometries.add(geometry);const object=new THREE.Mesh(geometry,material);object.name=name;object.userData={noMerge:true,category:'decoration'};object.castShadow=!material.transparent;object.receiveShadow=true;parent.add(object);return object;}
  function saveOriginal(o){if(!o||originals.some(s=>s.object===o))return;originals.push({object:o,parent:o.parent,position:o.position.clone(),quaternion:o.quaternion.clone(),scale:o.scale.clone(),userData:{...o.userData}});}
  const legacy=[];model.traverse(o=>{if(/^Laundry[_ ](?:Washer|Dryer)$/i.test(raw(o)))legacy.push(o);});
+ const sourceCase=named('Laundry stacked machines')[0],caseBounds=sourceCase?new THREE.Box3().setFromObject(sourceCase):null,caseSize=caseBounds?.getSize(new THREE.Vector3()),caseCenter=caseBounds?.getCenter(new THREE.Vector3());
+ const box=(parent,name,w,h,d,x,y,z,material=shell)=>{const m=mesh(parent,name,new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);m.userData.category='furniture';return m;};
+ if(sourceCase){
+  // The source was one solid white block. Rebuild a real cabinet around two
+  // openings, so both drums can sit inside the case instead of floating ahead of it.
+  saveOriginal(sourceCase);sourceCase.removeFromParent();
+  const cabinet=new THREE.Group();cabinet.name='Laundry stacked machine case';root.add(cabinet);
+  const thickness=.024;
+  for(const sign of [-1,1])box(cabinet,'Laundry continuous side panel',thickness,caseSize.y,caseSize.z,caseCenter.x+sign*(caseSize.x-thickness)/2,caseCenter.y,caseCenter.z);
+  for(const y of [caseBounds.min.y+thickness/2,caseBounds.max.y-thickness/2])box(cabinet,'Laundry sealed case end',caseSize.x-thickness*2,thickness,caseSize.z,caseCenter.x,y,caseCenter.z);
+  box(cabinet,'Laundry case rear',caseSize.x-thickness*2,caseSize.y-thickness*2,thickness,caseCenter.x,caseCenter.y,caseBounds.max.z-thickness/2);
+  box(cabinet,'Laundry stacking separator',caseSize.x-thickness*2,.018,caseSize.z,caseCenter.x,caseBounds.min.y+caseSize.y/2,caseCenter.z);
+ }
+ function collarGeometry(radius){
+  const profile=[[radius+.037,.010],[radius+.039,-.010],[radius+.029,-.025],[radius+.009,-.030],[radius-.002,-.023],[radius-.005,.022],[radius-.005,.065]],vertices=[],indices=[],steps=56;
+  for(const [r,z] of profile)for(let i=0;i<steps;i++){const angle=i/steps*Math.PI*2;vertices.push(r*Math.cos(angle),r*Math.sin(angle),z);}
+  for(let row=0;row<profile.length-1;row++)for(let i=0;i<steps;i++){const a=row*steps+i,b=row*steps+(i+1)%steps,c=a+steps,d=b+steps;indices.push(a,c,b,b,c,d);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();return g;
+ }
  for(let index=0;index<2;index++){
   const kind=index?'dryer':'washer',legacyObject=legacy.find(o=>raw(o).toLowerCase().endsWith(kind)),originalDoor=doors[index],originalPane=panes[index];
   if(!originalDoor&&!legacyObject)continue;
   const bounds=new THREE.Box3().setFromObject(originalPane||originalDoor||legacyObject),position=bounds.getCenter(new THREE.Vector3()),radius=originalPane?(bounds.max.x-bounds.min.x)/2:.17;
-  position.z=bounds.min.z-.009;
+  // Local +Z now enters the real machine. The door projects only 36 mm forward
+  // of the measured case front, with its seal continuing through the front panel.
+  position.z=caseBounds?caseBounds.min.z:bounds.max.z+.045;
   const machine=new THREE.Group();machine.name=index?'Laundry_Dryer':'Laundry_Washer';machine.position.copy(position);machine.userData={noMerge:true,interactionId:'laundry-'+kind};root.add(machine);
   for(const old of [originalDoor,originalPane])if(old){saveOriginal(old);old.removeFromParent();}
-  const rim=mesh(machine,'Laundry '+kind+' metal door rim',new THREE.TorusGeometry(radius+.023,.024,12,40),metal);
-  const back=mesh(machine,'Laundry '+kind+' recessed drum back',new THREE.CircleGeometry(radius,40),dark);back.rotation.y=Math.PI;back.position.z=.025;
-  const clothes=new THREE.Group();clothes.name='Visible '+kind+' garments';clothes.userData.noMerge=true;machine.add(clothes);
-  const porthole=mesh(machine,'Laundry '+kind+' transparent door',new THREE.CircleGeometry(radius,40),glass);porthole.position.z=-.024;porthole.rotation.y=Math.PI;porthole.renderOrder=3;
-  const inner=mesh(machine,'Laundry '+kind+' inner drum lip',new THREE.TorusGeometry(radius-.006,.006,8,40),metal);inner.position.z=.012;
+  let frontPanel=null;
+  if(caseBounds){
+   const minY=caseBounds.min.y+index*caseSize.y/2+.011,maxY=caseBounds.min.y+(index+1)*caseSize.y/2-.011,w=caseSize.x-.005,shape=new THREE.Shape();
+   shape.moveTo(-w/2,minY-position.y);shape.lineTo(w/2,minY-position.y);shape.lineTo(w/2,maxY-position.y);shape.lineTo(-w/2,maxY-position.y);shape.closePath();
+   const aperture=new THREE.Path();aperture.absarc(0,0,radius+.012,0,Math.PI*2,true);shape.holes.push(aperture);
+   frontPanel=mesh(machine,'Laundry '+kind+' front panel with open drum aperture',new THREE.ExtrudeGeometry(shape,{depth:.028,bevelEnabled:false,steps:1,curveSegments:32}),shell);frontPanel.userData.category='furniture';
+  }
+  const collar=mesh(machine,'Laundry '+kind+' continuous inset rubber collar',collarGeometry(radius),seal);
+  const rim=mesh(machine,'Laundry '+kind+' metal door rim',new THREE.TorusGeometry(radius+.027,.010,12,56),metal);rim.position.z=-.026;
+  const barrel=mesh(machine,'Laundry '+kind+' internal drum barrel',new THREE.CylinderGeometry(radius-.005,radius-.005,.17,56,1,true),dark);barrel.rotation.x=Math.PI/2;barrel.position.z=.109;
+  const back=mesh(machine,'Laundry '+kind+' recessed drum back',new THREE.CircleGeometry(radius-.006,56),dark);back.rotation.y=Math.PI;back.position.z=.194;
+  const inner=mesh(machine,'Laundry '+kind+' inner drum lip',new THREE.TorusGeometry(radius-.008,.005,8,56),metal);inner.position.z=.052;
+  for(let j=0;j<3;j++){const angle=j*Math.PI*2/3;const rib=box(machine,'Laundry '+kind+' recessed drum lifter',.013,.014,.12,Math.cos(angle)*(radius-.013),Math.sin(angle)*(radius-.013),.12,metal);rib.rotation.z=angle-Math.PI/2;rib.userData.category='decor';}
+  const clothes=new THREE.Group();clothes.name='Visible '+kind+' garments';clothes.userData.noMerge=true;clothes.position.z=.083;machine.add(clothes);
+  const porthole=mesh(machine,'Laundry '+kind+' transparent door',new THREE.CircleGeometry(radius-.003,56),glass);porthole.position.z=-.030;porthole.rotation.y=Math.PI;porthole.renderOrder=3;
   if(controls[index]){saveOriginal(controls[index]);machine.updateWorldMatrix(true,true);machine.attach(controls[index]);controls[index].userData.noMerge=true;}
-  const lightMat=mat('Laundry '+kind+' programme lamp',0x869787,{emissive:0x416653,emissiveIntensity:.08}),light=mesh(machine,'Laundry '+kind+' running indicator',new THREE.CircleGeometry(.012,16),lightMat);light.position.set(.17,.265,.058);light.rotation.y=Math.PI;
-  const record={id:'laundry-'+kind,label:index?'烘干机 · 温暖蓬松':'洗衣机 · 照顾衣物',kind:'laundry',object:machine,anchor:position.clone().add(new THREE.Vector3(0,.10,-.02)),click:()=>open(kind)};machine.traverse(o=>{if(o.isMesh)o.userData.interactionId=record.id;});register(record);records.push(record);
-  machines.push({kind,object:machine,clothes,lightMat,radius,signature:'',record});
+  const lightMat=mat('Laundry '+kind+' programme lamp',0x869787,{emissive:0x416653,emissiveIntensity:.08}),light=mesh(machine,'Laundry '+kind+' running indicator',new THREE.CircleGeometry(.008,16),lightMat);light.position.set(.17,.29,-.014);light.rotation.y=Math.PI;
+  const record={id:'laundry-'+kind,label:index?'烘干机 · 温暖蓬松':'洗衣机 · 照顾衣物',kind:'laundry',object:machine,anchor:position.clone().add(new THREE.Vector3(0,.10,-.045)),click:()=>open(kind)};machine.traverse(o=>{if(o.isMesh)o.userData.interactionId=record.id;});register(record);records.push(record);
+  machines.push({kind,object:machine,clothes,lightMat,radius,frontPanel,collar,rim,barrel,back,porthole,signature:'',record});
  }
+
  function clearClothes(group){for(const object of [...group.children]){object.traverse(o=>{if(o.isMesh){geometries.delete(o.geometry);o.geometry.dispose();}});object.removeFromParent();}}
  function makeGarment(parent,item,index,count,radius){
   const group=new THREE.Group();group.name=`Laundry ${item.kind} · ${item.id}`;group.userData.garmentId=item.id;parent.add(group);
@@ -109,5 +141,5 @@ export function setupLaundry({THREE,model,scene=model,register=()=>{},getState=(
  const unsubscribe=lifecycle.subscribe(()=>{syncVisuals();draw();});if(typeof window!=='undefined')window.addEventListener('little-world:languagechange',languageChanged);
  function update(dt=0){if(disposed)return;const second=Math.floor(now()/1000);if(second!==lastSecond){lastSecond=second;syncVisuals(lifecycle.refresh());draw();}const status=currentStatus||lifecycle.getStatus();if(!getState().settings?.reducedMotion)for(const machine of machines){if((machine.kind==='washer'&&status.phase==='washing')||(machine.kind==='dryer'&&status.phase==='drying'))machine.clothes.rotation.z+=Math.min(.1,Math.max(0,dt))*(machine.kind==='washer'?.9:.55);}}
  syncVisuals();
- return {root,machines,records,lifecycle,colliderRoots:[root],open,close,update,getStatus:()=>lifecycle.getStatus(),audit:{washerFound:machines.some(m=>m.kind==='washer'),dryerFound:machines.some(m=>m.kind==='dryer'),sourceDoorCentres:machines.map(m=>({kind:m.kind,position:m.object.position.toArray(),radius:m.radius})),periodDays:14,washMinutes:WASH_DURATION/60000,dryMinutes:DRY_DURATION/60000,maximumActiveGarments:5},dispose(){if(disposed)return;disposed=true;unsubscribe();close();overlay?.remove();if(typeof document!=='undefined')document.removeEventListener('keydown',keydown,true);if(typeof window!=='undefined')window.removeEventListener('little-world:languagechange',languageChanged);for(const saved of originals){saved.parent?.add(saved.object);saved.object.position.copy(saved.position);saved.object.quaternion.copy(saved.quaternion);saved.object.scale.copy(saved.scale);saved.object.userData=saved.userData;}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ return {root,machines,records,lifecycle,colliderRoots:[root],open,close,update,getStatus:()=>lifecycle.getStatus(),audit:{washerFound:machines.some(m=>m.kind==='washer'),dryerFound:machines.some(m=>m.kind==='dryer'),sourceDoorCentres:machines.map(m=>({kind:m.kind,position:m.object.position.toArray(),radius:m.radius})),caseFrontZ:caseBounds?.min.z??null,doorProjectionM:.036,drumDepthM:.194,realFrontApertures:machines.filter(m=>m.frontPanel).length,periodDays:14,washMinutes:WASH_DURATION/60000,dryMinutes:DRY_DURATION/60000,maximumActiveGarments:5},dispose(){if(disposed)return;disposed=true;unsubscribe();close();overlay?.remove();if(typeof document!=='undefined')document.removeEventListener('keydown',keydown,true);if(typeof window!=='undefined')window.removeEventListener('little-world:languagechange',languageChanged);for(const saved of originals){saved.parent?.add(saved.object);saved.object.position.copy(saved.position);saved.object.quaternion.copy(saved.quaternion);saved.object.scale.copy(saved.scale);saved.object.userData=saved.userData;}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

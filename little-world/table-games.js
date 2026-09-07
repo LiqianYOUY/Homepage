@@ -1,7 +1,7 @@
 import {createBoardGame} from './board-games.js?v=14';
 import {createCardGame,CARD_GAME_RULES} from './cards-games.js?v=14';
 import {getLanguage,translate,addTranslations} from './i18n.js?v=14';
-import {raiseDialog,consumeDialogEscape,isTopDialog} from './dialog-stack.js';
+import {raiseDialog,consumeDialogEscape,isTopDialog} from './dialog-stack.js?v=22';
 
 addTranslations({'棋牌桌 · 一起玩一局':'Game table · Play together','棋牌桌':'The game table','关闭棋牌桌':'Close game table'});
 export const GAME_NAMES={gomoku:['五子棋','Gomoku'],go:['围棋','Go'],xiangqi:['象棋','Xiangqi'],chess:['国际象棋','Chess'],doudizhu:['斗地主','Dou Dizhu'],mahjong:['麻将','Mahjong']};

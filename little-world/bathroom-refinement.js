@@ -68,17 +68,19 @@ export function setupBathroomRefinement({THREE,model,house=null}){
     remove(island);remove(find('Island sink bowl'));
   }
 
-  // Toilet cisterns and pedestals stay put; the solid bowl, seat ellipsoid and painted opening go away.
+  // Re-proportion each toilet; keep a hollow ceramic pan and a separate open seat.
   for(const prefix of ['Bathroom2 toilet','Bathroom3 toilet','Master WC']){
     const old=find(prefix+' bowl'),seat=find(prefix+' seat');if(!old||!seat)continue;
-    const c=seat.getWorldPosition(new THREE.Vector3()),q=seat.getWorldQuaternion(new THREE.Quaternion()),g=group(prefix+' hollow bowl',[c.x,0,c.z]);g.quaternion.copy(q);
-    // Local dimensions preserve the original oval footprint, including the sideways bathroom 3 toilet.
-    const shell=mesh(g,prefix+' continuous porcelain bowl',shellGeometry([[0,0,.256],[.143,.174,.256],[.19,.242,.35],[.22,.272,.485],[.214,.264,.528],[.142,.183,.528],[.139,.18,.507],[.102,.13,.375],[.064,.081,.344],[0,0,.344]],1),ceramic);
-    const seatRing=mesh(g,prefix+' open annular toilet seat',shellGeometry([[.196,.245,.529],[.201,.25,.548],[.193,.242,.563],[.135,.175,.563],[.131,.172,.551],[.135,.175,.529],[.196,.245,.529]],1),seatMaterial);
-    for(const xx of [-.11,.11])box(g,prefix+' seat hinge',.041,.028,.052,drainMetal,xx,.555,-.23,'decor');
-    drain(g,prefix,0,.347,.018,.025);fixtures.push({name:prefix,kind:'toilet',object:g,shell,x:c.x,z:c.z,top:.563,floor:.344,depth:.219,innerX:.131,innerZ:.172,power:1,seat:seatRing});
-    // The original ellipsoid pedestal reached .40 m and would otherwise plug the new .344 m cavity.
-    const pedestal=find(prefix+' pedestal');if(pedestal){remember(pedestal);pedestal.scale.y*=.84;pedestal.position.y=.168;}
+    const c=seat.getWorldPosition(new THREE.Vector3()),q=seat.getWorldQuaternion(new THREE.Quaternion()),forward=new THREE.Vector3(0,0,.06).applyQuaternion(q);c.add(forward);const g=group(prefix+' hollow bowl',[c.x,0,c.z]);g.quaternion.copy(q);
+    // Local axes also cover the sideways bathroom 3 toilet.
+    // A domestic pan is roughly 400 mm high before its seat, not the former 563 mm.
+    // Keep the bowl/seat as one open profile, with a low pedestal below the water trap.
+    const shell=mesh(g,prefix+' continuous porcelain bowl',shellGeometry([[0,0,.18],[.128,.16,.18],[.172,.223,.275],[.190,.257,.366],[.186,.252,.402],[.132,.180,.402],[.129,.176,.386],[.092,.126,.270],[.057,.077,.240],[0,0,.240]],1),ceramic);
+    const seatRing=mesh(g,prefix+' open annular toilet seat',shellGeometry([[.182,.245,.404],[.190,.252,.416],[.184,.247,.435],[.130,.177,.435],[.126,.173,.422],[.130,.177,.404],[.182,.245,.404]],1),seatMaterial);
+    for(const xx of [-.10,.10])box(g,prefix+' seat hinge',.035,.021,.040,drainMetal,xx,.4245,-.227,'decor');
+    drain(g,prefix,0,.243,.018,.023);fixtures.push({name:prefix,kind:'toilet',object:g,shell,x:c.x,z:c.z,top:.435,floor:.240,depth:.195,innerX:.126,innerZ:.173,power:1,seat:seatRing});
+    const pedestal=find(prefix+' pedestal');if(pedestal){remember(pedestal);pedestal.scale.y*=.225/.4;pedestal.scale.x*=.88;pedestal.scale.z*=.86;pedestal.position.add(forward);pedestal.position.y=.1125;}
+    const cistern=find(prefix+' cistern');if(cistern){remember(cistern);cistern.scale.y*=.40/.61;cistern.position.y=.60;}
     remove(old);remove(seat);remove(find(prefix+' opening'));
   }
   const bath=find('Master freestanding bath shell');if(bath){const b=boxOf(bath),c=b.getCenter(new THREE.Vector3());

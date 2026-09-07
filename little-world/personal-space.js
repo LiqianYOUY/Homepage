@@ -1,4 +1,4 @@
-import {raiseDialog, topDialog, isTopDialog, consumeDialogEscape, flattenDialogRoot} from './dialog-stack.js';
+import {raiseDialog, topDialog, isTopDialog, consumeDialogEscape, flattenDialogRoot} from './dialog-stack.js?v=22';
 import {addTranslations} from './i18n.js?v=14';
 addTranslations({'屋主的新书会出现在这里；你添加或移除的书只影响自己的书架。':'New books from the host appear here. Books you add or remove only change your own shelf.'});
 addTranslations({

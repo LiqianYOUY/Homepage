@@ -22,6 +22,16 @@ async function fixture(){
 }
 const f=await fixture(),raw=o=>o.userData?.name||o.name;
 
+test('all three toilet seats and full pans share practical dimensions, including the sideways fixture',()=>{
+ for(const t of f.bath.fixtures.filter(t=>t.kind==='toilet')){
+  const full=new THREE.Box3().setFromObject(t.object);
+  for(const o of f.meshes.filter(o=>[t.name+' cistern',t.name+' pedestal'].includes(raw(o))))full.union(new THREE.Box3().setFromObject(o));
+  const size=full.getSize(new THREE.Vector3()),footprint=[size.x,size.z].sort();
+  assert.ok(Math.abs(footprint[0]-.4)<.001&&Math.abs(footprint[1]-.65)<.002,t.name+' footprint');
+  assert.ok(Math.abs(full.max.y-.80)<.001);assert.ok(Math.abs(new THREE.Box3().setFromObject(t.seat).max.y-.435)<.001);
+ }
+});
+
 test('all 13 bath and sink fixtures have measurable open cavities, with no former cap beneath them',()=>{
  assert.equal(f.bath.fixtures.length,13);const ray=new THREE.Raycaster();
  for(const fixture of f.bath.fixtures){

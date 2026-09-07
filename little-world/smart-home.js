@@ -75,15 +75,24 @@ export function setupSmartHome({THREE,scene,model,register=()=>{},getState=()=>(
   applyIndoorDoor();colliderRoots.push(indoorDivider);
   record({id:'indoor-balcony-door',label:'室内阳台推拉门',kind:'door',object:indoorDivider,anchor:new THREE.Vector3(dividerX,1.2,indoorDoor.baseZ),click:()=>setIndoorDoor(indoorDoor.target<.5)});
 
-  // One cabinet-height, side-by-side smart refrigerator fills the cold-appliance bay beside the oven.
+  // A domestic side-by-side refrigerator sits inside full-height storage beside the oven.
   const refrigerators=[];
   for(const prefix of ['Integrated fridge','Integrated freezer'])starts(prefix+' · ').forEach(removeOriginal);
   {
-    const x1=888,x2=958,label='双开门智能冰箱',g=group('Cabinet-height side-by-side smart refrigerator'),w=(x2-x1)*S-.04,d=.595,height=2.46;
+    const x1=888,x2=958,label='双开门智能冰箱',g=group('Domestic side-by-side smart refrigerator'),bayWidth=(x2-x1)*S-.04,w=.96,d=.65,height=1.83;
     const steel=mat('Smart refrigerator satin pearl metal',{color:0xc5cfca,metalness:.53,roughness:.26});
     const displayMat=mat('Smart refrigerator glass display',{color:0x203e42,roughness:.15,metalness:.23,emissive:0x16333a,emissiveIntensity:.25});
     const lightMat=mat('Smart refrigerator soft display pixels',{color:0xc9eee0,roughness:.4,emissive:0xb9e6db,emissiveIntensity:.28});
-    g.position.copy(P((x1+x2)/2,548.8));g.userData.category='appliance';
+    g.position.copy(P(x1,548.8));g.position.x+=.02+w/2;g.userData.category='appliance';
+    // Cabinetry reaches the neighbouring 2.46 m cornice, independently of the fridge.
+    const surround=group('Smart fridge full-height surrounding storage');surround.position.copy(g.position);
+    const sideWidth=bayWidth-w-.045,sideX=w/2+.045+sideWidth/2;
+    const sideCase=box(surround,'Fridge side pantry closed case',sideWidth,2.46,.59,ivory);sideCase.position.set(sideX,1.23,.025);
+    const sideFront=box(surround,'Fridge side pantry full-height front',sideWidth-.014,2.30,.022,oak);sideFront.position.set(sideX,1.245,-.283);
+    const sidePull=box(surround,'Fridge side pantry recessed pull',.012,.22,.005,dark);sidePull.position.set(sideX-sideWidth/2+.04,1.12,-.297);
+    const upper=box(surround,'Fridge upper storage cabinet case',w, .55,.59,ivory);upper.position.set(0,2.185,.025);
+    for(const side of [-1,1]){const face=box(surround,'Fridge upper storage cupboard front',w/2-.012,.51,.022,oak);face.position.set(side*w/4,2.19,-.283);}
+    colliderRoots.push(surround);
     const body=box(g,label+' full-height insulated case',w,height-.11,d,steel);body.position.y=(height+.11)/2;
     const footOffset=w/2-.055;
     for(const xx of [-footOffset,footOffset])for(const zz of [-d/2+.06,d/2-.06]){const foot=cyl(g,label+' adjustable foot',.024,.027,.11,dark,12);foot.position.set(xx,.055,zz);}
@@ -91,25 +100,25 @@ export function setupSmartHome({THREE,scene,model,register=()=>{},getState=()=>(
     for(const side of [-1,1]){
       const x=side*(doorWidth/2+.0055),seal=box(g,label+' full-height door gasket',doorWidth,doorHeight+.004,.012,dark);seal.position.set(x,.115+doorHeight/2,-d/2-.006);
       const door=box(g,label+' '+(side<0?'left freezer door':'right refrigerator door'),doorWidth-.009,doorHeight,.042,steel);door.position.set(x,.115+doorHeight/2,-d/2-.032);
-      const handleX=side*.057,handle=cyl(g,label+' long vertical handle',.011,.011,.86,metal,14);handle.position.set(handleX,1.26,-d/2-.103);
-      for(const yy of [.86,1.66]){const mount=box(g,label+' handle mounting',.019,.023,.048,metal);mount.position.set(handleX,yy,-d/2-.079);}
+      const handleX=side*.057,handle=cyl(g,label+' long vertical handle',.011,.011,.62,metal,14);handle.position.set(handleX,1.10,-d/2-.103);
+      for(const yy of [.82,1.38]){const mount=box(g,label+' handle mounting',.019,.023,.048,metal);mount.position.set(handleX,yy,-d/2-.079);}
     }
-    const screenX=-w*.265,screenY=1.48,screenZ=-d/2-.06;
-    const bezel=box(g,label+' large portrait touchscreen bezel',.48,.85,.021,dark);bezel.position.set(screenX,screenY,screenZ);
-    const screen=box(g,label+' large glass touchscreen',.442,.803,.005,displayMat);screen.position.set(screenX,screenY,screenZ-.013);
+    const screenX=-w*.265,screenY=1.30,screenZ=-d/2-.06;
+    const bezel=box(g,label+' large portrait touchscreen bezel',.30,.53,.021,dark);bezel.position.set(screenX,screenY,screenZ);
+    const screen=box(g,label+' large glass touchscreen',.274,.476,.005,displayMat);screen.position.set(screenX,screenY,screenZ-.013);
     // Universal numerals and icon tiles keep the appliance legible in either interface language.
     const pixelZ=screenZ-.017;
-    for(let i=0;i<3;i++){const tile=box(g,label+' touchscreen care tile',.107,.122,.003,i===1?green:ivory);tile.position.set(screenX+(i-1)*.135,1.235,pixelZ);}
-    const line=box(g,label+' touchscreen divider',.357,.003,.003,lightMat);line.position.set(screenX,1.374,pixelZ);
+    for(let i=0;i<3;i++){const tile=box(g,label+' touchscreen care tile',.065,.080,.003,i===1?green:ivory);tile.position.set(screenX+(i-1)*.085,1.15,pixelZ);}
+    const line=box(g,label+' touchscreen divider',.23,.003,.003,lightMat);line.position.set(screenX,1.25,pixelZ);
     const segments={0:[0,1,2,3,4,5],1:[1,2],4:[1,2,5,6],8:[0,1,2,3,4,5,6]};
     // The display faces local -Z: its viewer-right is local -X. Mirror both glyph positions and segments.
     function digit(n,x,y,scale=.075){for(const s of segments[n]){const horizontal=[0,3,6].includes(s),dy=({0:1,1:.5,2:-.5,3:-1,4:-.5,5:.5,6:0})[s]*scale,dx=horizontal?0:([1,2].includes(s)?1:-1)*scale*.51;const part=box(g,label+' temperature digit',horizontal?scale*.91:.009,horizontal?.009:scale*.80,.003,lightMat);part.position.set(2*screenX-x-dx,y+dy,pixelZ);part.userData.digit=n;part.userData.segment=s;}}
-    digit(0,screenX-.067,1.677,.062);digit(4,screenX+.029,1.677,.062);
-    const degree=mesh(new THREE.TorusGeometry(.012,.003,6,12),lightMat,g,label+' temperature degree');degree.position.set(screenX-.111,1.722,pixelZ);
-    const freezerMinus=box(g,label+' freezer minus sign',.025,.006,.003,lightMat);freezerMinus.position.set(screenX+.105,1.482,pixelZ);digit(1,screenX-.05,1.482,.035);digit(8,screenX+.011,1.482,.035);
-    const badge=box(g,label+' small metal badge',.09,.012,.003,metal);badge.position.set(w*.265,2.23,-d/2-.055);
+    digit(0,screenX-.046,1.422,.044);digit(4,screenX+.023,1.422,.044);
+    const degree=mesh(new THREE.TorusGeometry(.012,.003,6,12),lightMat,g,label+' temperature degree');degree.position.set(screenX-.084,1.456,pixelZ);
+    const freezerMinus=box(g,label+' freezer minus sign',.025,.006,.003,lightMat);freezerMinus.position.set(screenX+.080,1.31,pixelZ);digit(1,screenX-.04,1.31,.027);digit(8,screenX+.009,1.31,.027);
+    const badge=box(g,label+' small metal badge',.09,.012,.003,metal);badge.position.set(w*.265,1.66,-d/2-.055);
     const vent=box(g,label+' recessed ventilation grille',w-.12,.043,.016,dark);vent.position.set(0,.058,-d/2+.01);
-    refrigerators.push({object:g,label,planBounds:[x1,x2],sideGapM:.02,heightM:height,doors:2,screenDiagonalInches:23.7});colliderRoots.push(g);
+    refrigerators.push({object:g,label,planBounds:[x1,x2],sideGapM:.02,heightM:height,widthM:w,depthM:.764,surroundHeightM:2.46,doors:2,screenDiagonalInches:21.6});colliderRoots.push(g);
   }
 
   // End the cabinet toe-kick at the cold-appliance bays; their real adjustable feet remain exposed.
@@ -363,5 +372,5 @@ export function setupSmartHome({THREE,scene,model,register=()=>{},getState=()=>(
   }
   function dispose(){if(disposed)return;disposed=true;unsubscribePlants();for(const [o,s] of originals){s.parent?.add(o);o.position.copy(s.position);o.quaternion.copy(s.quaternion);o.scale.copy(s.scale);o.visible=s.visible;o.material=s.material;if(s.noMerge===undefined)delete o.userData.noMerge;else o.userData.noMerge=s.noMerge;if(s.interaction===undefined)delete o.userData.interactionId;else o.userData.interactionId=s.interaction;}
     roots.forEach(g=>g.removeFromParent());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
-  return {update,setCurtains,setLights,setVacuumAuto,addMess,clean,plant,water,fertilize,harvest,clearPlant,arrangeFlowers,plantLife,vaseObjects,getStatus,getGardenStatus,setObstacles,setGardenTerrace,setIndoorDoor,indoorDoor,roomLights,colliderRoots,curtains,refrigerators,utility,controlPanel,clock,vacuum,dock,gardenRoot,records,audit:{vacuum:vacuumAudit,refrigeratorSideGapM:.02,refrigeratorHeightM:2.46,doubleDoorRefrigerator:true,curtain:{bottomM:.10,topM:2.60,railUnmodified:true,openStackWidthM:openWidth,closedSpanM:rightX-leftX},planter:{positionPlan:[420,439],potBottomM:0,soilTopM:.235},clockTimeZone:'Australia/Sydney'},dispose};
+  return {update,setCurtains,setLights,setVacuumAuto,addMess,clean,plant,water,fertilize,harvest,clearPlant,arrangeFlowers,plantLife,vaseObjects,getStatus,getGardenStatus,setObstacles,setGardenTerrace,setIndoorDoor,indoorDoor,roomLights,colliderRoots,curtains,refrigerators,utility,controlPanel,clock,vacuum,dock,gardenRoot,records,audit:{vacuum:vacuumAudit,refrigeratorSideGapM:.02,refrigeratorHeightM:1.83,refrigeratorSurroundHeightM:2.46,doubleDoorRefrigerator:true,curtain:{bottomM:.10,topM:2.60,railUnmodified:true,openStackWidthM:openWidth,closedSpanM:rightX-leftX},planter:{positionPlan:[420,439],potBottomM:0,soilTopM:.235},clockTimeZone:'Australia/Sydney'},dispose};
 }

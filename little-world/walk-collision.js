@@ -2,7 +2,8 @@
 // This is interaction collision geometry, not building-code clearance validation.
 export function createWalkCollision({THREE,model,house}){
   const radius=.18,bodyBottom=.12,bodyTop=1.73,cellSize=.75,epsilon=.00005;
-  const floors=[],shapes=[],grid=new Map(),dynamicCache=new Map(),counts={},excluded={};
+  const floors=[],shapes=[],grid=new Map(),dynamicCache=new WeakMap(),counts={},excluded={};
+  let snapshot=null;
   const nameOf=o=>o.userData?.name||o.name||'';
   const dynamicRoots=()=>[...(house?.doors||[]),...(house?.chairs||[]),...(house?.colliderRoots||[]).map(object=>({object}))].filter(r=>!r.disabled&&r.object).map(r=>r.object);
   const dynamicMeshes=new Set();for(const root of dynamicRoots())root.traverse(o=>{if(o.isMesh)dynamicMeshes.add(o);});
@@ -60,18 +61,38 @@ export function createWalkCollision({THREE,model,house}){
     return outsideX*outsideX+outsideZ*outsideZ<radius*radius;
   }
   function liveShapes(root){
-    root.updateWorldMatrix(true,true);const m=root.matrixWorld.elements;let cached=dynamicCache.get(root);
-    if(cached&&cached.matrix.every((v,i)=>v===m[i]))return cached.shapes;
-    const current=[];root.traverse(o=>{if(o.isMesh){const s=shapeOf(o);if(s&&s.maxY>=bodyBottom&&s.minY<=bodyTop)current.push(s);}});
-    cached={matrix:Array.from(m),shapes:current};dynamicCache.set(root,cached);return current;
+    root.updateWorldMatrix(true,true);const current=[];
+    // A door/drawer can move below an unchanged group. Cache each mesh's world
+    // transform, rather than assuming the whole group is fixed by its root.
+    root.traverse(o=>{if(!o.isMesh)return;const m=o.matrixWorld.elements;let cached=dynamicCache.get(o);
+      if(!cached||cached.geometry!==o.geometry||!cached.matrix.every((v,i)=>v===m[i])){
+        cached={matrix:Array.from(m),geometry:o.geometry,shape:shapeOf(o)};dynamicCache.set(o,cached);
+      }
+      const s=cached.shape;if(s&&s.maxY>=bodyBottom&&s.minY<=bodyTop)current.push(s);
+    });return current;
+  }
+  function dynamicIndex(){
+    const index=new Map(),seen=new Set();
+    for(const root of dynamicRoots())for(const s of liveShapes(root)){
+      if(seen.has(s.object))continue;seen.add(s.object);
+      for(let x=Math.floor((s.minX-radius)/cellSize);x<=Math.floor((s.maxX+radius)/cellSize);x++)for(let z=Math.floor((s.minZ-radius)/cellSize);z<=Math.floor((s.maxZ+radius)/cellSize);z++){
+        const key=x+','+z;if(!index.has(key))index.set(key,[]);index.get(key).push(s);
+      }
+    }return index;
+  }
+  function withSnapshot(fn){
+    if(snapshot)return fn();
+    // One consistent pose for all sweep and arrow-layout probes in this frame.
+    snapshot=dynamicIndex();try{return fn();}finally{snapshot=null;}
   }
   function collision(position){
     const x=position?.x,z=position?.z;if(!Number.isFinite(x)||!Number.isFinite(z)||!supported(x,z))return true;
     const candidates=grid.get(Math.floor(x/cellSize)+','+Math.floor(z/cellSize))||[];
     for(const s of candidates)if(touches(s,x,z))return true;
-    for(const root of dynamicRoots())for(const s of liveShapes(root))if(touches(s,x,z))return true;
+    const dynamic=(snapshot||dynamicIndex()).get(Math.floor(x/cellSize)+','+Math.floor(z/cellSize))||[];
+    for(const s of dynamic)if(touches(s,x,z))return true;
     return false;
   }
   const audit={radius_m:radius,eye_height_m:1.57,body_vertical_interval_m:[bodyBottom,bodyTop],floor_slabs:floors.length,static_shapes:shapes.length,static_categories:counts,excluded,method:'Actual GLB floor-slab union and circular-body versus oriented mesh bounds; circular structural columns; live door/chair transforms',floor_union:floors,dynamic_door_count:house?.doors?.length||0,dynamic_chair_count:house?.chairs?.length||0,notes:['Hidden walls and glazing remain solid for walking.','Floor seams are evaluated as a union, so adjacent room slabs do not create false gaps.','The southern wintergarden divider leaf uses its live sliding-door transform; the other panes remain solid.','Low carpets and mounted decoration are excluded; low coffee tables and other freestanding furniture remain solid.']};
-  return {collision,audit};
+  return {collision,withSnapshot,audit};
 }

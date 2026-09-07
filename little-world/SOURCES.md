@@ -12,18 +12,18 @@
 
 ## 真实公开项目
 
-[完整作品集原站](https://liqianyouy.github.io/Homepage/portfolio/) 是用户已有的公开网站。匿名本地预览 `portfolio-room.html` 使用对应项目的已有素材，随用户授权发布原公开项目素材的副本：
+[完整作品集原站](https://liqianyouy.github.io/Homepage/portfolio/) 是用户已有的公开网站。住宅工作室 `portfolio-room.html` 使用由对应产品形态绘制的线稿；原始项目照片保留在同一仓库的作品集素材目录：
 
 | 项目 | 本地素材 | 来源说明 |
 |---|---|---|
-| MoodBall | `assets/moodball.jpg` | 原作品中的交互项目图片 |
+| MoodBall | [原始项目照片](../portfolio/assets/images/moodball/hero.jpg) | 原作品中的交互项目图片 |
 | Compact washer | `assets/washer.svg` | 原作品中的紧凑洗衣机概念示意 |
-| 智能药盒 / Smart Medication Support | `assets/smart-medication.jpg` | [公开项目页](https://liqianyouy.github.io/Homepage/portfolio/projects/smart-medication/)的 `concept-cover.jpg`，研究用药支持的透明反馈、确认与修正 |
-| FoodCare + SeniorCare | `assets/foodcare.jpg`、`assets/foodcare-mobile.png` | [公开项目页](https://liqianyouy.github.io/Homepage/portfolio/projects/foodcare/)的 `hero-banner.jpg` 与 `mobile-prototype.png`，食物识别、移动交互和长者关怀研究原型 |
+| 智能药盒 / Smart Medication Support | [原始概念图](../portfolio/assets/images/smart-medication/concept-cover.jpg) | [公开项目页](https://liqianyouy.github.io/Homepage/portfolio/projects/smart-medication/)的 `concept-cover.jpg`，研究用药支持的透明反馈、确认与修正 |
+| FoodCare + SeniorCare | [原始硬件图](../portfolio/assets/images/foodcare/hero-banner.jpg)、[手机原型](../portfolio/assets/images/foodcare/mobile-prototype.png) | [公开项目页](https://liqianyouy.github.io/Homepage/portfolio/projects/foodcare/)的 `hero-banner.jpg` 与 `mobile-prototype.png`，食物识别、移动交互和长者关怀研究原型 |
 
-药盒与 FoodCare 的三张新增图片和原公开项目素材逐字节一致。住宅界面与本地作品预览使用「小尤」等匿名名称；外部原作品网站及 URL 可能显示真实姓名或账号。
+住宅中不再保留这些照片的重复副本；清理前已核对四个副本与上述保留素材的 SHA-256 完全一致。住宅界面与本地作品预览使用「小尤」等匿名名称；外部原作品网站及 URL 可能显示真实姓名或账号。
 
-2026-09-07 本地修改：住宅工作室的 MoodBall、药盒和 FoodCare 封面改用 `assets/moodball-linework.svg`、`assets/smart-medication-linework.svg`、`assets/foodcare-linework.svg`。线稿根据已有产品形态以 SVG 绘制，与 `washer.svg` 保持一致的展示风格；上述照片保留为原始素材。
+2026-09-07 修改：住宅工作室的 MoodBall、药盒和 FoodCare 封面改用 `assets/moodball-linework.svg`、`assets/smart-medication-linework.svg`、`assets/foodcare-linework.svg`。线稿根据已有产品形态以 SVG 绘制，与 `washer.svg` 保持一致的展示风格；上述作品集照片保留为原始素材。
 
 `portfolio-room.html` 的四个「查看项目」入口分别指向用户原站的 [MoodBall](https://liqianyouy.github.io/Homepage/portfolio/projects/moodball/)、[智能药盒](https://liqianyouy.github.io/Homepage/portfolio/projects/smart-medication/)、[FoodCare + SeniorCare](https://liqianyouy.github.io/Homepage/portfolio/projects/foodcare/) 和 [Compact washer](https://liqianyouy.github.io/Homepage/portfolio/projects/washing-machine/) 项目页。链接在新标签页打开，使用 `noopener noreferrer`；没有把外部项目页改成住宅中的游戏或本地原型。
 
@@ -76,7 +76,7 @@ v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审
 
 儿童房按用户指定的新布局重新绘制：卫生间一侧墙边为上窄下宽的子母上下铺，窗边两套独立学习桌椅，另一侧实墙设置收纳柜、推拉衣柜和书柜，玩具与书包放在近门低柜。床架、护栏、梯子、书桌与柜体均使用本地 Three.js 几何生成，没有下载外部模型、图片或材质；尺寸用于小屋的视觉与交互表现。
 
-钢琴左右移动按钮、键盘焦点箭头及冰箱数字均由本项目代码生成。冰箱屏幕以几何笔画显示温度示意，已修正面朝房间时的水平镜像；无新增图片、字库或温度数据接口。
+钢琴 88 键、三行字母映射、八度切换按钮及冰箱数字均由本项目代码生成。冰箱屏幕以几何笔画显示温度示意，已修正面朝房间时的水平镜像；无新增图片、字库或温度数据接口。
 
 植物使用真实经过的天数和品种差异；其发芽、开花、水肥与凋谢规则、园艺来源及模拟边界见 [PLANT-LIFECYCLE.md](PLANT-LIFECYCLE.md)。
 
@@ -106,3 +106,5 @@ v9 更新厨房平底锅与行走脚印 SVG，接入 Uluru 旅行视频，并审
 茶杯、餐具、锅碗、厨具、室内静态绿植、书房降噪耳机与衣帽间矮岛台均由本地 Three.js 几何生成。国际象棋的实心棋形由本项目 SVG 绘制，不依赖字符字体。
 
 用户添加的 [The Adventures of Sherlock Holmes](https://www.gutenberg.org/cache/epub/1661/pg1661-images.html) 与 [Pride and Prejudice](https://www.gutenberg.org/cache/epub/1342/pg1342-images.html) 保留 Project Gutenberg 原站阅读链接；本轮未复制书籍正文或图片。主动分享的书名和链接保存在已有共享后台的书架表中。
+
+第 22 轮卫浴与洗衣台的四面银框镜使用本项目生成的 128 × 64 环境纹理，模拟柔和室内反光，不新增实时房间反射渲染通道。

@@ -90,7 +90,7 @@ export function setupTerrace({THREE,model,register=()=>{},getState=()=>({}),setS
  const tray=roundedSlab(table,'Terrace tea tray',.30,.025,.21,.04,rattanShade);tray.position.set(.19,.752,.02);
  for(const x of [.10,.26]){const cup=cyl(table,'Terrace outdoor tea cup',.043,.034,.065,cream);cup.position.set(x,.795,.02);const tea=cyl(table,'Terrace tea surface',.034,.034,.004,soil);tea.position.set(x,.829,.02);}
  for(const [index,dx,angle] of [[0,-.91,-Math.PI/2],[1,.91,Math.PI/2]]){
-   const g=group('Terrace woven rattan armchair '+(index+1));g.position.set(table.position.x+dx,table.position.y,table.position.z);g.rotation.y=angle;
+   const g=group('Terrace woven rattan armchair '+(index+1));g.position.set(table.position.x+dx,table.position.y,table.position.z);g.rotation.y=angle;g.scale.y=.455/.521; // Seat surface 455 mm above the deck, including its cushion.
    const seat=roundedSlab(g,'Terrace rattan chair seat frame',.60,.065,.56,.12,rattanShade,'furniture');seat.position.y=.415;
    const cushion=roundedSlab(g,'Terrace linen seat cushion',.51,.08,.46,.10,linen,'furniture');cushion.position.set(0,.481,-.012);
    for(const x of [-.22,.22])for(const z of [-.19,.19]){const leg=cyl(g,'Terrace rattan chair teak leg',.020,.029,.40,teak,'furniture');leg.position.set(x,.20,z);leg.rotation.z=-Math.sign(x)*.075;leg.rotation.x=Math.sign(z)*.075;}

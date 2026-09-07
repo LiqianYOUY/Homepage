@@ -36,6 +36,7 @@ export function setupChildrenRoomDetails({THREE,model,renovation}){
   for(const [index,deskFrame] of (renovation?.childrenDesks||[]).entries()){
     const desk=deskFrame.desktop,notebook=deskFrame.notebook;if(!desk||!notebook)continue;
     const g=aligned('Children window desk '+(index+1)+' study supplies',deskFrame),deskBounds=localBounds(desk,deskFrame),y=deskBounds.max.y;
+    if(deskFrame.studyWidth){deskBounds.min.x=Math.max(deskBounds.min.x,-deskFrame.studyWidth/2);deskBounds.max.x=Math.min(deskBounds.max.x,deskFrame.studyWidth/2);}
     const accent=index===0?mint:blue;
     // Enrich the existing open notebook instead of stacking a second book in the writing space.
     const n=localBounds(notebook,deskFrame),c=n.getCenter(new THREE.Vector3()),top=n.max.y+.001;
@@ -82,7 +83,8 @@ export function setupChildrenRoomDetails({THREE,model,renovation}){
     }
     soft(bear,'Teddy bear cream muzzle',[.034,.025,.020],cream,[0,.239,.070]);soft(bear,'Teddy bear stitched nose',[.009,.006,.005],graphite,[0,.249,.089]);rod(bear,'Teddy bear mouth stitch',[0,.244,.091],[0,.234,.091],.0013,graphite);
     for(const side of [-1,1]){const bow=soft(bear,'Teddy bear mist-blue ribbon',[.031,.016,.012],blue,[side*.026,.188,.067]);bow.rotation.z=side*.32;}soft(bear,'Teddy bear ribbon knot',[.011,.013,.011],blue,[0,.188,.075]);toys.push(bear);
-    backpack=group('Children entrance small mint backpack',quiet);place(backpack,anchors.backpack);
+    const bagShelf=renovation.childrenBookcases?.[1]?aligned('Children window bookcase schoolbag',renovation.childrenBookcases[1]):quiet;
+    backpack=group('Children small mint backpack on bookcase shelf',bagShelf);place(backpack,anchors.backpack);
     roundedBox(backpack,'Children backpack padded main bag',.22,.285,.102,mint,[0,.150,0]);roundedBox(backpack,'Children backpack front zip pocket',.156,.090,.024,blue,[0,.076,.062]);
     rod(backpack,'Children backpack pocket zip',[-.062,.114,.081],[.062,.114,.081],.0023,cream);
     tube(backpack,'Children backpack little zipper pull',[[.052,.114,.085],[.058,.098,.089],[.063,.102,.090]],.0023,oak);

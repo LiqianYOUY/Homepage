@@ -32,8 +32,8 @@ const f=await fixture();
 
 function walkRoute(walk,route){for(let i=1;i<route.length;i++){const a=new THREE.Vector3(route[i-1][0],1.57,route[i-1][1]),b=new THREE.Vector3(route[i][0],1.57,route[i][1]);const steps=Math.ceil(a.distanceTo(b)/.02);for(let j=0;j<=steps;j++){const p=a.clone().lerp(b,j/steps);assert.equal(walk.collision(p),false,'route obstructed at '+p.x.toFixed(3)+','+p.z.toFixed(3));}}}
 const entryRoute=[[8.25,-1.07],[8.81,-1.07],[8.95,-.72],[9.17,-.60],[9.68,-.59]];
-const studyRoutes=[[[9.68,-.59],[10.35,-.45],[10.43,-.21]],[[9.68,-.59],[10.35,.20],[10.43,1.02]]];
-const storageRoute=[[9.68,-.61],[10.45,-.68],[11.10,-.68]];
+const studyRoutes=[[[9.68,-.59],[10.35,-.45],[10.43,.05]],[[9.68,-.59],[10.35,.20],[10.43,1.15]]];
+const storageRoute=[[9.68,-.56],[10.25,-.56],[11.0,-.56]];
 
 test('one bunk has a wider lower mattress and rests along the bathroom wall, leaving the window facade open',()=>{
  const bunk=f.renovation.childrenBunkBed;assert.ok(bunk);
@@ -51,12 +51,27 @@ test('one bunk has a wider lower mattress and rests along the bathroom wall, lea
  assert.ok(!meshes(f.renovation.root).some(o=>/integrated loft|under-desk rear|integrated long writing surface/.test(raw(o))));
 });
 
+test('bunk platforms and aprons have no exposed coplanar faces with their posts',()=>{
+ const bunk=f.renovation.childrenBunkBed,structure=meshes(bunk).filter(o=>o.geometry.type==='BoxGeometry'&&o.userData.category==='furniture');
+ for(const deck of [bunk.lowerDeck,bunk.upperDeck,...structure.filter(o=>/side apron/.test(raw(o)))]){
+  const a=bounds(deck);
+  for(const trim of structure.filter(o=>o!==deck)){
+   const b=bounds(trim);
+   for(const axis of ['x','y','z'])for(const side of ['min','max']){
+    const sharedPlane=Math.abs(a[side][axis]-b[side][axis])<.0001;
+    const faceOverlap=['x','y','z'].filter(k=>k!==axis).every(k=>Math.min(a.max[k],b.max[k])-Math.max(a.min[k],b.min[k])>.001);
+    assert.equal(sharedPlane&&faceOverlap,false,raw(deck)+' shares an exposed '+axis+' '+side+' face with '+raw(trim));
+   }
+  }
+ }
+});
+
 test('two complete window study places sit below the glazing and their supplies rest on their own desktops',()=>{
  assert.equal(f.renovation.childrenDesks.length,2);assert.equal(f.details.studySets.length,2);
  const glazing=f.meshes.filter(o=>/^Bedroom3 east glazing/.test(raw(o))),windowX=Math.min(...glazing.map(o=>bounds(o).min.x));
  const desktops=f.renovation.childrenDesks.map(d=>bounds(d.desktop));
  for(const [i,desk] of f.renovation.childrenDesks.entries()){
-  const b=desktops[i];assert.ok(b.min.x>11.25&&b.max.x<windowX-.15,'desk stays in front of the east window with a curtain pocket');
+  const b=desktops[i];assert.ok(b.min.x>11.15&&b.max.x<windowX-.15,'desk stays in front of the east window with a curtain pocket');
   assert.ok(b.max.y>.72&&b.max.y<.80);assert.ok(b.getSize(new THREE.Vector3()).z>1.0);
   const chair=bounds(f.renovation.childrenChairs[i]);assert.ok(chair.max.x<b.min.x+.04,'each chair is on the room side of its desk');
   const supplies=f.details.audit.studySets[i],top=supplies.desktopInDesk,items=supplies.suppliesInDesk;
@@ -64,9 +79,14 @@ test('two complete window study places sit below the glazing and their supplies 
   assert.ok(items.min[2]>=top.min[2]-.002&&items.max[2]<=top.max[2]+.002,'study belongings fit within desktop depth');
   assert.ok(items.min[1]>=top.max[1]-.006,'belongings sit on, rather than below, the desktop');
  }
- assert.ok(!positiveOverlap(desktops[0],desktops[1]));
+ assert.equal(f.renovation.childrenDesks[0].desktop,f.renovation.childrenDesks[1].desktop,'both places share one unbroken top');
+ const top=desktops[0],bookcase=bounds(f.renovation.childrenBookcase),size=top.getSize(new THREE.Vector3());
+ assert.ok(Math.abs(size.z-2.46)<.001&&Math.abs(size.x-.60)<.001);
+ assert.ok(Math.abs(top.min.z-bookcase.max.z)<.002,'desktop meets window bookcase exactly');
+ assert.ok(Math.abs(top.max.x-bookcase.max.x)<.002,'outer edges form one continuous return');
+ assert.ok(bounds(f.renovation.childrenChairs[0]).min.z-bounds(f.renovation.childrenWardrobes[0].object).max.z>.60,'at least 60 cm clear between the chair and the storage front');
  // At window height there should be no tall bed or storage immediately behind the glass.
- const windowLightZone=new THREE.Box3(new THREE.Vector3(11.65,1.20,-1.15),new THREE.Vector3(12.04,2.40,1.55));
+ const windowLightZone=new THREE.Box3(new THREE.Vector3(11.65,1.20,-.78),new THREE.Vector3(12.04,2.40,1.55));
  const roomFurniture=meshes(f.renovation.root).filter(o=>/^Children/.test(raw(o)));
  for(const o of roomFurniture)assert.equal(positiveOverlap(bounds(o),windowLightZone),false,raw(o)+' blocks the central window light');
 });
@@ -115,16 +135,16 @@ test('wardrobe doors slide without stealing the aisle and retain saved state aft
  reloaded.details.dispose();reloaded.renovation.dispose();
 });
 
-test('toys and backpack move to the entrance storage, leaving the former window quiet corner free',()=>{
- assert.equal(f.details.toys.length,2);assert.ok(f.details.backpack);assert.ok(f.renovation.childrenDropZone);
- const drop=bounds(f.renovation.childrenDropZone);assert.ok(drop.min.x>9.40&&drop.max.x<10.10&&drop.max.z<-.65,'drop zone sits at the door end of the north cabinet row');
- for(const o of [...f.details.toys,f.details.backpack]){const b=bounds(o);assert.ok(b.min.x>=drop.min.x-.02&&b.max.x<=drop.max.x+.02,'belonging stays over its entrance storage');assert.ok(b.min.z>=drop.min.z-.04&&b.max.z<=drop.max.z+.04);}
- const top=bounds(meshes(f.renovation.childrenDropZone).find(o=>/toy display top/.test(raw(o)))),floor=bounds(meshes(f.renovation.childrenDropZone).find(o=>/cubby floor/.test(raw(o))));
- for(const toy of f.details.toys)assert.ok(Math.abs(bounds(toy).min.y-top.max.y)<.01,'plush toy sits on the storage top');
- assert.ok(Math.abs(bounds(f.details.backpack).min.y-floor.max.y)<.01,'backpack rests on the cubby floor');
- for(const belonging of [...f.details.toys,f.details.backpack])for(const a of meshes(belonging))for(const b of meshes(f.renovation.childrenDropZone))assert.equal(orientedOverlap(obb(a),obb(b)),false,raw(a)+' passes through '+raw(b));
- assert.equal(f.meshes.filter(o=>/Children quiet corner/.test(raw(o))).length,0);
- assert.ok(meshes(f.renovation.childrenBookcase).some(o=>/book/.test(raw(o))));
+test('matching bookcases flank the wardrobe, with small belongings on the lowest bookshelves and no toy cabinet',()=>{
+ assert.equal(f.renovation.childrenStorage,null);assert.equal(f.renovation.childrenBookcases.length,2);
+ const [left,right]=f.renovation.childrenBookcases.map(bounds),wardrobe=bounds(f.renovation.childrenWardrobes[0].object);
+ assert.deepEqual(left.getSize(new THREE.Vector3()).toArray().map(v=>Math.round(v*1000)),right.getSize(new THREE.Vector3()).toArray().map(v=>Math.round(v*1000)));
+ assert.ok(Math.abs((left.min.x+left.max.x)/2+(right.min.x+right.max.x)/2-2*(wardrobe.min.x+wardrobe.max.x)/2)<.001);
+ assert.ok(Math.abs(left.max.x-wardrobe.min.x)<.002&&Math.abs(right.min.x-wardrobe.max.x)<.002,'case sides form a fitted symmetrical run');
+ assert.equal(f.details.toys.length,2);assert.ok(f.details.backpack);
+ for(const [object,support] of [...f.details.toys.map(o=>[o,left]),[f.details.backpack,right]]){const b=bounds(object);assert.ok(b.min.x>=support.min.x&&b.max.x<=support.max.x);assert.ok(b.min.z>=support.min.z&&b.max.z<=support.max.z);assert.ok(Math.abs(b.min.y-.116)<.008,'belongings rest on the bottom bookshelves');}
+ assert.ok(!meshes(f.renovation.childrenRoom).some(o=>/toy display|toy and schoolbag cubby|basket/.test(raw(o))));
+ for(const c of f.renovation.childrenBookcases)assert.ok(meshes(c).filter(o=>raw(o)==='Children bookcase upright book').length>=20);
 });
 
 test('wardrobe sliding panels clear shelves, case and each other through the complete travel',()=>{
