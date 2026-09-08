@@ -1,4 +1,143 @@
 import {raiseDialog,consumeDialogEscape} from './dialog-stack.js?v=22';
+import {connectYouTube} from './youtube-playback.js?v=20260908-tv4';
+import {addTranslations} from './i18n.js?v=14';
+
+const TV_COPY={
+ "loading": [
+  [
+   "正在加载 YouTube 播放器…",
+   "画面出现后，可以直接点播放。"
+  ],
+  [
+   "Loading the YouTube player…",
+   "When the player appears, tap its play button."
+  ]
+ ],
+ "ready": [
+  [
+   "播放器已就绪",
+   "点一下画面中的播放键即可观看。"
+  ],
+  [
+   "The player is ready",
+   "Tap the play button inside the video to watch."
+  ]
+ ],
+ "playing": [
+  [
+   "正在播放",
+   ""
+  ],
+  [
+   "Playing",
+   ""
+  ]
+ ],
+ "buffering": [
+  [
+   "视频正在缓冲",
+   "可以稍等一会儿，播放器控件仍然可以使用。"
+  ],
+  [
+   "The video is buffering",
+   "Give it a moment. The player controls are still available."
+  ]
+ ],
+ "autoplay-blocked": [
+  [
+   "点一下播放",
+   "浏览器需要你手动开始视频，画面中的播放键可以直接使用。"
+  ],
+  [
+   "Tap to play",
+   "Your browser needs a tap to start this video. Use the play button inside the picture."
+  ]
+ ],
+ "slow": [
+  [
+   "加载时间有点长",
+   "播放器仍在尝试连接。可以点画面的播放键，或重试。"
+  ],
+  [
+   "This is taking a little longer",
+   "The player is still connecting. Try its play button, or retry."
+  ]
+ ],
+ "api-unavailable": [
+  [
+   "播放控制暂时未连接",
+   "可以先点画面中的播放键。若 YouTube 页面也打不开，请在系统浏览器检查网络后再试。"
+  ],
+  [
+   "Playback controls have not connected",
+   "Try the play button inside the video. If YouTube will not open either, check the connection in your main browser and try again."
+  ]
+ ],
+ "error": [
+  [
+   "这段视频暂时无法播放",
+   "可以重试、去 YouTube 观看，或换一段小屋里的旅行影像。"
+  ],
+  [
+   "This video cannot play right now",
+   "Retry, watch it on YouTube, or choose a travel video hosted here."
+  ]
+ ],
+ "error-2": [
+  [
+   "视频地址暂时不可用",
+   "请换一个节目，或去 YouTube 打开这段视频。"
+  ],
+  [
+   "This video address is unavailable",
+   "Choose another programme or open this video on YouTube."
+  ]
+ ],
+ "error-5": [
+  [
+   "浏览器暂时无法播放这段视频",
+   "请在系统浏览器或 YouTube 打开，也可以选择 Uluru。"
+  ],
+  [
+   "This browser cannot play the video right now",
+   "Open it in your main browser or on YouTube, or choose Uluru."
+  ]
+ ],
+ "error-100": [
+  [
+   "这段视频已下架或不再公开",
+   "请换一个节目，或去 YouTube 查看原视频。"
+  ],
+  [
+   "This video was removed or is no longer public",
+   "Choose another programme or check the original on YouTube."
+  ]
+ ],
+ "error-101": [
+  [
+   "这段视频需要在 YouTube 观看",
+   "发布者限制了网页内播放，请点「去原平台观看」。"
+  ],
+  [
+   "Watch this video on YouTube",
+   "The publisher has restricted embedded playback. Select “Watch on the original platform”."
+  ]
+ ],
+ "error-153": [
+  [
+   "当前浏览器没有提供播放所需的来源信息",
+   "请在系统浏览器或 YouTube 打开这段视频。"
+  ],
+  [
+   "This browser did not provide the required playback identity",
+   "Open this video in your main browser or on YouTube."
+  ]
+ ]
+};
+export const TV_TRANSLATIONS=Object.fromEntries(Object.values(TV_COPY).flatMap(([zh,en])=>zh.map((text,i)=>[text,en[i]])));
+TV_TRANSLATIONS["视频由 YouTube 提供；微信等浏览器可能需要点一下播放。原平台无法访问时，可看 Uluru 或播放自己的文件。"]="Videos are provided by YouTube; browsers such as WeChat may need a tap to play. If YouTube is unavailable, choose Uluru or play your own file.";
+addTranslations(TV_TRANSLATIONS);
+export function youtubeStatusCopy({state,code}={}){const key=state==='error'?'error-'+(Number(code)===150?101:code):state;return (TV_COPY[key]||TV_COPY.error)[0];}
 const CHANNELS=[
  {key:'uluru',kind:'video',title:'Uluru · 日出与日落',caption:'小尤的旅行影像 · 乌鲁鲁的晨昏',source:'./media/uluru-sunrise-sunset.mp4',poster:'./assets/uluru-poster.jpg'},
  {key:'darling',kind:'youtube',id:'d-NUlz3FXpw',title:'达令港的烟花',caption:'Darling Harbour · 烟花影像',source:'https://www.youtube.com/watch?v=d-NUlz3FXpw'},
@@ -18,26 +157,28 @@ export function setupTelevision({THREE,scene,model,camera,register,go,toast}){
  const tx=new THREE.CanvasTexture(canvas);tx.colorSpace=THREE.SRGBColorSpace;
  // The visible -Z GLB face has reversed U; preserve V and the video projection.
  tx.repeat.x=-1;tx.offset.x=1;surface.material=new THREE.MeshBasicMaterial({map:tx,color:0xffffff});
- let on=false,theatre=true,channel=0,panel=null,player=null,overlay=null,localURL=null,localName='',ytPlayer=null,playerSource=null,connection=null,connectionTimer=null,apiPromise=null,ytResume=null;
+ let on=false,theatre=true,channel=0,panel=null,player=null,overlay=null,localURL=null,localName='',ytPlayback=null,playerSource=null,connection=null,ytResume=null;
  const make=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
  function button(text,fn,cls='world-button'){const b=make('button',cls,text);b.type='button';b.onclick=fn;return b;}
  function externalLink(text,url){const a=make('a','world-button',text);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;}
  function clearPlayer(){
-  clearTimeout(connectionTimer);connection?.remove();connection=null;
+  connection?.remove();connection=null;
   const previous=player;player=null;playerSource=null;
-  try{ytPlayer?.destroy();}catch{}ytPlayer=null;
+  ytPlayback?.destroy();ytPlayback=null;
   if(previous?.tagName==='VIDEO'){previous.pause();previous.removeAttribute('src');previous.load();}
   previous?.remove();if(localURL){URL.revokeObjectURL(localURL);localURL=null;}localName='';
  }
- function youtubeAPI(){
-  if(window.YT?.Player)return Promise.resolve(window.YT);if(apiPromise)return apiPromise;
-  apiPromise=new Promise((resolve,reject)=>{const script=document.createElement('script');const timer=setTimeout(()=>reject(Error('timeout')),10000);window.onYouTubeIframeAPIReady=()=>{clearTimeout(timer);resolve(window.YT);};script.src='https://www.youtube.com/iframe_api';script.onerror=()=>{clearTimeout(timer);reject(Error('network'));};document.head.append(script);}).catch(e=>{apiPromise=null;throw e;});return apiPromise;
- }
  function chooseChannel(index){ytResume=null;clearPlayer();channel=index;draw();}
  function connectionNotice(host){
-  const notice=make('div','tv-connection'),title=make('strong','','正在连接悉尼的画面……'),hint=make('span','','也可以先看小尤留在这里的旅行片段。');
-  notice.setAttribute('role','status');notice.append(title,hint,button('看看 Uluru 的日出日落',()=>chooseChannel(0)),externalLink('去原平台观看 ↗',CHANNELS[channel].source));host.append(notice);connection=notice;
-  return failed=>{if(connection!==notice)return;notice.hidden=!failed;if(failed){title.textContent='画面暂时没有连上';hint.textContent='换一段小尤拍下的日出日落，陪你坐一会儿。';}};
+  // The player stays exposed: a browser may require a direct tap on its controls.
+  const notice=make('div','tv-online-status'),title=make('strong'),hint=make('p'),actions=make('div','world-actions');
+  notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');
+  actions.append(button('再试一次',()=>chooseChannel(channel)),externalLink('去原平台观看 ↗',CHANNELS[channel].source),button('看看 Uluru 的日出日落',()=>chooseChannel(0)));
+  notice.append(title,hint,actions);host.append(notice);connection=notice;
+  return status=>{if(connection!==notice)return;const state=status.state;notice.dataset.state=state;notice.hidden=state==='playing';
+   const [heading,detail]=youtubeStatusCopy(status);title.textContent=heading;hint.textContent=detail;
+   actions.hidden=['loading','ready','autoplay-blocked','buffering','playing'].includes(state);
+  };
  }
  function tryPlay(video){video.play().catch(()=>{if(player===video&&on&&video.isConnected)toast('点一下播放器里的播放键，就能看啦。');});}
  function nativePlayer(src,poster,title){
@@ -50,7 +191,7 @@ export function setupTelevision({THREE,scene,model,camera,register,go,toast}){
    video.parentElement?.append(connection);
   });return video;
  }
- function mount(host){
+ function mount(host,statusHost){
   if(player&&(playerSource===CHANNELS[channel].key||playerSource==='local')){
    const resume=player.tagName==='VIDEO'&&!player.paused;host.append(player);if(connection)host.append(connection);if(resume)tryPlay(player);return;
   }
@@ -58,19 +199,15 @@ export function setupTelevision({THREE,scene,model,camera,register,go,toast}){
   if(current.kind==='video'){player=nativePlayer(current.source,current.poster,current.caption);host.append(player);tryPlay(player);return;}
   const restore=ytResume;ytResume=null;player=document.createElement('iframe');player.title=current.title+' · YouTube';player.src=`https://www.youtube.com/embed/${current.id}?autoplay=${restore?.paused?0:1}&mute=1&playsinline=1&rel=0&loop=1&playlist=${current.id}&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
   player.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';player.referrerPolicy='strict-origin-when-cross-origin';player.allowFullscreen=true;host.append(player);
-  const iframe=player,notice=connectionNotice(host);connectionTimer=setTimeout(()=>{if(player===iframe)notice(true);},10000);
-  youtubeAPI().then(YT=>{if(player!==iframe)return;ytPlayer=new YT.Player(iframe,{events:{
-   onReady:e=>{if(player!==iframe)return;if(restore){e.target.seekTo(restore.time,true);e.target.setVolume(restore.volume);if(restore.muted)e.target.mute();else e.target.unMute();if(restore.paused){e.target.pauseVideo();clearTimeout(connectionTimer);notice(false);}else e.target.playVideo();}else{e.target.mute();e.target.playVideo();}},
-   onError:()=>{if(player===iframe){clearTimeout(connectionTimer);notice(true);}},
-   onStateChange:e=>{if(player===iframe&&e.data===1){clearTimeout(connectionTimer);notice(false);}}
-  }});}).catch(()=>{if(player===iframe)notice(true);});
+  const iframe=player,notice=connectionNotice(statusHost);
+  ytPlayback=connectYouTube({iframe,resume:restore,onStatus:status=>{if(player===iframe)notice(status);}});
  }
  function close(){on=false;ytResume=null;clearPlayer();panel?.remove();panel=null;overlay?.remove();overlay=null;}
  function open(){if(on){panel?.focus();return;}on=true;theatre=true;go('television');draw();}
  function draw(){
   // Native video keeps its element. An iframe loses its browsing context when
   // reparented, so restore its API playback state after rebuilding.
-  if(player?.tagName==='IFRAME'){try{const state=ytPlayer?.getPlayerState();ytResume={time:ytPlayer?.getCurrentTime()||0,paused:state===2||state===0,muted:ytPlayer?.isMuted()!==false,volume:ytPlayer?.getVolume()??100};}catch{ytResume=null;}clearPlayer();}
+  if(player?.tagName==='IFRAME'){ytResume=ytPlayback?.getSnapshot()||ytResume;clearPlayer();}
   const resume=player?.tagName==='VIDEO'&&!player.paused;
   if(player)player.remove();connection?.remove();panel?.remove();overlay?.remove();overlay=null;
   const current=CHANNELS[channel],own=playerSource==='local';
@@ -79,16 +216,18 @@ export function setupTelevision({THREE,scene,model,camera,register,go,toast}){
   const x=button('×',close,'dialog-close');x.setAttribute('aria-label','关闭电视');header.append(title,x);
   const body=make('div','dialog-body'),channels=make('div','tv-toolbar');channels.setAttribute('aria-label','选择电视节目');
   CHANNELS.forEach((c,i)=>{const b=button(c.title,()=>chooseChannel(i),'tv-channel'+(!own&&channel===i?' active':''));b.setAttribute('aria-pressed',String(!own&&channel===i));channels.append(b);});body.append(channels);
-  const viewport=make('div','tv-player');
-  if(theatre){body.append(viewport);mount(viewport);}else{
-   overlay=make('div','tv-overlay');overlay.hidden=true;document.body.append(overlay);mount(overlay);
+  const viewport=make('div','tv-player');viewport.dataset.provider=own?'video':current.kind;
+  if(theatre){body.append(viewport);mount(viewport,body);}else{
+   overlay=make('div','tv-overlay');overlay.hidden=true;document.body.append(overlay);mount(overlay,body);
    body.append(make('p','tv-status','画面已经放回客厅电视，靠近看看吧。'));
    panel.style.left='auto';panel.style.right='20px';panel.style.transform='none';panel.style.top='auto';panel.style.bottom='110px';
   }
   const actions=make('div','world-actions');actions.append(button(theatre?'放回电视屏幕':'放大观看',()=>{theatre=!theatre;draw();}),button('关电视',close));
   if(!own)actions.append(externalLink(current.kind==='video'?'单独打开视频 ↗':'原平台打开 ↗',current.source));
-  const caption=own?`正在播放：${localName}。文件只在你的浏览器临时播放，不会上传。`:current.caption+(current.kind==='video'?'。这段视频放在小屋里，不用连接外部视频平台。':'。如果原平台没有连上，选「Uluru · 日出与日落」就好。');
-  body.append(actions,make('p','tv-credit',caption+' 开始时静音，可以在播放器里打开声音。'));
+  const caption=own?`正在播放：${localName}。文件只在你的浏览器临时播放，不会上传。`:current.caption;
+  const credit=make('p','tv-credit');credit.append(make('span','',caption));
+  if(!own)credit.append(document.createTextNode(' · '),make('span','',current.kind==='video'?'这段视频放在小屋里，不用连接外部视频平台。':'视频由 YouTube 提供；微信等浏览器可能需要点一下播放。原平台无法访问时，可看 Uluru 或播放自己的文件。'));
+  credit.append(document.createTextNode(' '),make('span','','开始时静音，可以在播放器里打开声音。'));body.append(actions,credit);
   const local=document.createElement('input');local.type='file';local.accept='video/*';local.hidden=true;
   local.onchange=()=>{
    const f=local.files?.[0];if(!f)return;if(!f.type.startsWith('video/')&&!/\.(mp4|webm|mov|m4v)$/i.test(f.name)){toast('请选择一个视频文件。');return;}
