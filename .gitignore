@@ -15,3 +15,6 @@ node_modules/
 /little-world/coverage/
 /little-world/.cache/
 /little-world/.tmp/
+
+# Local model experiments stay outside the public site.
+/little-world/*.local.html
